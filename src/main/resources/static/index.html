@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RiskGuard | Sözleşme Risk Analizi</title>
+
+<style>
+/* ===== Kurumsal Tema Değerleri ===== */
+:root{
+  --bg-page:#eef2f7;
+  --surface:#ffffff;
+  --surface-2:#f9fafb;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --text-dim:#6b7280;
+  --brand-1:#6366f1;
+  --brand-2:#22c1c3;
+  --ok:#2e7d32;
+  --warn:#f57c00;
+  --crit:#b00020;
+  --rad-lg:16px;
+  --rad-md:12px;
+  --shadow-sm:0 6px 20px rgba(15,23,42,.06);
+  --shadow-md:0 14px 40px rgba(15,23,42,.10);
+}
+
+/* ===== Genel ===== */
+html,body{background:var(--bg-page);}
+body{
+  margin:0;
+  color:var(--text);
+  font:400 15px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "DejaVu Sans", Arial;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  min-height:100vh;
+  display:flex; flex-direction:column;
+}
+
+/* Üst progress bar */
+#topProgress{
+  position:fixed; left:0; top:0; height:3px; width:0%;
+  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  box-shadow:0 0 16px rgba(99,102,241,.45);
+  z-index:120;
+  transition:width .25s ease, opacity .25s ease;
+  opacity:0;
+}
+
+/* Üst navbar */
+.topbar{
+  background:#0f172a; color:#fff;
+  padding:10px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+  box-shadow:0 12px 24px rgba(0,0,0,.35);
+}
+.topbar-left{ display:flex; align-items:center; gap:10px; }
+.brand{ display:flex; align-items:center; gap:8px; }
+.brand svg{ width:22px; height:22px; }
+.product-name{ font-size:14px; font-weight:800; }
+.doc-id-label{ font-size:11px; color:#94a3b8; word-break:break-all; }
+.topbar-actions{ display:flex; align-items:center; gap:8px; }
+
+/* Üst butonları */
+.btn{
+  appearance:none; border:none; cursor:pointer;
+  font-size:12px; font-weight:800; line-height:1.2;
+  padding:10px 14px; border-radius:12px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.btn:active{ transform:translateY(0); filter:brightness(.96); }
+
+#pdfBtn{
+  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  color:#fff;
+}
+#pdfBtn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+#shareBtn{
+  background:#111827; color:#fff; border:1px solid rgba(148,163,184,.3);
+}
+
+/* Toast */
+.toast{
+  position:fixed; right:16px; bottom:16px; z-index:130;
+  background:#0b1220; color:#fff; padding:10px 14px; border-radius:12px;
+  box-shadow:0 10px 30px rgba(2,6,23,.35); opacity:0; transform:translateY(10px);
+  transition:opacity .2s ease, transform .2s ease;
+  font-size:13px; pointer-events:none;
+}
+.toast.show{ opacity:1; transform:translateY(0); }
+
+/* ===== Layout ve Paneller ===== */
+
+/* Ana layout: ortalanmış, geniş önizleme */
+.layout{
+  flex:1;
+  display:flex;
+  gap:32px;
+  padding:40px 24px;
+  box-sizing:border-box;
+  max-width:1500px;         /* sayfa toplam genişliği ↑ */
+  width:100%;
+  margin:0 auto;            /* ortalama */
+  align-items:flex-start;
+  justify-content:center;   /* ortalama */
+}
+
+/* Sol panel (Analiz Et) – ortaya yakın ve biraz daha geniş */
+.side-panel{
+  width:360px;              /* önceki 320 → 360 */
+  min-width:320px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rad-lg);
+  box-shadow:var(--shadow-sm);
+  padding:24px 22px;
+  height:max-content;
+  position:sticky;
+  top:40px;
+  align-self:flex-start;
+  margin-left:auto;         /* ortalamaya destek */
+  margin-right:auto;
+}
+
+/* Sağ panel (Rapor Önizleme) – daha geniş */
+.report-panel{
+  flex:1.4;                 /* 1 → 1.4 */
+  min-width:0;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--rad-lg);
+  box-shadow:var(--shadow-sm);
+  padding:20px;
+  min-height:75vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.report-headline{ display:flex; flex-direction:column; font-size:12px; margin-bottom:12px; color:#111827; }
+.report-headline-title{ font-size:13px; font-weight:800; }
+.report-headline-meta{ font-size:11px; color:var(--text-dim); word-break:break-all; }
+
+/* İçerik iframe’i */
+.iframe-shell{
+  position:relative; width:100%; flex:1;
+  border:1px solid var(--border); border-radius:12px; overflow:auto; background:#fff; min-height:880px;
+}
+#reportFrame{ width:100%; border:0; background:#fff; display:block; height:100%;}
+
+/* Mobil sekmeler */
+.mobile-tabs{ display:none; gap:8px; margin:10px 0 -6px 0; }
+.tab-btn{
+  flex:1; text-align:center; padding:10px 12px; border-radius:12px; font-weight:800; font-size:12px;
+  border:1px solid var(--border); background:var(--surface-2); color:#111827; cursor:pointer;
+}
+.tab-btn.active{ background:linear-gradient(90deg,var(--brand-1),var(--brand-2)); color:#fff; border-color:transparent; }
+
+@media (max-width:1024px){
+  .layout{ flex-direction:column; }
+  .mobile-tabs{ display:flex; }
+}
+
+/* Panel içeriği */
+.panel-heading{ font-size:14px; font-weight:800; color:#111827; display:flex; gap:6px; align-items:center; margin-bottom:6px; }
+.panel-sub{ font-size:12px; color:var(--text-dim); margin-bottom:14px; }
+.field-label{ font-size:12px; font-weight:600; color:#111827; margin-bottom:6px; }
+
+/* Drag & drop yükleme alanı */
+.file-input-wrap{
+  background:var(--surface-2);
+  border:1px dashed #cbd5e1; border-radius:14px;
+  padding:14px; color:#334155; font-size:12px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  cursor:pointer; margin-bottom:12px;
+  transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.file-input-wrap:hover{ border-color:#b6c2d6; background:#fff; box-shadow:var(--shadow-sm); }
+.file-input-wrap.drag{ border-color:var(--brand-1); background:#f5f7ff; box-shadow:0 10px 30px rgba(99,102,241,.15); }
+.file-input-wrap span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px; }
+input[type="file"]{ display:none; }
+
+/* CTA */
+#analyzeBtn{
+  width:100%; border:0; border-radius:12px;
+  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  color:#0b1220; font-weight:800; font-size:13px; padding:12px 16px; cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+#analyzeBtn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
+#analyzeBtn[disabled]{ opacity:.5; cursor:not-allowed; }
+
+/* Hata kutusu */
+.error-box{
+  background:#7f1d1d; border:1px solid #dc2626; color:#fecaca;
+  font-size:12px; line-height:1.4; border-radius:12px; padding:12px; display:none; margin-top:12px;
+}
+
+/* Ufak animasyonlar */
+a, #pdfBtn, #shareBtn, .side-panel, .file-input-wrap, #analyzeBtn{ transition:all .2s ease; }
+
+/* ===== Fade-in animasyonu ===== */
+.fade-up{ opacity:0; transform:translateY(10px); }
+.fade-up.show{ opacity:1; transform:none; transition:opacity .35s ease, transform .35s ease; }
+
+/* Print: dış UI’yi gizle */
+@media print{
+  .side-panel, #pdfBtn, #shareBtn, .topbar{ display:none !important; }
+  body{ background:#fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- Üst progress bar -->
+<div id="topProgress"></div>
+
+<!-- Üst Navbar -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand" aria-label="RiskGuard Logo">
+      <!-- Minimal kurumsal SVG logo -->
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6366F1"/><stop offset="1" stop-color="#22C1C3"/>
+          </linearGradient>
+        </defs>
+        <rect x="6" y="6" width="52" height="52" rx="12" fill="url(#g)"/>
+        <path d="M19 33l9 9 17-17" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <div class="product-name">RiskGuard AI · Sözleşme Risk Analizi</div>
+        <div class="doc-id-label" id="miniNote">Henüz belge yok</div>
+      </div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button id="shareBtn" class="btn" disabled>Linki paylaş</button>
+    <button id="pdfBtn" class="btn" disabled>PDF indir</button>
+  </div>
+</header>
+
+<!-- İçerik -->
+<main class="layout">
+  <!-- Mobil sekmeler -->
+  <div class="mobile-tabs" role="tablist" aria-label="Görünüm seç">
+    <button id="tabUpload" class="tab-btn active" role="tab" aria-selected="true">Yükle</button>
+    <button id="tabPreview" class="tab-btn" role="tab" aria-selected="false">Önizleme</button>
+  </div>
+
+  <!-- Sol panel -->
+  <section class="side-panel fade-up" id="panelUpload" role="tabpanel" aria-labelledby="tabUpload">
+    <div class="panel-heading">
+      <span>📄 Analiz Et</span>
+      <span style="font-size:11px;font-weight:400;color:var(--text-dim);">PoC</span>
+    </div>
+
+    <div class="panel-sub">PDF sözleşmeni seç ve “Analiz et” de. Aşağıda risk raporu otomatik oluşsun.</div>
+
+    <div class="field">
+      <div class="field-label">Sözleşme PDF</div>
+      <label class="file-input-wrap" id="filePickerUi">
+        <span id="fileNameUi">Dosya seçilmedi — sürükleyip bırakabilirsin</span>
+        <strong style="font-size:11px;opacity:.85;">Gözat</strong>
+        <input id="fileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+      </label>
+    </div>
+
+    <button id="analyzeBtn">Analiz et</button>
+    <div id="errorBox" class="error-box"></div>
+  </section>
+
+  <!-- Sağ panel -->
+  <section class="report-panel fade-up" id="panelPreview" role="tabpanel" aria-labelledby="tabPreview">
+    <div class="report-headline">
+      <div class="report-headline-title">Rapor Önizleme</div>
+      <div class="report-headline-meta" id="reportMeta">Henüz analiz edilmedi</div>
+    </div>
+
+    <div class="iframe-shell">
+      <iframe id="reportFrame" title="Rapor"></iframe>
+    </div>
+  </section>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite">Kopyalandı</div>
+
+<script>
+const fileInput   = document.getElementById('fileInput');
+const fileNameUi  = document.getElementById('fileNameUi');
+const analyzeBtn  = document.getElementById('analyzeBtn');
+const reportFrame = document.getElementById('reportFrame');
+const errorBox    = document.getElementById('errorBox');
+const pdfBtn      = document.getElementById('pdfBtn');
+const shareBtn    = document.getElementById('shareBtn');
+const miniNote    = document.getElementById('miniNote');
+const reportMeta  = document.getElementById('reportMeta');
+const filePicker  = document.getElementById('filePickerUi');
+const topProgress = document.getElementById('topProgress');
+const toastEl     = document.getElementById('toast');
+
+const tabUpload   = document.getElementById('tabUpload');
+const tabPreview  = document.getElementById('tabPreview');
+const panelUpload = document.getElementById('panelUpload');
+const panelPreview= document.getElementById('panelPreview');
+
+let lastDocumentId = null;
+
+/* İlk açılış: yumuşak fade-in */
+window.addEventListener('DOMContentLoaded', () => {
+  const parts = document.querySelectorAll('.fade-up');
+  parts.forEach((el, i) => setTimeout(() => el.classList.add('show'), 80 + i*120));
+});
+
+/* Mobil sekmeler */
+function activateTab(which){
+  const up = which === 'upload';
+  tabUpload.classList.toggle('active', up);
+  tabPreview.classList.toggle('active', !up);
+  tabUpload.setAttribute('aria-selected', up);
+  tabPreview.setAttribute('aria-selected', !up);
+  panelUpload.style.display = up ? '' : 'none';
+  panelPreview.style.display = up ? 'none' : '';
+}
+tabUpload.addEventListener('click', ()=>activateTab('upload'));
+tabPreview.addEventListener('click', ()=>activateTab('preview'));
+activateTab('upload'); // başlangıç
+
+/* Drag & drop */
+['dragenter','dragover'].forEach(evt =>
+  filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.add('drag'); })
+);
+['dragleave','drop'].forEach(evt =>
+  filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.remove('drag'); })
+);
+filePicker.addEventListener('drop', e => {
+  if (e.dataTransfer?.files?.length) {
+    fileInput.files = e.dataTransfer.files;
+    fileNameUi.textContent = fileInput.files[0].name;
+  }
+});
+
+/* Normal seçim */
+fileInput.addEventListener('change', () => {
+  fileNameUi.textContent = (fileInput.files?.[0]?.name) || "Dosya seçilmedi";
+});
+
+/* Progress helpers */
+function startProgress(){
+  topProgress.style.opacity = 1;
+  topProgress.style.width = '15%';
+  let w = 15;
+  const id = setInterval(() => {
+    if (w < 85) { w += Math.random()*5; topProgress.style.width = w + '%'; }
+    else { clearInterval(id); }
+  }, 300);
+  return id;
+}
+function endProgress(timerId){
+  if (timerId) clearInterval(timerId);
+  topProgress.style.width = '100%';
+  setTimeout(() => { topProgress.style.opacity = 0; topProgress.style.width = '0%'; }, 320);
+}
+
+/* Toast helper */
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 1400);
+}
+
+/* Analiz akışı */
+analyzeBtn.addEventListener('click', async () => {
+  if (!fileInput.files || fileInput.files.length === 0) {
+    showError("Lütfen önce bir dosya seç.");
+    return;
+  }
+  const timer = startProgress();
+  analyzeBtn.disabled = true;
+  analyzeBtn.textContent = "Analiz ediliyor...";
+  errorBox.style.display = "none";
+
+  try {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    const resp = await fetch('/ui/upload', { method:'POST', body:formData });
+    const data = await resp.json();
+
+    if (!resp.ok || data.error) {
+      const errHtml = data && data.html ? data.html : "Bilinmeyen hata";
+      showError("İstek başarısız.");
+      injectFrameHtml(errHtml);
+      lastDocumentId = null;
+      pdfBtn.disabled = true;
+      shareBtn.disabled = true;
+      miniNote.textContent = "Hata oluştu";
+      reportMeta.textContent = "Hata oluştu";
+    } else {
+      const { documentId, html } = data;
+      lastDocumentId = documentId;
+      injectFrameHtml(html);
+      miniNote.textContent = "Belge ID: " + documentId;
+      reportMeta.textContent = "/ui/report/" + documentId;
+      pdfBtn.disabled = false;
+      shareBtn.disabled = false;
+      activateTab('preview'); // mobilde otomatik Önizleme
+    }
+  } catch (e) {
+    showError("İstek atılırken hata oluştu: " + e.message);
+    lastDocumentId = null;
+    pdfBtn.disabled = true;
+    shareBtn.disabled = true;
+    miniNote.textContent = "İstek hatası";
+    reportMeta.textContent = "İstek hatası";
+  } finally {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = "Analiz et";
+    endProgress(timer);
+  }
+});
+
+/* PDF indirme */
+pdfBtn.addEventListener('click', () => {
+  if (!lastDocumentId) { alert("Önce bir sözleşme yükleyip analiz etmelisin."); return; }
+  const pdfUrl = `/ui/report/${lastDocumentId}/pdf`;
+  window.open(pdfUrl, '_blank');
+});
+
+/* Link paylaş (HTML rapor linki) */
+shareBtn.addEventListener('click', async () => {
+  if (!lastDocumentId) { alert("Önce bir rapor üretmelisin."); return; }
+  const shareUrl = `${location.origin}/ui/report/${lastDocumentId}`;
+  try{
+    await navigator.clipboard.writeText(shareUrl);
+    toast("Link panoya kopyalandı");
+  }catch{
+    const a = document.createElement('textarea');
+    a.value = shareUrl; document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a);
+    toast("Link panoya kopyalandı");
+  }
+});
+
+/* Iframe’e temiz HTML enjekte et (inline PDF butonunu kaldır) */
+function injectFrameHtml(htmlContent) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlContent, "text/html");
+  doc.querySelectorAll('.ui-inline-pdf-btn').forEach(el => el.remove());
+  const cleanedHtml = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+  // Blob yerine srcdoc kullan: aynı origin → içerik boyunu ölçebiliriz
+  reportFrame.removeAttribute('src');      // temizlik
+  reportFrame.srcdoc = cleanedHtml;
+  // Yüksekliği içerik kadar yap
+  // (load sonrasında bir kez, sonra kısa bir gecikmeyle tekrar ölç)
+  reportFrame.addEventListener('load', adjustFrameHeightOnce, { once:true });
+  setTimeout(adjustFrameHeightSafe, 120);
+
+}
+function adjustFrameHeightOnce(){ adjustFrameHeightSafe(); }
+// Güvenli yükseklik ölçümü
+function adjustFrameHeightSafe(){
+  try{
+    const doc = reportFrame.contentDocument || reportFrame.contentWindow.document;
+    if(!doc) return;
+    const body = doc.body, html = doc.documentElement;
+
+    const h = Math.max(
+      body.scrollHeight, html.scrollHeight,
+      body.offsetHeight, html.offsetHeight,
+      body.clientHeight, html.clientHeight
+    );
+
+    // Alt +20px pay
+    reportFrame.style.height = (h + 20) + 'px';
+  } catch(e){
+    // çapraz origin vs. olursa sessiz geç
+  }
+}
+// İçerik içinde hash’e gidilirse (örn. #row-xxxx) tekrar ölç
+window.addEventListener('hashchange', adjustFrameHeightSafe);
+/* Hata kutusu */
+function showError(msg){
+  errorBox.textContent = msg;
+  errorBox.style.display = "block";
+}
+</script>
+
+</body>
+</html>

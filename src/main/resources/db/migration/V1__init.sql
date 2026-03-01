@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS document (
+  id UUID PRIMARY KEY,
+  filename VARCHAR(255) NOT NULL,
+  language VARCHAR(8),
+  text TEXT NOT NULL,
+  uploaded_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS clause (
+  id UUID PRIMARY KEY,
+  document_id UUID REFERENCES document(id) ON DELETE CASCADE,
+  idx INT NOT NULL,
+  heading VARCHAR(255),
+  text TEXT NOT NULL,
+  span_start INT,
+  span_end INT
+);
+
+CREATE TYPE risk_category AS ENUM (
+  'INDEMNITY','LIMITATION_OF_LIABILITY','TERMINATION','CONFIDENTIALITY','IP_RIGHTS',
+  'GOVERNING_LAW','JURISDICTION','AUTO_RENEWAL','PAYMENT_TERMS','SLA','DATA_PROTECTION','OTHER'
+);
+
+CREATE TABLE IF NOT EXISTS risk_finding (
+  id UUID PRIMARY KEY,
+  document_id UUID REFERENCES document(id) ON DELETE CASCADE,
+  clause_id UUID REFERENCES clause(id) ON DELETE SET NULL,
+  category risk_category NOT NULL,
+  rule_id VARCHAR(64),
+  score NUMERIC(5,3) NOT NULL,
+  confidence NUMERIC(5,3) NOT NULL,
+  snippet TEXT,
+  explanation TEXT
+);

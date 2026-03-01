@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiskGuard Admin | RulePack Yönetimi</title>
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#111827; --card:#ffffff; --muted:#64748b; --brand:#6366f1; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    }
+    body{ margin:0; font-family:Inter,system-ui,Arial; background:#f1f5f9; color:#0f172a;}
+    header{ background:linear-gradient(90deg,#0f172a,#111827); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;}
+    header .title{ font-weight:700; letter-spacing:.2px}
+    header a{ color:#e2e8f0; text-decoration:none; background:#1f2937; padding:8px 12px; border-radius:10px}
+    main{ max-width:880px; margin:28px auto; padding:0 16px;}
+    .card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:18px; box-shadow:0 6px 18px rgba(15,23,42,.06); margin-bottom:18px;}
+    .row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+    .muted{ color:#64748b; font-size:14px}
+    .pill{ display:inline-block; padding:4px 10px; border-radius:999px; background:#eef2ff; color:#3730a3; font-size:12px}
+    button{ border:0; padding:10px 14px; border-radius:10px; background:linear-gradient(90deg,#6366f1,#14b8a6); color:#fff; font-weight:600; cursor:pointer}
+    input[type="file"]{ padding:8px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc}
+    pre{ background:#0b1220; color:#e2e8f0; padding:14px; border-radius:10px; overflow:auto; max-height:320px}
+    .ok{ color:var(--ok)} .warn{ color:var(--warn)} .err{ color:var(--err)}
+    .grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+    @media(max-width:820px){ .grid{ grid-template-columns:1fr } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="title">RiskGuard Admin</div>
+  <nav class="row">
+    <a href="/">Ana Sayfa</a>
+    <a href="/admin.html">RulePack</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <h3>Aktif RulePack</h3>
+    <div id="current" class="muted">Yükleniyor…</div>
+  </section>
+
+  <section class="card">
+    <h3>Yeni RulePack Yükle (YAML)</h3>
+    <div class="row">
+      <input id="file" type="file" accept=".yml,.yaml" />
+      <button id="btnUpload">Yükle</button>
+    </div>
+    <p class="muted">Not: Yükleme anında kural seti uygulamaya anında yansır (hot-reload).</p>
+    <div id="status"></div>
+  </section>
+
+  <section class="card">
+    <h3>Ham Yanıt</h3>
+    <pre id="raw">—</pre>
+  </section>
+</main>
+
+<script>
+  const elCurrent = document.getElementById('current');
+  const elStatus  = document.getElementById('status');
+  const elRaw     = document.getElementById('raw');
+  const elFile    = document.getElementById('file');
+  const btnUpload = document.getElementById('btnUpload');
+
+  async function refreshCurrent(){
+    try{
+      const r = await fetch('/api/v1/admin/rulepacks/current');
+      if(!r.ok) throw new Error('Durum alınamadı');
+      const j = await r.json();
+      elCurrent.innerHTML = `
+        <div class="grid">
+          <div><b>ID:</b> ${j.id ?? '—'}</div>
+          <div><b>Version:</b> ${j.version ?? '—'}</div>
+          <div><b>CreatedAt:</b> ${j.createdAt ?? '—'}</div>
+          <div><b>Kural Sayısı:</b> ${(j.rules?.length ?? 0)}</div>
+        </div>
+      `;
+      elRaw.textContent = JSON.stringify(j, null, 2);
+    }catch(e){
+      elCurrent.innerHTML = `<span class="err">Hata: ${e.message}</span>`;
+    }
+  }
+
+  btnUpload.addEventListener('click', async ()=>{
+    const f = elFile.files?.[0];
+    if(!f){ elStatus.innerHTML = '<span class="warn">Lütfen bir YAML dosyası seçin.</span>'; return; }
+    try{
+      elStatus.innerHTML = 'Yükleniyor…';
+      const fd = new FormData();
+      fd.append('file', f);
+      const r = await fetch('/api/v1/admin/rulepacks', { method:'POST', body: fd });
+      const ok = r.ok;
+      const j  = await r.json().catch(()=> ({}));
+      if(!ok) throw new Error(j.error || 'Yükleme başarısız');
+
+      elStatus.innerHTML = '<span class="ok">Yüklendi ✔︎</span>';
+      elRaw.textContent = JSON.stringify(j, null, 2);
+      await refreshCurrent();
+    }catch(e){
+      elStatus.innerHTML = `<span class="err">Hata: ${e.message}</span>`;
+    }
+  });
+
+  refreshCurrent();
+</script>
+</body>
+</html>

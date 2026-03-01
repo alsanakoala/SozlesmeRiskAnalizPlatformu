@@ -1,0 +1,40 @@
+LIABILITY:
+  rationale: "Sınırsız veya yüksek sorumluluk yükümlülüğü taraf için ciddi mali risk yaratır."
+  levers:
+    - "Toplam sorumluluk için 'sözleşme bedeli' veya 'son 12 ay faturaları' kadar üst sınır ekleyin."
+    - "Dolaylı/sonuçsal zararların kapsam dışı bırakılmasını talep edin."
+  safer_wording: "Tarafların toplam sorumluluğu, işbu sözleşme kapsamında ödenen toplam bedelle sınırlıdır."
+
+TERMINATION:
+  rationale: "Tek taraflı fesih hakkı, gelir akışının aniden kesilmesi ve yatırımın boşa gitmesi riskini doğurur."
+  levers:
+    - "Fesih için makul ihbar süresi (ör. 30 gün) talep edin."
+    - "Haksız fesihte cezai şart/erken fesih bedeli ekleyin."
+  safer_wording: "Sözleşme yalnızca haklı sebeple ve en az 30 gün önceden yazılı bildirimle feshedilebilir."
+
+CONFIDENTIALITY:
+  rationale: "Aşırı cezai hükümler veya tek taraflı yükümlülükler dengesizlik yaratır."
+  levers:
+    - "Karşılıklı ve dengeli gizlilik yükümlülüğü talep edin."
+    - "İhlal halinde makul ve ölçülü yaptırım belirleyin."
+  safer_wording: "Taraflar karşılıklı gizlilik yükümlülüğüne tabidir; cezai şart makul seviyede belirlenir."
+
+INDEMNITY:
+  rationale: "Geniş tazmin yükümlülükleri, öngörülemez zararları üstlenme riski taşır."
+  levers:
+    - "Tazmin kapsamını üçüncü kişi talepleriyle sınırlayın."
+    - "Kasıt/ağır kusur dışında sorumluluğu sınırlayın."
+  safer_wording: "Tarafların tazmin yükümlülüğü, yalnızca üçüncü kişi talepleri ve kasıt/ağır kusur hallerinde geçerlidir."
+
+FORCE_MAJEURE:
+  rationale: "Mücbir sebebin tanımsız veya dengesiz olması tarafı hukuken savunmasız bırakır."
+  levers:
+    - "Mücbir sebepleri açıkça sayın ve ispat/muafiyet süresini düzenleyin."
+    - "Mücbir sebep halinde askı ve makul süre sonunda fesih hakkı tanımlayın."
+  safer_wording: "Mücbir sebep halleri açıkça tanımlanır; bu sürede yükümlülükler askıdadır ve makul süre sonunda fesih mümkündür."
+
+OTHER:
+  rationale: "Madde kategorize edilemedi; manuel gözden geçirme önerilir."
+  levers:
+    - "Maddenin kapsamı ve sınırları netleştirilsin."
+  safer_wording: "İlgili yükümlülükler ölçülü, karşılıklı ve açıkça tanımlanır."

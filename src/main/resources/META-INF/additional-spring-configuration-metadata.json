@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "riskguard.ai.similarity.log",
+      "type": "java.lang.Boolean",
+      "description": "AI öneri kutularında benzerlik etiketini gösterir."
+    }
+  ]
+}
