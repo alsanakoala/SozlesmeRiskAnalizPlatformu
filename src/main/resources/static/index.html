@@ -73,15 +73,13 @@ body{
 .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
 .btn:active{ transform:translateY(0); filter:brightness(.96); }
 
-#pdfBtn{
-  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
-  color:#fff;
-}
+#pdfBtn{ background:linear-gradient(90deg,var(--brand-1),var(--brand-2)); color:#fff; }
 #pdfBtn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-#shareBtn{
-  background:#111827; color:#fff; border:1px solid rgba(148,163,184,.3);
-}
+#shareBtn{ background:#111827; color:#fff; border:1px solid rgba(148,163,184,.3); }
+
+#logoutBtn { background: transparent; color: #ef4444; border: 1px solid #ef4444; }
+#logoutBtn:hover { background: #ef4444; color: #fff; }
 
 /* Toast */
 .toast{
@@ -94,50 +92,28 @@ body{
 .toast.show{ opacity:1; transform:translateY(0); }
 
 /* ===== Layout ve Paneller ===== */
-
-/* Ana layout: ortalanmış, geniş önizleme */
 .layout{
-  flex:1;
-  display:flex;
-  gap:32px;
-  padding:40px 24px;
-  box-sizing:border-box;
-  max-width:1500px;         /* sayfa toplam genişliği ↑ */
-  width:100%;
-  margin:0 auto;            /* ortalama */
-  align-items:flex-start;
-  justify-content:center;   /* ortalama */
+  flex:1; display:flex; gap:32px; padding:40px 24px; box-sizing:border-box;
+  max-width:1500px; width:100%; margin:0 auto; align-items:flex-start; justify-content:center;
 }
 
-/* Sol panel (Analiz Et) – ortaya yakın ve biraz daha geniş */
+/* 🔥 SOL KOLON (Masaüstü/Mobil Sekme Uyumlu) */
+.left-column {
+  width: 360px; min-width: 320px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: sticky; top: 40px; align-self: flex-start;
+}
+
 .side-panel{
-  width:360px;              /* önceki 320 → 360 */
-  min-width:320px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--rad-lg);
-  box-shadow:var(--shadow-sm);
-  padding:24px 22px;
-  height:max-content;
-  position:sticky;
-  top:40px;
-  align-self:flex-start;
-  margin-left:auto;         /* ortalamaya destek */
-  margin-right:auto;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--rad-lg); box-shadow:var(--shadow-sm); padding:24px 22px;
 }
 
-/* Sağ panel (Rapor Önizleme) – daha geniş */
+/* Sağ panel */
 .report-panel{
-  flex:1.4;                 /* 1 → 1.4 */
-  min-width:0;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--rad-lg);
-  box-shadow:var(--shadow-sm);
-  padding:20px;
-  min-height:75vh;
-  display:flex;
-  flex-direction:column;
+  flex:1.4; min-width:0; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--rad-lg); box-shadow:var(--shadow-sm); padding:20px;
+  min-height:75vh; display:flex; flex-direction:column;
 }
 
 .report-headline{ display:flex; flex-direction:column; font-size:12px; margin-bottom:12px; color:#111827; }
@@ -146,22 +122,43 @@ body{
 
 /* İçerik iframe’i */
 .iframe-shell{
-  position:relative; width:100%; flex:1;
-  border:1px solid var(--border); border-radius:12px; overflow:auto; background:#fff; min-height:880px;
+  position:relative; width:100%; flex:1; border:1px solid var(--border);
+  border-radius:12px; overflow:hidden; background:#fff; min-height:880px;
 }
 #reportFrame{ width:100%; border:0; background:#fff; display:block; height:100%;}
 
-/* Mobil sekmeler */
-.mobile-tabs{ display:none; gap:8px; margin:10px 0 -6px 0; }
+/* 🔥 YENİ: Boş Durum (Empty State) Tasarımı */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; color: #94a3b8; text-align: center; padding: 40px;
+}
+.empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.4; }
+.empty-state h3 { color: #475569; margin: 0 0 8px 0; }
+
+/* 🔥 YENİ: Yükleme İskeleti (Skeleton Loader) */
+.skeleton-loader { padding: 30px; display: none; }
+.skeleton-line {
+  height: 15px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; margin-bottom: 15px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* 🔥 NAV TABS (Sekmeler) */
+.nav-tabs { display:flex; gap:8px; }
 .tab-btn{
   flex:1; text-align:center; padding:10px 12px; border-radius:12px; font-weight:800; font-size:12px;
   border:1px solid var(--border); background:var(--surface-2); color:#111827; cursor:pointer;
 }
 .tab-btn.active{ background:linear-gradient(90deg,var(--brand-1),var(--brand-2)); color:#fff; border-color:transparent; }
 
+@media (min-width: 1025px) {
+  /* Masaüstünde "Önizleme" sekmesine gerek yok, zaten sağda duruyor */
+  .desktop-hide { display: none !important; }
+}
+
 @media (max-width:1024px){
-  .layout{ flex-direction:column; }
-  .mobile-tabs{ display:flex; }
+  .layout{ flex-direction:column; padding: 20px; }
+  .left-column { width: 100%; position: static; }
 }
 
 /* Panel içeriği */
@@ -171,11 +168,9 @@ body{
 
 /* Drag & drop yükleme alanı */
 .file-input-wrap{
-  background:var(--surface-2);
-  border:1px dashed #cbd5e1; border-radius:14px;
-  padding:14px; color:#334155; font-size:12px;
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  cursor:pointer; margin-bottom:12px;
+  background:var(--surface-2); border:1px dashed #cbd5e1; border-radius:14px;
+  padding:14px; color:#334155; font-size:12px; display:flex; align-items:center;
+  justify-content:space-between; gap:10px; cursor:pointer; margin-bottom:12px;
   transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
 }
 .file-input-wrap:hover{ border-color:#b6c2d6; background:#fff; box-shadow:var(--shadow-sm); }
@@ -185,14 +180,20 @@ input[type="file"]{ display:none; }
 
 /* CTA */
 #analyzeBtn{
-  width:100%; border:0; border-radius:12px;
-  background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  width:100%; border:0; border-radius:12px; background:linear-gradient(90deg,var(--brand-1),var(--brand-2));
   color:#0b1220; font-weight:800; font-size:13px; padding:12px 16px; cursor:pointer;
-  box-shadow:var(--shadow-sm);
-  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+  box-shadow:var(--shadow-sm); transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
 }
 #analyzeBtn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-md); }
 #analyzeBtn[disabled]{ opacity:.5; cursor:not-allowed; }
+
+/* Geçmiş Sözleşmeler Tablosu */
+.history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+.history-table th { background: #f8fafc; padding: 12px; text-align: left; border-bottom: 2px solid var(--border); color: #475569; }
+.history-table td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.history-table tr:hover { background: #f1f5f9; }
+.action-btn { background: #fff; border: 1px solid var(--border); padding: 6px 10px; border-radius: 6px; cursor: pointer; color: var(--brand-1); font-weight: bold; font-size: 11px; }
+.action-btn:hover { background: var(--brand-1); color: #fff; }
 
 /* Hata kutusu */
 .error-box{
@@ -200,30 +201,22 @@ input[type="file"]{ display:none; }
   font-size:12px; line-height:1.4; border-radius:12px; padding:12px; display:none; margin-top:12px;
 }
 
-/* Ufak animasyonlar */
-a, #pdfBtn, #shareBtn, .side-panel, .file-input-wrap, #analyzeBtn{ transition:all .2s ease; }
-
-/* ===== Fade-in animasyonu ===== */
 .fade-up{ opacity:0; transform:translateY(10px); }
 .fade-up.show{ opacity:1; transform:none; transition:opacity .35s ease, transform .35s ease; }
 
-/* Print: dış UI’yi gizle */
 @media print{
-  .side-panel, #pdfBtn, #shareBtn, .topbar{ display:none !important; }
+  .left-column, #pdfBtn, #shareBtn, #logoutBtn, .topbar{ display:none !important; }
   body{ background:#fff; }
 }
 </style>
 </head>
 <body>
 
-<!-- Üst progress bar -->
 <div id="topProgress"></div>
 
-<!-- Üst Navbar -->
 <header class="topbar">
   <div class="topbar-left">
     <div class="brand" aria-label="RiskGuard Logo">
-      <!-- Minimal kurumsal SVG logo -->
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
@@ -235,63 +228,111 @@ a, #pdfBtn, #shareBtn, .side-panel, .file-input-wrap, #analyzeBtn{ transition:al
       </svg>
       <div>
         <div class="product-name">RiskGuard AI · Sözleşme Risk Analizi</div>
-        <div class="doc-id-label" id="miniNote">Henüz belge yok</div>
+        <div class="doc-id-label" id="miniNote">Hoş Geldiniz</div>
       </div>
     </div>
   </div>
   <div class="topbar-actions">
     <button id="shareBtn" class="btn" disabled>Linki paylaş</button>
     <button id="pdfBtn" class="btn" disabled>PDF indir</button>
+    <button id="logoutBtn" class="btn">Çıkış Yap</button>
   </div>
 </header>
 
-<!-- İçerik -->
 <main class="layout">
-  <!-- Mobil sekmeler -->
-  <div class="mobile-tabs" role="tablist" aria-label="Görünüm seç">
-    <button id="tabUpload" class="tab-btn active" role="tab" aria-selected="true">Yükle</button>
-    <button id="tabPreview" class="tab-btn" role="tab" aria-selected="false">Önizleme</button>
+  
+  <div class="left-column">
+      <div class="nav-tabs" role="tablist" aria-label="Görünüm seç">
+        <button id="tabUpload" class="tab-btn active" role="tab">Yükle</button>
+        <button id="tabHistory" class="tab-btn" role="tab">Geçmiş</button>
+        <button id="tabPreview" class="tab-btn desktop-hide" role="tab">Önizleme</button>
+      </div>
+
+      <section class="side-panel fade-up" id="panelUpload" role="tabpanel">
+        <div class="panel-heading">
+          <span>📄 Analiz Et</span>
+        </div>
+        <div class="panel-sub">PDF sözleşmeni seç ve “Analiz et” de. Aşağıda risk raporu otomatik oluşsun.</div>
+
+        <div class="field">
+          <div class="field-label">Sözleşme PDF</div>
+          <label class="file-input-wrap" id="filePickerUi">
+            <span id="fileNameUi">Dosya seçilmedi — sürükleyip bırakabilirsin</span>
+            <strong style="font-size:11px;opacity:.85;">Gözat</strong>
+            <input id="fileInput" type="file" accept=".pdf,.doc,.docx,.txt">
+          </label>
+        </div>
+        
+        <button id="analyzeBtn">Analiz et</button>
+        <div id="errorBox" class="error-box"></div>
+      </section>
+
+      <section class="side-panel fade-up" id="panelHistory" role="tabpanel" style="display: none;">
+        <div class="panel-heading">
+          <span>🗂️ Geçmiş Analizlerim</span>
+        </div>
+        <div class="panel-sub">Daha önce yüklediğiniz sözleşmeleri ve raporları görüntüleyin.</div>
+        
+        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Dosya Adı</th>
+                        <th>Tarih</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <tr><td colspan="3" style="text-align: center; color: #888;">Yükleniyor...</td></tr>
+                </tbody>
+            </table>
+        </div>
+      </section>
   </div>
 
-  <!-- Sol panel -->
-  <section class="side-panel fade-up" id="panelUpload" role="tabpanel" aria-labelledby="tabUpload">
-    <div class="panel-heading">
-      <span>📄 Analiz Et</span>
-      <span style="font-size:11px;font-weight:400;color:var(--text-dim);">PoC</span>
-    </div>
-
-    <div class="panel-sub">PDF sözleşmeni seç ve “Analiz et” de. Aşağıda risk raporu otomatik oluşsun.</div>
-
-    <div class="field">
-      <div class="field-label">Sözleşme PDF</div>
-      <label class="file-input-wrap" id="filePickerUi">
-        <span id="fileNameUi">Dosya seçilmedi — sürükleyip bırakabilirsin</span>
-        <strong style="font-size:11px;opacity:.85;">Gözat</strong>
-        <input id="fileInput" type="file" accept=".pdf,.doc,.docx,.txt">
-      </label>
-    </div>
-
-    <button id="analyzeBtn">Analiz et</button>
-    <div id="errorBox" class="error-box"></div>
-  </section>
-
-  <!-- Sağ panel -->
-  <section class="report-panel fade-up" id="panelPreview" role="tabpanel" aria-labelledby="tabPreview">
+  <section class="report-panel fade-up" id="panelPreview" role="tabpanel">
     <div class="report-headline">
       <div class="report-headline-title">Rapor Önizleme</div>
-      <div class="report-headline-meta" id="reportMeta">Henüz analiz edilmedi</div>
+      <div class="report-headline-meta" id="reportMeta">Analiz bekleniyor...</div>
     </div>
 
     <div class="iframe-shell">
-      <iframe id="reportFrame" title="Rapor"></iframe>
+      <div id="welcomePlaceholder" class="empty-state">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <h3>Henüz Analiz Yapılmadı</h3>
+        <p>Sol panelden sözleşmenizi yükleyerek risk raporunu burada görüntüleyebilirsiniz.</p>
+      </div>
+
+      <div id="skeletonLoader" class="skeleton-loader">
+        <div class="skeleton-line" style="width: 40%; height: 25px;"></div>
+        <div class="skeleton-line" style="width: 90%;"></div>
+        <div class="skeleton-line" style="width: 85%;"></div>
+        <div class="skeleton-line" style="width: 70%;"></div>
+        <br>
+        <div class="skeleton-line" style="width: 30%; height: 25px;"></div>
+        <div class="skeleton-line" style="width: 95%;"></div>
+        <div class="skeleton-line" style="width: 60%;"></div>
+      </div>
+
+      <iframe id="reportFrame" title="Rapor" style="display:none;"></iframe>
     </div>
   </section>
 </main>
 
-<!-- Toast -->
 <div id="toast" class="toast" role="status" aria-live="polite">Kopyalandı</div>
 
 <script>
+// 🔥 GÜVENLİK KONTROLÜ
+const token = localStorage.getItem('jwtToken');
+if (!token) {
+    window.location.href = '/login.html'; 
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('jwtToken');
+    window.location.href = '/login.html';
+});
+
 const fileInput   = document.getElementById('fileInput');
 const fileNameUi  = document.getElementById('fileNameUi');
 const analyzeBtn  = document.getElementById('analyzeBtn');
@@ -304,58 +345,90 @@ const reportMeta  = document.getElementById('reportMeta');
 const filePicker  = document.getElementById('filePickerUi');
 const topProgress = document.getElementById('topProgress');
 const toastEl     = document.getElementById('toast');
+const welcomePlaceholder = document.getElementById('welcomePlaceholder');
+const skeletonLoader = document.getElementById('skeletonLoader');
 
 const tabUpload   = document.getElementById('tabUpload');
+const tabHistory  = document.getElementById('tabHistory');
 const tabPreview  = document.getElementById('tabPreview');
 const panelUpload = document.getElementById('panelUpload');
+const panelHistory= document.getElementById('panelHistory');
 const panelPreview= document.getElementById('panelPreview');
 
 let lastDocumentId = null;
 
-/* İlk açılış: yumuşak fade-in */
 window.addEventListener('DOMContentLoaded', () => {
   const parts = document.querySelectorAll('.fade-up');
   parts.forEach((el, i) => setTimeout(() => el.classList.add('show'), 80 + i*120));
 });
 
-/* Mobil sekmeler */
-function activateTab(which){
-  const up = which === 'upload';
-  tabUpload.classList.toggle('active', up);
-  tabPreview.classList.toggle('active', !up);
-  tabUpload.setAttribute('aria-selected', up);
-  tabPreview.setAttribute('aria-selected', !up);
-  panelUpload.style.display = up ? '' : 'none';
-  panelPreview.style.display = up ? 'none' : '';
-}
-tabUpload.addEventListener('click', ()=>activateTab('upload'));
-tabPreview.addEventListener('click', ()=>activateTab('preview'));
-activateTab('upload'); // başlangıç
+// 🔥 SEKME YÖNETİMİ (Masaüstü/Mobil Uyumlu)
+const isDesktop = () => window.innerWidth > 1024;
 
-/* Drag & drop */
-['dragenter','dragover'].forEach(evt =>
-  filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.add('drag'); })
-);
-['dragleave','drop'].forEach(evt =>
-  filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.remove('drag'); })
-);
+function activateTab(which) {
+  tabUpload.classList.toggle('active', which === 'upload');
+  tabHistory.classList.toggle('active', which === 'history');
+  tabPreview.classList.toggle('active', which === 'preview');
+
+  if (isDesktop()) {
+      panelPreview.style.display = ''; // Masaüstünde sağ panel hep açık
+      panelUpload.style.display = (which === 'upload') ? '' : 'none';
+      panelHistory.style.display = (which === 'history') ? '' : 'none';
+  } else {
+      panelUpload.style.display = (which === 'upload') ? '' : 'none';
+      panelHistory.style.display = (which === 'history') ? '' : 'none';
+      panelPreview.style.display = (which === 'preview') ? '' : 'none';
+  }
+
+  if (which === 'history') loadMyDocuments();
+  window.location.hash = which;
+}
+
+tabUpload.addEventListener('click', () => activateTab('upload'));
+tabHistory.addEventListener('click', () => activateTab('history'));
+tabPreview.addEventListener('click', () => activateTab('preview'));
+
+window.addEventListener('resize', () => {
+    if (isDesktop() && panelPreview.style.display === 'none') {
+        panelPreview.style.display = '';
+    }
+});
+
+window.addEventListener('popstate', () => {
+    const tab = window.location.hash.replace('#', '') || 'upload';
+    activateTab(tab);
+});
+
+activateTab('upload'); 
+
+// Drag & Drop işlemleri
+['dragenter','dragover'].forEach(evt => filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.add('drag'); }));
+['dragleave','drop'].forEach(evt => filePicker.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); filePicker.classList.remove('drag'); }));
 filePicker.addEventListener('drop', e => {
   if (e.dataTransfer?.files?.length) {
     fileInput.files = e.dataTransfer.files;
-    fileNameUi.textContent = fileInput.files[0].name;
+    updateFileUI();
   }
 });
 
-/* Normal seçim */
-fileInput.addEventListener('change', () => {
-  fileNameUi.textContent = (fileInput.files?.[0]?.name) || "Dosya seçilmedi";
-});
+fileInput.addEventListener('change', updateFileUI);
 
-/* Progress helpers */
+function updateFileUI() {
+    if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const fileSize = (file.size / 1024 / 1024).toFixed(2);
+        fileNameUi.innerHTML = `<span style="color: var(--ok)">✓</span> ${file.name} <small style="opacity:0.6">(${fileSize} MB)</small>`;
+        filePicker.style.borderColor = "var(--brand-1)";
+        filePicker.style.background = "#f0fdf4";
+    } else {
+        fileNameUi.textContent = "Dosya seçilmedi — sürükleyip bırakabilirsin";
+        filePicker.style.background = "var(--surface-2)";
+        filePicker.style.borderColor = "#cbd5e1";
+    }
+}
+
 function startProgress(){
-  topProgress.style.opacity = 1;
-  topProgress.style.width = '15%';
-  let w = 15;
+  topProgress.style.opacity = 1; topProgress.style.width = '15%'; let w = 15;
   const id = setInterval(() => {
     if (w < 85) { w += Math.random()*5; topProgress.style.width = w + '%'; }
     else { clearInterval(id); }
@@ -368,78 +441,164 @@ function endProgress(timerId){
   setTimeout(() => { topProgress.style.opacity = 0; topProgress.style.width = '0%'; }, 320);
 }
 
-/* Toast helper */
 function toast(msg){
-  toastEl.textContent = msg;
-  toastEl.classList.add('show');
+  toastEl.textContent = msg; toastEl.classList.add('show');
   setTimeout(()=>toastEl.classList.remove('show'), 1400);
 }
 
-/* Analiz akışı */
+// 🔥 ANALİZ İŞLEMİ
 analyzeBtn.addEventListener('click', async () => {
   if (!fileInput.files || fileInput.files.length === 0) {
-    showError("Lütfen önce bir dosya seç.");
-    return;
+    showError("Lütfen önce bir dosya seç."); return;
   }
+  
+  // UI Hazırlığı
+  welcomePlaceholder.style.display = 'none';
+  skeletonLoader.style.display = 'block';
+  reportFrame.style.display = 'none';
   const timer = startProgress();
-  analyzeBtn.disabled = true;
-  analyzeBtn.textContent = "Analiz ediliyor...";
+  analyzeBtn.disabled = true; analyzeBtn.textContent = "Analiz ediliyor...";
   errorBox.style.display = "none";
 
   try {
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
 
-    const resp = await fetch('/ui/upload', { method:'POST', body:formData });
+    const resp = await fetch('/ui/upload', { 
+        method:'POST', 
+        headers: { 'Authorization': 'Bearer ' + token },
+        body:formData 
+    });
+
+    if (resp.status === 401 || resp.status === 403) {
+        alert("Oturum süreniz doldu. Lütfen tekrar giriş yapın.");
+        document.getElementById('logoutBtn').click(); return;
+    }
+
     const data = await resp.json();
 
     if (!resp.ok || data.error) {
-      const errHtml = data && data.html ? data.html : "Bilinmeyen hata";
       showError("İstek başarısız.");
-      injectFrameHtml(errHtml);
-      lastDocumentId = null;
-      pdfBtn.disabled = true;
-      shareBtn.disabled = true;
-      miniNote.textContent = "Hata oluştu";
-      reportMeta.textContent = "Hata oluştu";
+      welcomePlaceholder.style.display = 'flex';
+      skeletonLoader.style.display = 'none';
     } else {
-      const { documentId, html } = data;
-      lastDocumentId = documentId;
-      injectFrameHtml(html);
-      miniNote.textContent = "Belge ID: " + documentId;
-      reportMeta.textContent = "/ui/report/" + documentId;
-      pdfBtn.disabled = false;
-      shareBtn.disabled = false;
-      activateTab('preview'); // mobilde otomatik Önizleme
+      lastDocumentId = data.documentId;
+      injectFrameHtml(data.html);
+      miniNote.textContent = "Belge ID: " + data.documentId;
+      reportMeta.textContent = "Analiz Tamamlandı: " + fileInput.files[0].name;
+      pdfBtn.disabled = false; shareBtn.disabled = false;
+      if(!isDesktop()) activateTab('preview'); 
     }
   } catch (e) {
     showError("İstek atılırken hata oluştu: " + e.message);
-    lastDocumentId = null;
-    pdfBtn.disabled = true;
-    shareBtn.disabled = true;
-    miniNote.textContent = "İstek hatası";
-    reportMeta.textContent = "İstek hatası";
+    welcomePlaceholder.style.display = 'flex';
+    skeletonLoader.style.display = 'none';
   } finally {
-    analyzeBtn.disabled = false;
-    analyzeBtn.textContent = "Analiz et";
+    analyzeBtn.disabled = false; analyzeBtn.textContent = "Analiz et";
     endProgress(timer);
   }
 });
 
-/* PDF indirme */
-pdfBtn.addEventListener('click', () => {
-  if (!lastDocumentId) { alert("Önce bir sözleşme yükleyip analiz etmelisin."); return; }
-  const pdfUrl = `/ui/report/${lastDocumentId}/pdf`;
-  window.open(pdfUrl, '_blank');
+// 🔥 GEÇMİŞİ ÇEKME
+async function loadMyDocuments() {
+    const tbody = document.getElementById('historyTableBody');
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Yükleniyor...</td></tr>';
+    
+    try {
+        const resp = await fetch('/api/v1/documents/my', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (resp.status === 401 || resp.status === 403) { document.getElementById('logoutBtn').click(); return; }
+        const docs = await resp.json();
+        
+        if (docs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #666;">Henüz bir sözleşme yüklemediniz.</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        docs.forEach(doc => {
+            const date = new Date(doc.uploadedAt).toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+            const shortName = doc.filename.length > 20 ? doc.filename.substring(0, 20) + '...' : doc.filename;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight: 600;" title="${doc.filename}">${shortName}</td>
+                <td style="color: #64748b; font-size: 11px;">${date}</td>
+                <td>
+                    <button class="action-btn" onclick="openPastReport('${doc.id}', '${doc.filename.replace(/'/g, "\\'")}')">Aç</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: red;">Veriler alınamadı.</td></tr>';
+    }
+}
+
+// 🔥 ESKİ RAPORU AÇMA
+window.openPastReport = async function(docId, filename) {
+    welcomePlaceholder.style.display = 'none';
+    skeletonLoader.style.display = 'block';
+    reportFrame.style.display = 'none';
+    
+    lastDocumentId = docId;
+    miniNote.textContent = "Belge ID: " + docId;
+    reportMeta.textContent = filename + " adlı belgenin raporu";
+    pdfBtn.disabled = false; shareBtn.disabled = false;
+    
+    try {
+        const resp = await fetch('/ui/report/' + docId, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const html = await resp.text();
+        injectFrameHtml(html);
+        if(!isDesktop()) activateTab('preview'); 
+    } catch(e) {
+        alert("Rapor yüklenirken hata oluştu.");
+        welcomePlaceholder.style.display = 'flex';
+    } finally {
+        skeletonLoader.style.display = 'none';
+    }
+}
+
+// 🔥 PDF İNDİRME GÜVENLİK YAMASI
+pdfBtn.addEventListener('click', async () => {
+  if (!lastDocumentId) return;
+  const originalText = pdfBtn.textContent;
+  pdfBtn.disabled = true;
+  pdfBtn.textContent = "Hazırlanıyor...";
+  
+  try {
+    const response = await fetch(`/ui/report/${lastDocumentId}/pdf`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    if (response.status === 401 || response.status === 403) { document.getElementById('logoutBtn').click(); return; }
+    if (!response.ok) throw new Error("Dosya alınamadı");
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `RiskGuard_Analiz_${lastDocumentId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    alert("PDF oluşturulurken bir hata oluştu: " + err.message);
+  } finally {
+    pdfBtn.disabled = false;
+    pdfBtn.textContent = originalText;
+  }
 });
 
-/* Link paylaş (HTML rapor linki) */
+// Paylaş butonu
 shareBtn.addEventListener('click', async () => {
   if (!lastDocumentId) { alert("Önce bir rapor üretmelisin."); return; }
   const shareUrl = `${location.origin}/ui/report/${lastDocumentId}`;
   try{
-    await navigator.clipboard.writeText(shareUrl);
-    toast("Link panoya kopyalandı");
+    await navigator.clipboard.writeText(shareUrl); toast("Link panoya kopyalandı");
   }catch{
     const a = document.createElement('textarea');
     a.value = shareUrl; document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a);
@@ -447,48 +606,35 @@ shareBtn.addEventListener('click', async () => {
   }
 });
 
-/* Iframe’e temiz HTML enjekte et (inline PDF butonunu kaldır) */
+// Iframe Yükleyici
 function injectFrameHtml(htmlContent) {
+  welcomePlaceholder.style.display = 'none';
+  skeletonLoader.style.display = 'none';
+  reportFrame.style.display = 'block';
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlContent, "text/html");
   doc.querySelectorAll('.ui-inline-pdf-btn').forEach(el => el.remove());
   const cleanedHtml = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
-  // Blob yerine srcdoc kullan: aynı origin → içerik boyunu ölçebiliriz
-  reportFrame.removeAttribute('src');      // temizlik
+  reportFrame.removeAttribute('src');      
   reportFrame.srcdoc = cleanedHtml;
-  // Yüksekliği içerik kadar yap
-  // (load sonrasında bir kez, sonra kısa bir gecikmeyle tekrar ölç)
   reportFrame.addEventListener('load', adjustFrameHeightOnce, { once:true });
   setTimeout(adjustFrameHeightSafe, 120);
-
 }
+
 function adjustFrameHeightOnce(){ adjustFrameHeightSafe(); }
-// Güvenli yükseklik ölçümü
 function adjustFrameHeightSafe(){
   try{
     const doc = reportFrame.contentDocument || reportFrame.contentWindow.document;
     if(!doc) return;
     const body = doc.body, html = doc.documentElement;
-
-    const h = Math.max(
-      body.scrollHeight, html.scrollHeight,
-      body.offsetHeight, html.offsetHeight,
-      body.clientHeight, html.clientHeight
-    );
-
-    // Alt +20px pay
+    const h = Math.max( body.scrollHeight, html.scrollHeight, body.offsetHeight, html.offsetHeight, body.clientHeight, html.clientHeight );
     reportFrame.style.height = (h + 20) + 'px';
-  } catch(e){
-    // çapraz origin vs. olursa sessiz geç
-  }
+  } catch(e){}
 }
-// İçerik içinde hash’e gidilirse (örn. #row-xxxx) tekrar ölç
 window.addEventListener('hashchange', adjustFrameHeightSafe);
-/* Hata kutusu */
-function showError(msg){
-  errorBox.textContent = msg;
-  errorBox.style.display = "block";
-}
+
+function showError(msg){ errorBox.textContent = msg; errorBox.style.display = "block"; }
 </script>
 
 </body>

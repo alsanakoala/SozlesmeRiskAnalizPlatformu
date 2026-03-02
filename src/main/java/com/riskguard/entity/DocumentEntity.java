@@ -31,6 +31,9 @@ public class DocumentEntity {
     @Column(name = "ocr_used")
     private Boolean ocrUsed;
 
+    @Column(name = "owner_email")
+    private String ownerEmail;
+
     @PrePersist
     public void prePersist() {
         if (id == null) {
@@ -93,4 +96,16 @@ public class DocumentEntity {
     public void setOcrUsed(Boolean ocrUsed) {
         this.ocrUsed = ocrUsed;
     }
+
+    public String getOwnerEmail() {
+        return ownerEmail;
+    }
+
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
+    }
+
+
+
+
 }

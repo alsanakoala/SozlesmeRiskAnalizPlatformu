@@ -70,8 +70,7 @@ public class RiskFindingEntity {
 
     public String getExplanation() { return explanation; }
     public void setExplanation(String explanation) { this.explanation = explanation; }
-
-    // 👇 yeni getter/setter
+    
     public String getMitigation() { return mitigation; }
     public void setMitigation(String mitigation) { this.mitigation = mitigation; }
 }

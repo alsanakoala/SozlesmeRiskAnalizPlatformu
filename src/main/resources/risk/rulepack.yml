@@ -1,4 +1,7 @@
 rules:
+  # ==========================================
+  # ENGLISH BASE RULES
+  # ==========================================
   - id: IND-001
     category: INDEMNITY
     name: Broad indemnity including all losses
@@ -6,6 +9,7 @@ rules:
     weight: 1.0
     severity: 0.9
     locale: en
+    mitigation: "Tazminat yükümlülüğü doğrudan zararlarla sınırlandırılmalı, dolaylı zararlar (kâr kaybı, itibar kaybı vb.) kapsam dışı bırakılmalıdır."
 
   - id: LOL-001
     category: LIMITATION_OF_LIABILITY
@@ -14,8 +18,7 @@ rules:
     weight: 1.0
     severity: 1.0
     locale: en
-    mitigation: Sorumluluk tutarını dolaylı/sonuç zararları hariç tutarak yıllık sözleşme bedeli ile sınırlandırın.
-
+    mitigation: "Sorumluluk tutarını dolaylı/sonuç zararları hariç tutarak yıllık sözleşme bedeli ile sınırlandırın."
 
   - id: GOV-TR-001
     category: GOVERNING_LAW
@@ -24,6 +27,7 @@ rules:
     weight: 0.8
     severity: 0.8
     locale: en
+    mitigation: "Sözleşmenin Türk Hukukuna (veya tarafların ortak belirleyeceği tarafsız bir hukuka) tabi olacak şekilde değiştirilmesi önerilir."
 
   - id: AUTO-001
     category: AUTO_RENEWAL
@@ -32,6 +36,7 @@ rules:
     weight: 0.7
     severity: 0.7
     locale: en
+    mitigation: "Otomatik yenileme maddesine, yenileme tarihinden en az 30 gün önce yazılı bildirim ile iptal edebilme hakkı eklenmelidir."
 
   - id: PAY-TR-001
     category: PAYMENT_TERMS
@@ -40,6 +45,11 @@ rules:
     weight: 0.6
     severity: 0.6
     locale: en
+    mitigation: "Ödeme vadelerinin 30-45 gün bandına çekilmesi veya gecikme faizi uygulanacağı yönünde madde eklenmesi talep edilebilir."
+
+  # ==========================================
+  # TURKISH BASE RULES
+  # ==========================================
   - id: LOL-TR-001
     category: LIMITATION_OF_LIABILITY
     name: Sorumluluğun sınırlandırılmaması / sınırsız sorumluluk
@@ -47,6 +57,7 @@ rules:
     weight: 1.0
     severity: 1.0
     locale: tr
+    mitigation: "Sorumluluğun en fazla 'sözleşme bedeli' kadar olacağı ve dolaylı zararların (kâr kaybı vb.) karşılanmayacağı açıkça belirtilmelidir."
 
   - id: IND-TR-001
     category: INDEMNITY
@@ -55,6 +66,7 @@ rules:
     weight: 0.9
     severity: 0.9
     locale: tr
+    mitigation: "Tazminat yükümlülüğünün kusur oranına göre sınırlandırılması ve üçüncü taraf iddiaları için haber verme şartı getirilmesi önerilir."
 
   - id: TERM-TR-001
     category: TERMINATION
@@ -63,6 +75,7 @@ rules:
     weight: 0.9
     severity: 0.8
     locale: tr
+    mitigation: "Fesih hakkının karşılıklı hale getirilmesi veya tek taraflı fesih durumunda en az 30 günlük ön ihbar süresi eklenmesi sağlanmalıdır."
 
   - id: AUTO-TR-001
     category: AUTO_RENEWAL
@@ -71,6 +84,7 @@ rules:
     weight: 0.7
     severity: 0.7
     locale: tr
+    mitigation: "Sözleşme süresi bitiminden en az 30 gün önce yazılı bildirim ile otomatik yenilemenin durdurulabileceği hükmü eklenmelidir."
 
   - id: PAY-TR-002
     category: PAYMENT_TERMS
@@ -79,6 +93,7 @@ rules:
     weight: 0.6
     severity: 0.6
     locale: tr
+    mitigation: "Fatura ödeme vadesi 30 veya 45 güne düşürülmeli, gecikme durumunda temerrüt faizi işletileceği eklenmelidir."
 
   - id: LAW-TR-001
     category: GOVERNING_LAW
@@ -87,6 +102,7 @@ rules:
     weight: 0.8
     severity: 0.8
     locale: tr
+    mitigation: "Uyuşmazlıkların çözümü için Türkiye Cumhuriyeti kanunlarının geçerli olması ve Türkiye'deki mahkemelerin yetkilendirilmesi önerilir."
 
   - id: DATA-TR-001
     category: DATA_PROTECTION
@@ -95,20 +111,25 @@ rules:
     weight: 0.85
     severity: 0.9
     locale: tr
+    mitigation: "KVKK kapsamında veri aktarımının sadece belirli amaçlarla sınırlandırılması ve açık rıza metninin ayrıca alınacağı belirtilmelidir."
 
   - id: PRIV-001
     category: CONFIDENTIALITY
     name: Personal data usage without explicit consent
-    pattern: (?is)(kişisel\s+veri|personal\s+data).{0,200}(izinsiz|rızası\s+olmaksızın|without\s+(explicit\s+)?consent|unauthorized)
+    pattern: '(?is)(kişisel\s+veri|personal\s+data).{0,200}(izinsiz|rızası\s+olmaksızın|without\s+(explicit\s+)?consent|unauthorized)'
     weight: 1.0
     severity: 0.95
     locale: multi
-    mitigation: Kişisel verinin paylaşımı veya işlenmesi açık yazılı rızaya bağlanmalı ve tarafın veriyi sınırsız kullanma hakkı sınırlandırılmalıdır.
- 
+    mitigation: "Kişisel verinin paylaşımı veya işlenmesi açık yazılı rızaya bağlanmalı ve tarafın veriyi sınırsız kullanma hakkı sınırlandırılmalıdır."
+
+  # ==========================================
+  # SCORE-BASED & PATTERN LIST RULES
+  # ==========================================
   - id: "TERM-001"
     category: "TERMINATION"
     score: 85
     explanation: "Karşı taraf hiçbir gerekçe göstermeden sözleşmeyi feshedebilir. Gelirin bir anda kesilebilir."
+    mitigation: "Fesih hakkının karşılıklı (simetrik) hale getirilmesi veya tek taraflı fesih durumunda en az 30 günlük makul bir ön ihbar süresi eklenmesi önerilir."
     patterns:
       - "(terminate|termination).*(for (its )?convenience)"
       - "may terminate (this )?(agreement|contract) at any time (and )?for any reason"
@@ -116,13 +137,14 @@ rules:
       - "may terminate .* without cause"
       - "may terminate .* without (any )?penalty"
       - "may terminate .* at any time (and )?for any reason"
-      - "may terminate .* upon written notice"   # çok geniş bildirimle fesih
+      - "may terminate .* upon written notice"
       - "at (its|their) convenience .* terminate"
-  
+
   - id: "INS-001"
     category: "INSURANCE_OBLIGATION"
     score: 80
     explanation: "Belirli bir sigorta poliçesini belirli bir minimum limit ile sürdürme zorunluluğu var. Bu maliyet sende kalabilir."
+    mitigation: "Talep edilen poliçe limitlerinin sözleşme bedeliyle orantılı olup olmadığını kontrol edin. Limitlerin düşürülmesini veya prim maliyetlerinin paylaşılmasını talep edebilirsiniz."
     patterns:
       - "(maintain|carry|procure).*(insurance|liability insurance)"
       - "insurance coverage (of|in) (amounts )?not less than"
@@ -136,17 +158,19 @@ rules:
     category: "GOVERNING_LAW"
     score: 60
     explanation: "Sözleşmede yabancı bir hukuk seçilmiş olabilir. Anlaşmazlık olursa bu hukuka göre değerlendirilir."
+    mitigation: "Sözleşmenin Türk Hukukuna (veya tarafların ortak belirleyeceği tarafsız ve bilindik bir hukuka) tabi olacak şekilde değiştirilmesi önerilir."
     patterns:
       - "governed by the laws of (the )?[A-Z][a-zA-Z]+"
       - "shall be governed by.*laws of"
       - "under the laws of the State of"
       - "in accordance with the laws of"
-      - "Turkish law shall not apply"   # explicit dışlama varsa
+      - "Turkish law shall not apply"
 
   - id: "JUR-001"
     category: "JURISDICTION"
     score: 70
     explanation: "Uyuşmazlık halinde belirli bir mahkemenin/yerin münhasır yetkisi tanımlanmış. Bu seni yabancı bir mahkemeye zorlayabilir."
+    mitigation: "Uyuşmazlıkların çözümü için şirketin merkezinin bulunduğu yerdeki (örneğin İstanbul veya Ankara) mahkemelerin yetkilendirilmesi önerilir."
     patterns:
       - "exclusive jurisdiction of the courts of"
       - "exclusive jurisdiction .* (County|Court|Courts|District)"
@@ -154,10 +178,9 @@ rules:
       - "submit to the (exclusive )?jurisdiction of"
       - "irrevocably submit to .* jurisdiction"
 
-  
-  
-  
-  # === CUSTOM RULES (Added for SampleContract) ===  
+  # ==========================================
+  # CUSTOM RULES
+  # ==========================================
   - id: CUSTOM-TERM-001
     category: TERMINATION
     name: "Tek taraflı fesih (for convenience)"
@@ -165,6 +188,8 @@ rules:
     weight: 0.9
     severity: 0.8
     locale: en 
+    mitigation: "Sebepsiz fesih (convenience) hakkı iptal edilmeli veya feshin sadece haklı sebeple (cause) yapılabileceği şekilde sınırlandırılmalıdır."
+
   - id: CUSTOM-IND-001
     category: INDEMNITY
     name: "Limitsiz tazminat / broad indemnity"
@@ -172,6 +197,7 @@ rules:
     weight: 1.0
     severity: 0.95
     locale: en
+    mitigation: "Tazminat yükümlülüğü doğrudan zararlarla sınırlandırılmalı, dolaylı zararlar (kâr kaybı, itibar kaybı vb.) kapsam dışı bırakılmalıdır."
 
   - id: CUSTOM-INS-001
     category: INSURANCE_OBLIGATION
@@ -180,6 +206,7 @@ rules:
     weight: 0.7
     severity: 0.7
     locale: en
+    mitigation: "Talep edilen poliçe limitlerinin makul seviyede olduğundan ve mevcut poliçelerinizle örtüştüğünden emin olun."
 
   - id: CUSTOM-IP-001
     category: INTELLECTUAL_PROPERTY_TRANSFER
@@ -188,6 +215,7 @@ rules:
     weight: 0.85
     severity: 0.85
     locale: en
+    mitigation: "Fikri mülkiyet haklarının tamamen devri yerine, müşteriye sadece projeyle sınırlı bir kullanım hakkı (lisans) verilmesi müzakere edilebilir."
 
   - id: CUSTOM-LAW-001
     category: GOVERNING_LAW
@@ -196,3 +224,4 @@ rules:
     weight: 0.8
     severity: 0.8
     locale: en
+    mitigation: "Uyuşmazlıkların ABD mahkemeleri yerine tarafsız bir tahkim merkezinde (örneğin ICC veya ISTAC) çözümlenmesi önerilir."

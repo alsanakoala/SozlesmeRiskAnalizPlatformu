@@ -16,8 +16,8 @@ public class PdfRendererClient {
     private final String token;
 
     public PdfRendererClient(
-            @Value("${renderer.url:http://localhost:3005/render}") String endpoint,
-            @Value("${renderer.token:}") String token
+            @Value("${riskguard.renderer.url:http://localhost:3005/render}") String endpoint,
+            @Value("${riskguard.renderer.token:}") String token
     ) {
         this.http = HttpClient.newHttpClient();
         this.endpoint = endpoint;
@@ -26,16 +26,21 @@ public class PdfRendererClient {
 
     public byte[] renderHtmlToPdf(String html, String baseUrl) {
         try {
-            // server.js içindeki alanlarla birebir uyuşan JSON gövde
+            // Şık kurumsal üst bilgi (Header) ve alt bilgi (Footer) şablonları
+            String headerTemplate = "<div style='font-size: 9px; color: #888; width: 100%; text-align: right; padding-right: 15mm; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px;'>Sözleşme Risk Analiz Raporu | GİZLİ</div>";
+            String footerTemplate = "<div style='font-size: 10px; color: #555; width: 100%; text-align: center; border-top: 1px solid #eee; padding-top: 5px; margin: 0 15mm; font-family: Arial, sans-serif;'>Sayfa <span class=\"pageNumber\"></span> / <span class=\"totalPages\"></span></div>";
+
             String json = "{"
                     + "\"html\":" + toJsonString(html) + ","
                     + "\"baseUrl\":" + toJsonString(baseUrl) + ","
                     + "\"pdf\":{"
                     +   "\"format\":\"A4\","
-                    +   "\"margin\":{\"top\":\"12mm\",\"right\":\"12mm\",\"bottom\":\"14mm\",\"left\":\"12mm\"},"
+                    +   "\"margin\":{\"top\":\"20mm\",\"right\":\"12mm\",\"bottom\":\"20mm\",\"left\":\"12mm\"},"
                     +   "\"printBackground\":true,"
                     +   "\"preferCSSPageSize\":true,"
-                    +   "\"displayHeaderFooter\":true"
+                    +   "\"displayHeaderFooter\":true,"
+                    +   "\"headerTemplate\":" + toJsonString(headerTemplate) + ","
+                    +   "\"footerTemplate\":" + toJsonString(footerTemplate)
                     + "},"
                     + "\"waitUntil\":\"networkidle0\","
                     + "\"timeoutMs\":30000"
@@ -50,13 +55,10 @@ public class PdfRendererClient {
             }
 
             HttpRequest req = rb.POST(HttpRequest.BodyPublishers.ofString(json)).build();
-
-            // DOĞRUDAN PDF baytlarını alıyoruz (asla JSON'a sarmalamıyoruz)
             HttpResponse<byte[]> resp = http.send(req, HttpResponse.BodyHandlers.ofByteArray());
 
             int code = resp.statusCode();
             if (code >= 200 && code < 300) {
-                // İçerik tipi application/pdf olmalı — ama olmasa da baytlar önemli
                 return resp.body();
             } else {
                 String detail = new String(resp.body() == null ? new byte[0] : resp.body());
@@ -67,14 +69,9 @@ public class PdfRendererClient {
         }
     }
 
-    // Basit JSON kaçışlayıcı
     private static String toJsonString(String s) {
         if (s == null) return "null";
-        String escaped = s
-                .replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r");
+        String escaped = s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
         return "\"" + escaped + "\"";
     }
 }

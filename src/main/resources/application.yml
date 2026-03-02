@@ -10,13 +10,17 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      # ddl-auto: validate   # ⬅️ ÖNCEKİ: şema sabit, kolon eklemez, eksik kolon olunca patlatır
       ddl-auto: update       # ⬅️ YENİ: local/dev için. document tablosuna ocr_used kolonunu otomatik ekle
-    show-sql: true
+    # 🔥 1. HIZLANDIRMA: Konsolu kilitleyen devasa SQL logları kapatıldı
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false    # 🔥 SQL formatlama kapatıldı
+        # 🔥 2. HIZLANDIRMA: Veritabanına saniyede 100 kere gitmek yerine verileri 50'şerli paketler halinde gönderir
+        order_inserts: true
+        order_updates: true
         jdbc:
+          batch_size: 50
           lob:
             non_contextual_creation: true  # ⬅️ Postgres LOB ile uyum için faydalı
 
@@ -46,9 +50,6 @@ app:
   rules:
     path: classpath:risk/rulepack.yml
   nlp:
-    # Eğer en-sent.bin / tr-sent.bin dosyaların yoksa geçici olarak boş bırakabilirsin:
-    # sentenceModelEn:
-    # sentenceModelTr:
     sentenceModelEn: classpath:nlp/en-sent.bin
     sentenceModelTr: classpath:nlp/tr-sent.bin
   python:
@@ -64,7 +65,9 @@ app:
 riskguard:
   ai:
     similarity:
-      log: true           # ⬅️ AI öneri kutularında “Benzerlik Rozeti” görünür
+      # 🔥 3. HIZLANDIRMA: Eğer servisinde bu ayar kontrol ediliyorsa, ağır PyTorch modelini devre dışı bırakır
+      enabled: false      
+      log: false          
       embedding:
         model: "sentence-transformers/all-MiniLM-L6-v2"
         minSim: 0.85
@@ -101,4 +104,3 @@ resilience4j:
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 20s
-    
