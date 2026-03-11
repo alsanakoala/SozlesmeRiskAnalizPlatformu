@@ -52,13 +52,26 @@ public class AnalysisService {
         // Sözleşmedeki tüm clause'ları getir
         List<ClauseEntity> clauses = documentService.getClauses(documentId);
 
+        // Değiştirilebilir listeler oluşturuyoruz (Full text ekleyebilmek için)
         List<UUID> clauseIds = clauses.stream()
                 .map(ClauseEntity::getId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
 
         List<String> texts = clauses.stream()
                 .map(ClauseEntity::getText)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        // 🔽 EKLEME: Bütünsel analiz için döküman metnini listeye ekle
+        Optional<DocumentEntity> docOpt = documentService.findDocument(documentId);
+        if (docOpt.isPresent()) {
+            DocumentEntity doc = docOpt.get();
+            String fullText = doc.getText();
+            if (fullText != null && !fullText.trim().isEmpty()) {
+                texts.add(fullText);
+                clauseIds.add(null); // Clause ID null olunca veritabanında FK hatası oluşmaz
+            }
+        }
+        // 🔼 EKLEME BİTTİ
 
         // Kural motoru çağrısı -> RiskFindingEntity listesi döner
         List<RiskFindingEntity> findings = ruleEngine.evaluate(documentId, clauseIds, texts);
@@ -88,7 +101,6 @@ public class AnalysisService {
         resp.clauseCount = (clauses != null ? clauses.size() : 0);
         resp.findingCount = (findings != null ? findings.size() : 0);
 
-        Optional<DocumentEntity> docOpt = documentService.findDocument(documentId);
         if (docOpt.isPresent()) {
             DocumentEntity doc = docOpt.get();
             String fullText = doc.getText();
@@ -103,7 +115,6 @@ public class AnalysisService {
 
     /**
      * Daha sonra görüntülenecek / raporlanacak final rapor objesi.
-     * Bu obje hem JSON API'de dönebiliyor hem de HTML render için kullanılıyor.
      */
     public RiskReportResponse buildReport(UUID documentId) {
         // 1. Belgeyi al
@@ -113,7 +124,7 @@ public class AnalysisService {
         }
         DocumentEntity doc = docOpt.get();
 
-        // 2. Mevcut bulguları al (bu sözleşme için DB'de kayıtlı riskler)
+        // 2. Mevcut bulguları al
         List<RiskFindingEntity> findingsList = findingRepo.findByDocumentId(documentId);
 
         // 🔽 EKLENDİ: clause ve metin istatistikleri
@@ -128,7 +139,6 @@ public class AnalysisService {
         double totalScore = ruleEngine.aggregateScore(findingsList);
 
         // 🔽 EKLENDİ: kategori bazlı ortalama skor hesapla
-        // buckets: kategori -> o kategoriye ait skorlar listesi
         Map<String, List<Double>> buckets = new HashMap<>();
         for (RiskFindingEntity f : findingsList) {
             String cat = (f.getCategory() != null ? f.getCategory().name() : "OTHER");
@@ -160,34 +170,24 @@ public class AnalysisService {
         resp.language = doc.getLanguage();
         resp.totalScore = totalScore;
 
-        // 🔽 EKLENDİ: debug/özet alanlarını rapora yaz
         resp.clauseCount = clauseCountVal;
         resp.textLength = textLenVal;
         resp.findingCount = (findingsList != null ? findingsList.size() : 0);
 
-        // OCR kullanıldı mı? (DocumentEntity.ocrUsed kolonu)
         resp.ocrUsed = doc.getOcrUsed();
-
-        // kategori bazlı ortalama skor haritası
         resp.avgScorePerCategory = avgMap;
-        // 🔼 EKLENDİ
 
         resp.findings = findingsList.stream().map(f -> {
             RiskReportResponse.FindingSummary fs = new RiskReportResponse.FindingSummary();
 
-            // category enum/string -> düz string
             fs.category = (f.getCategory() != null ? f.getCategory().name() : null);
-
             fs.ruleId = f.getRuleId();
             fs.score = f.getScore();
             fs.confidence = f.getConfidence();
             fs.snippet = f.getSnippet();
             fs.explanation = f.getExplanation();
-
-            // DB tarafındaki mitigation kolonu
             fs.mitigation = f.getMitigation();
 
-            // Türkçe başlık ve yönetici dili tavsiye
             fs.humanTitle = getHumanTitleForCategory(fs.category);
             fs.advice = getAdviceForCategory(fs.category);
 
@@ -196,10 +196,6 @@ public class AnalysisService {
 
         return resp;
     }
-
-    // -------------------------
-    // Yardımcı metotlar (TR başlıklar ve tavsiye metinleri)
-    // -------------------------
 
     private String getHumanTitleForCategory(String category) {
         if (category == null) return null;

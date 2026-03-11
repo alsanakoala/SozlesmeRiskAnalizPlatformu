@@ -14,20 +14,19 @@ import java.util.stream.Collectors;
 public class RuleEngineService {
     private final RulePack rules;
 
-    // 🔥 EKLEDİĞİMİZ KISIM:
-    // Her kategori için ağırlık. 1.0 = çok kritik, 0.4 = nispeten hafif.
-    // Burada ana fikir: bazı riskler hukuki olarak öldürücü (liability / personal data),
-    // bazıları ise daha "ticari pazarlık" seviyesinde.
+
     private static final Map<RiskCategory, Double> CATEGORY_WEIGHTS = Map.of(
         RiskCategory.LIMITATION_OF_LIABILITY, 1.0,
         RiskCategory.INDEMNITY,               0.9,
         RiskCategory.CONFIDENTIALITY,         0.95, // KVKK / kişisel veri gibi şeyler buraya giriyor
         RiskCategory.GOVERNING_LAW,           0.6,
         RiskCategory.AUTO_RENEWAL,            0.4,
+        RiskCategory.INSURANCE_OBLIGATION,    0.7,
         RiskCategory.OTHER,                   0.5
     );
 
-    public RuleEngineService(RulePackLoader loader, @Value("${app.rules.path}") String rulesPath){
+    public RuleEngineService(RulePackLoader loader, @Value("${app.rules.path}") String rulesPath)
+    {
         this.rules = loader.load(rulesPath);
     }
 
@@ -38,16 +37,24 @@ public class RuleEngineService {
                                         List<String> clauseTexts) {
 
     List<RiskFindingEntity> results = new ArrayList<>();
+    
+    Set<String> uniqueCheck = new HashSet<>();
 
-    // varsayım: this.rules -> List<RuleDef>
     for (int clauseIndex = 0; clauseIndex < clauseTexts.size(); clauseIndex++) {
         String clauseText = clauseTexts.get(clauseIndex);
         UUID clauseId = clauseIds.get(clauseIndex);
 
+        if (clauseText == null || clauseText.trim().isEmpty()) continue;
+
         for (RuleDef rule : rules.rules) {
+
+            String comboKey = (clauseId != null ? clauseId.toString() : "GLOBAL") + "-" + rule.getId();
+                if (uniqueCheck.contains(comboKey)) continue;
 
             // 1. Bu kurala ait denenecek pattern listesini hazırla
             List<String> candidatePatterns = new ArrayList<>();
+            if (rule.getPatterns() != null) candidatePatterns.addAll(rule.getPatterns());
+                if (rule.getPattern() != null) candidatePatterns.add(rule.getPattern());
 
             // yeni format (List<String> patterns)
             List<String> fromYamlList = rule.getPatterns();
@@ -60,11 +67,8 @@ public class RuleEngineService {
             if (singlePattern != null && !singlePattern.isEmpty()) {
                 candidatePatterns.add(singlePattern);
             }
-
-            // Hiç pattern yoksa devam et
-            if (candidatePatterns.isEmpty()) {
-                continue;
-            }
+            
+            if (candidatePatterns.isEmpty()) continue;
 
             boolean matched = false;
             String matchedSnippet = null;
@@ -73,77 +77,73 @@ public class RuleEngineService {
             for (String p : candidatePatterns) {
                 if (p == null || p.isEmpty()) continue;
 
-                Pattern compiled = Pattern.compile("(?is)" + p);
-                Matcher m = compiled.matcher(clauseText);
+                
+                try {
+                    // Regex'i derle
+                    Pattern compiled = Pattern.compile("(?is)" + p);
+                    Matcher m = compiled.matcher(clauseText);
 
-                if (m.find()) {
-                    matched = true;
+                    if (m.find()) {
+                        matched = true;
 
-                    // snippet = eşleşen kısım
-                    matchedSnippet = clauseText.substring(
-                        Math.max(m.start(), 0),
-                        Math.min(m.end(), clauseText.length())
-                    );
-
-                    break; // bu kural tetiklendi, diğer pattern'lere bakmaya gerek yok
+                        // snippet = eşleşen kısım
+                        matchedSnippet = m.group().trim(); 
+                        if(matchedSnippet.length() > 250) {
+                            matchedSnippet = matchedSnippet.substring(0, 247) + "...";
+                        }
+                        break;
+                    }
                 }
+                catch (PatternSyntaxException e) {
+                    // Hatalı regex patternlerini sistemin çökmemesi için atlıyoruz
+                    continue;
+                }
+            } // patterns loop end
+
+            if (matched) 
+            {
+                // 3. Eşleştiyse RiskFindingEntity oluştur
+                RiskFindingEntity finding = new RiskFindingEntity();
+                finding.setId(UUID.randomUUID());
+                finding.setDocumentId(documentId);
+                finding.setClauseId(clauseId);
+                finding.setCategory(rule.getCategory());
+                finding.setRuleId(rule.getId());
+
+                Double ruleScore = rule.getScore();
+                if (ruleScore == null) {
+                    // 🔽 HATA BURADAYDI: Double (büyük D) kullanarak null kontrolüne izin veriyoruz
+                    Double weight = (Double.valueOf(rule.getWeight()) != null ? rule.getWeight() : 1.0);
+                    Double severity = (Double.valueOf(rule.getSeverity()) != null ? rule.getSeverity() : 1.0);
+                    ruleScore = weight * severity;
+                }
+                finding.setScore(ruleScore);
+                finding.setConfidence(1.0);
+                finding.setExplanation(rule.getExplanation());
+                finding.setMitigation(rule.getMitigation());
+
+                if (matchedSnippet != null) {
+                    finding.setSnippet(matchedSnippet);
+                } else {
+                    finding.setSnippet(clauseText);
+                }
+
+                results.add(finding);
+                uniqueCheck.add(comboKey);
             }
-
-            if (!matched) {
-                continue;
-            }
-
-            // 3. Eşleştiyse RiskFindingEntity oluştur
-            RiskFindingEntity finding = new RiskFindingEntity();
-            finding.setId(UUID.randomUUID());
-            finding.setDocumentId(documentId);
-            finding.setClauseId(clauseId);
-
-            // Kategori
-            // Senin RuleDef.category şu an RiskCategory enum (sen öyle tanımladın).
-            // O yüzden direkt kullanıyoruz:
-            finding.setCategory(rule.getCategory());
-
-            // Rule ID
-            finding.setRuleId(rule.getId());
-
-            // Skor mantığı:
-            Double ruleScore = rule.getScore();
-            if (ruleScore == null) {
-                // geri uyumluluk: eski weight/severity'den hesapla
-                // Bu formül senin sisteminde farklıysa burayı değiştir.
-                ruleScore = rule.getWeight() * rule.getSeverity();
-            }
-            finding.setScore(ruleScore);
-
-            // Şimdilik sabit güven değeri
-            finding.setConfidence(1.0);
-
-            // Açıklama / Mitigation
-            finding.setExplanation(rule.getExplanation());
-            finding.setMitigation(rule.getMitigation());
-
-            // Snippet (eşleşen parça)
-            if (matchedSnippet != null) {
-                finding.setSnippet(matchedSnippet);
-            } else {
-                finding.setSnippet(clauseText);
-            }
-
-            results.add(finding);
-        }
-    }
-
+        } // rules loop end
+    } // clauses loop end
     return results;
-}
+    }
 
 
     public double aggregateScore(List<RiskFindingEntity> findings){
         // remaining mantığını koruyoruz, ama her bulguyu kategori ağırlığı ile çarpıyoruz
 
         double remaining = 1.0;
-
+        Set<String> processedRules = new HashSet<>();
         for (RiskFindingEntity f : findings){
+            if (processedRules.contains(f.getRuleId())) continue;
             // bulgunun kendi şiddetini normalize et (0.0 - 1.0)
             double base = Math.max(0.0, Math.min(1.0, f.getScore()/100.0));
 
@@ -162,6 +162,7 @@ public class RuleEngineService {
             // önceki formülünde s*0.6 vardı.
             // Artık 'effective'ı kullanıyoruz ki kritik kategoriler sistemi daha çok etkilesin.
             remaining *= (1.0 - effective * 0.6);
+            processedRules.add(f.getRuleId());
         }
 
         double finalScore = (1.0 - remaining) * 100.0;

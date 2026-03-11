@@ -225,3 +225,283 @@ rules:
     severity: 0.8
     locale: en
     mitigation: "Uyuşmazlıkların ABD mahkemeleri yerine tarafsız bir tahkim merkezinde (örneğin ICC veya ISTAC) çözümlenmesi önerilir."
+
+  # ==========================================
+  # CONSTRUCTION / UNOPS SPECIFIC RULES
+  # ==========================================
+  - id: CONST-TERM-001
+    category: TERMINATION
+    name: "Keyfî Fesih ve Kâr Kaybı (Termination for Convenience)"
+    pattern: "(?is)terminate\\s+the\\s+contract.*?for\\s+(the\\s+employer['’]?s\\s+)?convenience"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin keyfî fesih hakkı sınırlandırılmalı, fesih durumunda müteahhidin tamamlanmamış işler için beklenen kârı (loss of profit) ve demobilizasyon masraflarının ödeneceği açıkça belirtilmelidir."
+
+  - id: CONST-OMISSION-001
+    category: SCOPE_OF_WORK
+    name: "İş Kapsamını Daraltıp Başkasına Verme (Omission to Engage Others)"
+    pattern: "(?is)omission\\s+of\\s+any\\s+part.*?employer\\s+may\\s+engage\\s+others"
+    weight: 0.95
+    severity: 0.90
+    locale: en
+    mitigation: "İşveren, sözleşmedeki iş kalemlerini projeden çıkarıp (omission) daha ucuza başka bir firmaya yaptırmamalıdır. Bu madde, sözleşme dengesine aykırıdır ve iptal edilmesi önerilir."
+
+  - id: CONST-SETOFF-001
+    category: PAYMENT_TERMS
+    name: "Sınırsız Kesinti ve Mahsup Hakkı (Unfettered Set-off)"
+    pattern: "(?is)employer\\s+may\\s+withhold,\\s+retain\\s+or\\s+set\\s*off\\s+from\\s+any\\s+payment"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin hakedişlerden tek taraflı kesinti (set-off) yapma hakkı; yalnızca taraflarca mutabık kalınan, kesinleşmiş yargı kararına dayanan veya itirazsız cezai şart alacaklarıyla sınırlandırılmalıdır."
+
+  - id: CONST-TIMEBAR-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Çok Kısa İhbar Süresi ve Hak Kaybı (Strict Time Bar / Waiver)"
+    pattern: "(?is)(not\\s+entitled\\s+to\\s+an\\s+extension|deemed\\s+to\\s+have\\s+waived).*?(not\\s+submit\\s+a\\s+notice|fails\\s+to\\s+give\\s+notice)"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Süre uzatımı veya ek maliyet talepleri için verilen bildirim süresi (örn. 7 gün) çok kısadır. Bu sürenin en az 28 güne (FIDIC standartları) çıkarılması ve bildirim yapılmamasının 'kesin hak kaybı' (waiver) sayılacağı ibaresinin kaldırılması önerilir."
+
+  - id: CONST-PRICE-001
+    category: PAYMENT_TERMS
+    name: "Fiyat Farkı Yasağı (No Price Escalation)"
+    pattern: "(?is)(Contract\\s+Price|rates\\s+and\\s+prices).*?not\\s+be\\s+adjusted\\s+for\\s+rises\\s+or\\s+falls"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Sözleşme bedelinin malzeme ve işçilik artışlarına karşı sabit tutulması (sabit fiyat) büyük finansal risk barındırır. Beklenmeyen enflasyon veya malzeme fiyat endeksi artışlarında sözleşme bedelinin resmi endekslere göre (örn. TÜİK) güncellenmesi gerektiği eklenmelidir."
+
+  - id: CONST-SITE-001
+    category: SITE_CONDITIONS
+    name: "Beklenmeyen Saha ve İklim Koşulları Riski (Unforeseen Conditions)"
+    pattern: "(?is)deemed\\s+to\\s+have\\s+(inspected|satisfied\\s+itself).*?(climatic|hydrological|natural\\s+conditions).*?not\\s+entitled\\s+to\\s+an\\s+increase"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Müteahhidin zemin veya iklim koşullarından kaynaklanan riskleri tamamen üstlenmesi adil değildir. 'Öngörülemeyen fiziki koşullar' (Unforeseeable physical conditions) ile karşılaşılması halinde müteahhide süre uzatımı ve maliyet tazmini hakkı verilmelidir."
+
+  - id: CONST-DESIGN-001
+    category: WARRANTIES
+    name: "Mutlak Amaca Uygunluk Garantisi (Fitness for Purpose)"
+    pattern: "(?is)(design).*?fit\\s+for\\s+(the\\s+)?intended\\s+purpose(s)?"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Tasarım için 'Amaca Uygunluk' (Fitness for purpose) yerine 'Makul Özen ve Beceri' (Reasonable skill and care) standardının kullanılması, profesyonel sorumluluk sigortası (PI) kapsamı dışında kalmamanız için kritik önem taşır."
+
+  - id: CONST-TAKINGOVER-001
+    category: COMPLETION_AND_HANDOVER
+    name: "Geçici Kabul Olmadan Teslim Alma (Use Without Taking-Over)"
+    pattern: "(?is)(partial\\s+or\\s+entire\\s+use\\s+or\\s+occupancy).*?(not|nor\\s+does\\s+it)\\s+(constitute(s)?\\s+an\\s+acknowledgement|release)"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "İşverenin tesisi veya işleri kendi amaçları için fiilen kullanmaya başlaması (Use or occupancy), işlerin teslim alındığı (Substantial Completion) anlamına gelmeli ve o bölümün bakım, güvenlik ve sigorta riski işverene geçmelidir."
+
+
+
+
+
+  - id: CONST-SITECOND-002
+    category: SITE_CONDITIONS
+    name: "Saha Koşullarındaki Farklılıkların Yükleniciye Yıkılması (Site Conditions Discrepancies)"
+    pattern: "(?is)Discrepancies\\s+between\\s+the\\s+Site\\s+Conditions.*?are\\s+at\\s+the\\s+Contractor['’]?s\\s+risk"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Saha koşullarının müteahhidin öngördüğünden farklı çıkması (zemin, hidroloji vb.) durumunda sürenin (EOT) ve maliyetin artırılması yasaklanmıştır. FIDIC standartlarına uygun olarak 'Öngörülemeyen fiziki koşullar' (Unforeseeable physical conditions) halinde maliyet ve süre telafisi hakkı sözleşmeye eklenmelidir."
+
+  - id: CONST-SUBCON-001
+    category: SCOPE_OF_WORK
+    name: "Belirlenmiş Alt Yüklenici Sorumluluğu (Nominated Subcontractors Liability)"
+    pattern: "(?is)responsible\\s+for\\s+the\\s+work\\s+of\\s+all\\s+Subcontractors\\s+and\\s+Nominated\\s+Subcontractors"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İşverenin atadığı (Nominated) alt yüklenicilerin hatalarından dolayı müteahhidin sorumlu tutulması ciddi bir risktir. Müteahhide, atanan alt yükleniciyi makul gerekçelerle reddetme veya bu firmaların hatalarından doğacak sorumluluğu sınırlandırma hakkı verilmelidir."
+
+  - id: CONST-IP-002
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Tasarım ve Belgelerin Tüm Haklarının Devri (Absolute Assignment of IPR)"
+    pattern: "(?is)Contractor\\s+assigns\\s+to\\s+the\\s+Employer\\s+absolutely\\s+all\\s+of\\s+the\\s+Contractor['’]?s\\s+rights.*?including\\s+all\\s+IPR"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Müteahhidin hazırladığı tasarımların ve belgelerin fikri mülkiyetinin tamamen (absolutely) işverene devredilmesi yerine, işverene sadece projeyle sınırlı ve devredilemez bir kullanım hakkı (lisans) verilmesi müzakere edilmelidir."
+
+  - id: CONST-FORCEMAJ-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Mücbir Sebepte Maliyet Tazmini Yasağı (No Cost for Force Majeure)"
+    pattern: "(?is)not\\s+be\\s+entitled\\s+to\\s+reimbursement\\s+of\\s+any\\s+additional\\s+Cost\\s+incurred.*?resulting\\s+from\\s+Force\\s+Majeure"
+    weight: 0.85
+    severity: 0.9
+    locale: en
+    mitigation: "Doğal afetler hariç tutulsa dahi, savaş, terör veya idari yaptırımlar gibi mücbir sebep hallerinde müteahhidin maruz kaldığı ek maliyetlerin (demobilizasyon vb.) işveren tarafından karşılanacağı hükmü eklenmelidir."
+
+  - id: CONST-PAYMOD-001
+    category: PAYMENT_TERMS
+    name: "Onaylanmış Hakedişlerin Geriye Dönük Değiştirilmesi (Retrospective Modification of Payments)"
+    pattern: "(?is)not\\s+bound\\s+by\\s+any\\s+sum\\s+previously\\s+considered.*?may\\s+make\\s+any\\s+correction\\s+or\\s+modification\\s+to\\s+any\\s+previous\\s+payments"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin geçmişte onaylanmış hakedişleri tek taraflı olarak değiştirme yetkisi (correction to previous payments) müteahhidin nakit akışı güvenliğini bozar. Geçmiş ödemelerin ancak bariz bir hesap hatası varsa ve tarafların mutabakatıyla düzeltilebileceği belirtilmelidir."
+
+  - id: CONST-SUSP-001
+    category: TERMINATION
+    name: "Uzun Süreli Askıya Alma ve Fesih Yasağı (Prolonged Suspension Without Termination Right)"
+    pattern: "(?is)suspension.*?continues\\s+for\\s+more\\s+than\\s+one\\s+hundred\\s+and\\s+eighty\\s+\\(180\\)\\s+consecutive\\s+days"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin projeyi 180 gün (6 ay) boyunca askıya alma hakkı çok uzundur. FIDIC standartlarına göre bu süre 84 gün (12 hafta) ile sınırlandırılmalı ve bu süre sonunda müteahhide sözleşmeyi feshetme veya şantiyeden çekilme hakkı verilmelidir."
+
+  - id: CONST-AUDIT-001
+    category: PAYMENT_TERMS
+    name: "Geriye Dönük Denetim ve Kesin Hesap Sonrası İade (Post-Payment Audit and Refund)"
+    pattern: "(?is)subject\\s+to\\s+a\\s+post-payment\\s+audit.*?entitled\\s+to\\s+a\\s+refund\\s+from\\s+the\\s+Contractor"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Sözleşme bitiminden sonra 2 yıl boyunca süren geriye dönük denetim (post-payment audit) ve para iadesi (refund) şartı ucu açık bir risktir. Kesin Hesap (Final Statement) onaylandıktan sonra işverenin geriye dönük alacak taleplerinden feragat ettiği (discharge) hükme bağlanmalıdır."
+
+  - id: CONST-TIMEBAR-002
+    category: CLAIMS_AND_DISPUTES
+    name: "14 Günlük Katı Hak Düşürücü Süre (14-Day Strict Time Bar)"
+    pattern: "(?is)fails\\s+to\\s+give\\s+a\\s+Notice\\s+of\\s+Claim\\s+within\\s+the\\s+period\\s+of\\s+fourteen\\s+\\(14\\)\\s+days.*?deemed\\s+to\\s+have\\s+waived\\s+its\\s+entitlement"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Hak taleplerinde (Claim) 14 günlük bildirim süresi çok kısadır ve sürenin aşılmasının 'kesin hak kaybı' (waived its entitlement) sayılması adil değildir. Süre, standart uygulamalara uygun olarak en az 28 gün olarak revize edilmelidir."
+
+  # ==========================================
+  # EPC / TURNKEY (FIDIC SILVER) SPECIFIC RULES
+  # ==========================================
+  
+  - id: EPC-ADV-001
+    category: PAYMENT_TERMS
+    name: "Avans Ödemesinin İptal Edilmesi (No Advance Payment)"
+    pattern: '(?is)Sub\s+Clause\s+14\.2\s+is\s+deleted'
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sözleşmedeki avans ödemesi (Sub Clause 14.2) maddesinin silinmesi, müteahhidin tüm mobilizasyon maliyetlerini kendi cebinden karşılamasına yol açar. Proje başlangıç finansmanı için sözleşme bedelinin en az %10'u kadar avans talep edilmelidir."
+
+  - id: EPC-PENALTY-001
+    category: PAYMENT_TERMS
+    name: "Sert Beyan Cezası (BEE Penalty Deduction)"
+    pattern: '(?is)penalty\s+for\s+claiming\s+BEE\s+and\s+Preferencing\s+Points.*?1%'
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "BEE puanı beyanındaki olası bir hata durumunda hiçbir itiraz hakkı tanınmadan doğrudan ceza kesilmesi çok ağır bir hükümdür. Maddi bir hata durumunda hakedişten kesinti yapılmadan önce savunma imkanı tanınmalıdır."
+
+  - id: EPC-TRAIN-001
+    category: SCOPE_OF_WORK
+    name: "Zorunlu İstihdam ve Stajyer Kotaları (Strict Training Quotas)"
+    pattern: '(?is)hires\s+at\s+least\s+twelve\s*\(\s*12\s*\)\s*Interns'
+    weight: 0.8
+    severity: 0.7
+    locale: en
+    mitigation: "Sözleşme süresi boyunca 12 stajyer (Interns) çalıştırılmasının zorunlu tutulması, idari maliyetlerinizi artıracaktır. Bu bütçe planlamasına dahil edilmelidir."
+
+  - id: EPC-DELAY-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Aşırı Yüksek Günlük Gecikme Cezası (High Delay Damages)"
+    pattern: '(?is)Delay\s+Damages\s+payable.*?R500\s*000'
+    weight: 0.9
+    severity: 0.95
+    locale: en
+    mitigation: "Günlük R500.000,00 gibi astronomik gecikme cezaları (Delay Damages) risklidir. Günlük ceza oranının sözleşme bedelinin %0.1'i ile sınırlandırılması müzakere edilmelidir."
+
+  - id: EPC-WEATH-001
+    category: SITE_CONDITIONS
+    name: "Doğa Olayları Riskinin Müteahhide Yıkılması (Forces of Nature Risk)"
+    pattern: '(?is)Forces\s+of\s+nature.*?Rain,\s*Wind,\s*Hail\s*and\s*Floods'
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Yağmur, rüzgar, dolu ve sel gibi doğa olaylarının riskinin tamamen müteahhide yüklenmesi, olağanüstü hallerde bile süre uzatımı alamamanıza yol açar. Süre uzatımı (EOT) hakkı tanınmalıdır."
+
+  - id: EPC-VAR-001
+    category: SCOPE_OF_WORK
+    name: "Değişiklik (Varyasyon) Sınırı (Variation Limit)"
+    pattern: '(?is)variation\s+orders\s+shall\s+exceed\s+20%'
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Sözleşmede yapılacak değişikliklerin sözleşme bedelinin %20'si ile sınırlandırılması, işverenin devasa kapsam değişiklikleri talep etmesi halinde müteahhidi korumasız bırakır."
+
+  - id: EPC-REP-001
+    category: SCOPE_OF_WORK
+    name: "Daraltılmış İlerleme Raporu Süresi (Short Progress Report Deadline)"
+    pattern: "(?is)'7days'\\s+is\\s+deleted\\s+and\\s+replaced\\s+with\\s+'3'\\s+days'"
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "İlerleme raporlarının teslim süresinin 7 günden 3 güne düşürülmesi sahada ağır bir idari yük oluşturur. Bürokratik cezalarla karşılaşmamak için bu sürenin 7 gün olarak kalması talep edilmelidir."
+
+  - id: EPC-STAMP-001
+    category: OTHER
+    name: "Damga Vergisi Masraf Paylaşımı (Shared Stamp Duties)"
+    pattern: '(?is)stamp\s+duties.*?borne\s+by\s+both\s+Parties'
+    weight: 0.6
+    severity: 0.6
+    locale: en
+    mitigation: "Damga vergisi (Stamp duties) masraflarının taraflarca ortaklaşa ödenecek olması proje kârlılığınızı etkileyebilir. İlgili yasal mevzuata göre bu verginin kimin sorumluluğunda olduğu netleştirilmelidir."
+
+  - id: EPC-JUR-001
+    category: JURISDICTION
+    name: "Yerel Tahkim Zorunluluğu (Local Arbitration Rules)"
+    pattern: '(?is)Arbitration\s+Foundation\s+of\s+South\s+Africa\s+Rules'
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Uyuşmazlıkların çözümünün yalnızca AFSA kurallarına tabi tutulması, yabancı müteahhitler için dezavantajlı olabilir. ICC veya UNCITRAL kuralları önerilebilir."
+
+
+  # ==========================================
+  # GLOBAL TURNKEY TEMPLATE - ULTRA FLEXIBLE
+  # ==========================================
+
+  - id: EPC-GLOBAL-LIAB
+    category: LIABILITY
+    name: "Sorumluluk Sınırı Boş Bırakılmış (Liability Cap Empty)"
+    # [ ] içindeki boşluğu veya parantez içindeki boş metni yakalar
+    pattern: '(?is)total\s+liability.*?exceed.{1,20}(\[|__).{0,10}(\]|__)'
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sözleşmede sorumluluk sınırı [ ] şeklinde boş bırakılmış. Bu, sınırsız tazminat riski demektir. Buraya 'Sözleşme Bedeli' yazılmalıdır."
+
+  - id: EPC-GLOBAL-PAY
+    category: PAYMENT_TERMS
+    name: "Ödeme Süresi Belirsiz (Payment Period Undefined)"
+    # "within [ ] days" yapısını yakalar
+    pattern: '(?is)within.{1,20}(\[|__).{0,10}(\]|__).{1,10}days'
+    weight: 0.8
+    severity: 0.9
+    locale: en
+    mitigation: "Ödeme süresi boş bırakılmış. İşverenin ödemeyi ne zaman yapacağı belli değil. Buraya '28 days' veya '56 days' eklenmelidir."
+
+  - id: EPC-GLOBAL-GOV
+    category: JURISDICTION
+    name: "Uygulanacak Hukuk Seçilmemiş (Governing Law Empty)"
+    pattern: '(?is)law\s+of.{1,20}(\[|__).{0,10}(\]|__)'
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "Sözleşmenin hangi ülke hukukuna tabi olacağı seçilmemiş. Belirsizlik durumunda yerel mahkemeler yetkili olur, bu da risklidir."
+
+  - id: EPC-GLOBAL-VAR
+    category: SCOPE_OF_WORK
+    name: "Değişiklik Yetkisi (Variation Authority)"
+    # Kelimeler arasına ne girerse girsin (.{1,50}) yakalayan yapı
+    pattern: '(?is)Variation.{1,50}initiated.{1,50}any\s+time'
+    weight: 0.6
+    severity: 0.6
+    locale: en
+    mitigation: "İşverenin 'herhangi bir zamanda' değişiklik istemesi projeyi bitirmenizi engelleyebilir."

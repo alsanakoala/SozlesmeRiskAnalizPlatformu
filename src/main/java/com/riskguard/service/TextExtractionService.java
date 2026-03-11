@@ -2,6 +2,10 @@ package com.riskguard.service;
 
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -32,10 +36,18 @@ public class TextExtractionService {
         String text = null;
         boolean usedOcr = false;
 
-        // 1️⃣ Tika denemesi
+        // 1️⃣ Tika denemesi (Karakter Limiti Kaldırıldı)
         try (InputStream tikaIn = new ByteArrayInputStream(bytes)) {
             Metadata metadata = new Metadata();
-            String tikaText = tika.parseToString(tikaIn, metadata);
+            Parser parser = new AutoDetectParser();
+            
+            // DİKKAT: -1 parametresi ile Tika'nın 100.000 karakter okuma limiti sonsuz yapılır.
+            BodyContentHandler handler = new BodyContentHandler(-1);
+            ParseContext context = new ParseContext();
+            
+            // tika.parseToString yerine daha güvenilir ve limitsiz olan parser.parse kullanıyoruz
+            parser.parse(tikaIn, handler, metadata, context);
+            String tikaText = handler.toString();
 
             if (tikaText != null) {
                 tikaText = tikaText.trim();
@@ -54,10 +66,12 @@ public class TextExtractionService {
                     + t.getClass().getName() + " -> " + t.getMessage());
         }
 
-        // 2️⃣ OCR fallback (hala text null veya blank ise)
-        if (text == null || text.isBlank()) {
+        // 2️⃣ OCR fallback (Hala text null ise, boşsa VEYA şüpheli derecede kısaysa)
+        if (text == null || text.isBlank() || text.length() < 1500) {
             try {
-                System.out.println("[TextExtractionService] OCR fallback çalışıyor...");
+                System.out.println("[TextExtractionService] Tika metni yetersiz buldu (" + 
+                                  (text == null ? 0 : text.length()) + " karakter). OCR/PDFBox fallback çalışıyor...");
+                
                 InMemoryMultipartFile fakeFile = new InMemoryMultipartFile(
                         "upload",
                         "document.pdf",
@@ -71,13 +85,18 @@ public class TextExtractionService {
                 }
                 ocrText = ocrText.trim();
 
-                text = ocrText;
-                usedOcr = true;
-                System.out.println("[TextExtractionService] OCR fallback OK, length=" + text.length());
+                // Eğer OCR, Tika'dan daha fazla metin bulduysa onu kabul et
+                if (ocrText.length() > (text == null ? 0 : text.length())) {
+                    text = ocrText;
+                    usedOcr = true;
+                    System.out.println("[TextExtractionService] OCR fallback OK, yeni uzunluk=" + text.length());
+                } else {
+                    System.out.println("[TextExtractionService] OCR da daha fazlasını bulamadı. Orijinal Tika metni korunuyor.");
+                }
+                
             } catch (Throwable t) {
                 System.err.println("[TextExtractionService] OCR fallback da hata verdi: "
                         + t.getClass().getName() + " -> " + t.getMessage());
-                text = "";
                 usedOcr = true;
             }
         }
