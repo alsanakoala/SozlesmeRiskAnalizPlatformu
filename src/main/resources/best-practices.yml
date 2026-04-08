@@ -1,0 +1,30 @@
+- id: bp-liab-1
+  category: LIABILITY
+  text: "Tarafların toplam sorumluluğu işbu sözleşme kapsamında ödenen toplam bedelle sınırlıdır; dolaylı ve sonuçsal zararlar kapsam dışıdır."
+  safer_wording: "Tarafların toplam sorumluluğu, sözleşme bedeli ile sınırlıdır ve dolaylı/sonuçsal zararlar hariçtir."
+  note: "Standart sorumluluk sınırlandırması"
+
+- id: bp-liab-2
+  category: LIABILITY
+  text: "Taraflar müteselsil sorumluluk üstlenmez; yalnızca kendi fiil ve kusurundan sorumludur."
+  safer_wording: "Her taraf sadece kendi fiil ve ihmallerinden sorumludur."
+  note: "Müteselsil sorumluluğu azaltma"
+
+- id: bp-term-1
+  category: TERMINATION
+  text: "Fesih yalnızca haklı sebeple ve en az 30 gün önceden yazılı bildirimle kullanılabilir."
+  safer_wording: "Tek taraflı fesih hakkı haklı sebep ve 30 gün ihbar koşuluna bağlıdır."
+  note: "Dengeli fesih şartı"
+
+- id: bp-conf-1
+  category: CONFIDENTIALITY
+  text: "Gizlilik yükümlülüğü karşılıklıdır; cezai şart makul seviyede ve öngörülebilirdir."
+  safer_wording: "Taraflar karşılıklı gizlilik yükümlülüğüne tabidir."
+  note: "Karşılıklı gizlilik"
+
+- id: bp-fm-1
+  category: FORCE_MAJEURE
+  text: "Mücbir sebep hallerinde yükümlülükler askıya alınır; makul süre sonunda fesih mümkündür."
+  safer_wording: "Mücbir sebep halinde askı ve sonrasında fesih yolu tanımlıdır."
+  note: "FM standardı"
+  

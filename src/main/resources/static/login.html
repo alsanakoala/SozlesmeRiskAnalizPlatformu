@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Sözleşme Risk Analiz</title>
+    <style>
+        :root {
+            --bg-page: #f3f6f9;
+            --bg-card: #ffffff;
+            --border-card: #e5e7eb;
+            --text-main: #0f172a;
+            --brand-1: #1f3a8a;
+            --brand-2: #2563eb;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Inter', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-card);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--brand-1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            background: var(--brand-2);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--brand-1);
+        }
+
+        .toggle-link {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .toggle-link span {
+            color: var(--brand-2);
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+            display: block;
+        }
+
+        .alert.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <h2 id="form-title">Sisteme Giriş</h2>
+        <div id="alert-box" class="alert"></div>
+
+        <form id="auth-form">
+            <div class="input-group">
+                <label for="email">E-posta</label>
+                <input type="email" id="email" required placeholder="ornek@sirket.com">
+            </div>
+            <div class="input-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Giriş Yap</button>
+        </form>
+
+        <div class="toggle-link" id="toggle-form">
+            Hesabın yok mu? <span>Kayıt Ol</span>
+        </div>
+    </div>
+
+    <script>
+        let isLoginMode = true;
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const toggleForm = document.getElementById('toggle-form');
+        const authForm = document.getElementById('auth-form');
+        const alertBox = document.getElementById('alert-box');
+
+        // Kayıt Ol / Giriş Yap Modunu Değiştirme
+        toggleForm.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            formTitle.innerText = isLoginMode ? 'Sisteme Giriş' : 'Yeni Kayıt';
+            submitBtn.innerText = isLoginMode ? 'Giriş Yap' : 'Kayıt Ol';
+            toggleForm.innerHTML = isLoginMode
+                ? 'Hesabın yok mu? <span>Kayıt Ol</span>'
+                : 'Zaten hesabın var mı? <span>Giriş Yap</span>';
+            alertBox.style.display = 'none'; // Uyarıları temizle
+        });
+
+        // Form Gönderimi (Backend'e İstek Atma)
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Lütfen bekleyin...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const endpoint = isLoginMode ? '/api/v1/auth/login' : '/api/v1/auth/register';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (isLoginMode) {
+                        localStorage.setItem('jwtToken', data.token);
+                        alertBox.className = 'alert success';
+                        alertBox.innerText = 'Giriş başarılı! Yönlendiriliyorsunuz...';
+                        setTimeout(() => window.location.href = '/index.html', 1000);
+                    } else {
+                        alertBox.className = 'alert success';
+                        alertBox.innerText = 'Kayıt başarılı! Şimdi giriş yapabilirsiniz.';
+                        toggleForm.click();
+                    }
+                } else {
+                    alertBox.className = 'alert error';
+                    alertBox.innerText = data.message || 'Bir hata oluştu!';
+                }
+            } catch (error) {
+                alertBox.className = 'alert error';
+                alertBox.innerText = 'Sunucuya bağlanılamadı!';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = isLoginMode ? 'Giriş Yap' : 'Kayıt Ol';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

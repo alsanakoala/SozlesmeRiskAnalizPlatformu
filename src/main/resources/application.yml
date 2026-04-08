@@ -1,0 +1,106 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/contractrisk
+    username: serad
+    password: "1234"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false        # ⬅️ LOB okuma/yazma için gerekli
+  
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update       # ⬅️ YENİ: local/dev için. document tablosuna ocr_used kolonunu otomatik ekle
+    # 🔥 1. HIZLANDIRMA: Konsolu kilitleyen devasa SQL logları kapatıldı
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false    # 🔥 SQL formatlama kapatıldı
+        # 🔥 2. HIZLANDIRMA: Veritabanına saniyede 100 kere gitmek yerine verileri 50'şerli paketler halinde gönderir
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 50
+          lob:
+            non_contextual_creation: true  # ⬅️ Postgres LOB ile uyum için faydalı
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  # 🔇 RabbitMQ auto-config kapalı, listener'lar devre dışı
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false
+
+server:
+  port: 8080
+
+app:
+  rules:
+    path: classpath:risk/rulepack.yml
+  nlp:
+    sentenceModelEn: classpath:nlp/en-sent.bin
+    sentenceModelTr: classpath:nlp/tr-sent.bin
+  python:
+    enabled: false
+    baseUrl: http://localhost:8000
+  features:
+    mq:
+      enabled: false      # ⬅️ RabbitMQ listener ve producer devre dışı
+
+# =====================================================
+# 🧠 AI / NLP / Embedding Ayarları
+# =====================================================
+riskguard:
+  ai:
+    similarity:
+      # 🔥 3. HIZLANDIRMA: Eğer servisinde bu ayar kontrol ediliyorsa, ağır PyTorch modelini devre dışı bırakır
+      enabled: false      
+      log: false          
+      embedding:
+        model: "sentence-transformers/all-MiniLM-L6-v2"
+        minSim: 0.85
+
+pdf:
+  renderer:
+    mode: puppeteer
+    url: http://localhost:3005/render
+    base-url: http://localhost:8080/     # HTML içindeki göreli asset kökü
+    token: CHANGE_ME_SECRET
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: contract-risk-platform
+
+resilience4j:
+  timelimiter:
+    instances:
+      pdfRender:
+        timeoutDuration: 12s
+  retry:
+    instances:
+      pdfRender:
+        maxAttempts: 3
+        waitDuration: 500ms
+  circuitbreaker:
+    instances:
+      pdfRender:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s

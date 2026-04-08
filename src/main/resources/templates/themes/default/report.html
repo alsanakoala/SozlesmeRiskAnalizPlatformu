@@ -1,0 +1,16 @@
+<!doctype html><html lang="tr"><head>
+<meta charset="utf-8"/><title>Risk Raporu</title>
+<style>
+  @page { margin: 18mm; } html,body{margin:0;padding:0}
+  body{font-family: DejaVu Sans, Arial, sans-serif; color:#0f172a}
+  .title{font-weight:700;font-size:20px;margin:0 0 12px}
+  .meta{color:#64748b;font-size:12px;margin:0 0 16px}
+  .card{border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin:8px 0}
+  .risk-high{background:#fee2e2;border-color:#fecaca}
+  .risk-med{background:#fef9c3;border-color:#fde68a}
+  .risk-low{background:#dcfce7;border-color:#bbf7d0}
+</style></head><body>
+  <div class="title">Sözleşme Risk Raporu</div>
+  <div class="meta">{{documentMeta}}</div>
+  <div id="findings">{{findingsHtml}}</div>
+</body></html>

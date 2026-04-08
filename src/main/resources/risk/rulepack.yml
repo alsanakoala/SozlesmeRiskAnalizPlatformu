@@ -1,0 +1,2576 @@
+rules:
+  # ==========================================
+  # ENGLISH BASE RULES
+  # ==========================================
+  - id: IND-001
+    category: INDEMNITY
+    name: Broad indemnity including all losses
+    pattern: '(?is)indemnif(y|ication).*(all|any)\s+(loss(es)?|damages?)'
+    weight: 1.0
+    severity: 0.9
+    locale: en
+    mitigation: "Tazminat yükümlülüğü doğrudan zararlarla sınırlandırılmalı, dolaylı zararlar (kâr kaybı, itibar kaybı vb.) kapsam dışı bırakılmalıdır."
+
+  - id: LOL-001
+    category: LIMITATION_OF_LIABILITY
+    name: No cap or unlimited liability
+    pattern: '(?is)(unlimited|without\s+limit|no\s+cap).*liabilit(y|ies)'
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sorumluluk tutarını dolaylı/sonuç zararları hariç tutarak yıllık sözleşme bedeli ile sınırlandırın."
+
+  - id: GOV-TR-001
+    category: GOVERNING_LAW
+    name: Governing law outside Türkiye
+    pattern: '(?is)governing\s+law\s+of\s+(?!t(u|ü)rkiye|turkish|istanbul|ankara).+'
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Sözleşmenin Türk Hukukuna (veya tarafların ortak belirleyeceği tarafsız bir hukuka) tabi olacak şekilde değiştirilmesi önerilir."
+
+  - id: AUTO-001
+    category: AUTO_RENEWAL
+    name: Auto-renewal without termination window
+    pattern: '(?is)auto(-|\s*)renew(al)?(?!.*(notice|termination|opt\s*out))'
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "Otomatik yenileme maddesine, yenileme tarihinden en az 30 gün önce yazılı bildirim ile iptal edebilme hakkı eklenmelidir."
+
+  - id: PAY-TR-001
+    category: PAYMENT_TERMS
+    name: Payment term exceeds 60 days
+    pattern: '(?is)(net|payment\s*term).*?(6[1-9]|[7-9]\d|1\d\d)\s*day'
+    weight: 0.6
+    severity: 0.6
+    locale: en
+    mitigation: "Ödeme vadelerinin 30-45 gün bandına çekilmesi veya gecikme faizi uygulanacağı yönünde madde eklenmesi talep edilebilir."
+
+  # ==========================================
+  # TURKISH BASE RULES
+  # ==========================================
+  - id: LOL-TR-001
+    category: LIMITATION_OF_LIABILITY
+    name: Sorumluluğun sınırlandırılmaması / sınırsız sorumluluk
+    pattern: "(?is)(sınırsız\\s+sorumluluk|her\\s+türlü\\s+zarar(ın|dan)\\s+mesuliyet|limit(\\s+)?olmaksızın\\s+sorumlu)"
+    weight: 1.0
+    severity: 1.0
+    locale: tr
+    mitigation: "Sorumluluğun en fazla 'sözleşme bedeli' kadar olacağı ve dolaylı zararların (kâr kaybı vb.) karşılanmayacağı açıkça belirtilmelidir."
+
+  - id: IND-TR-001
+    category: INDEMNITY
+    name: Karşı tarafı her türlü zarar, talep, kayıp için tazmin etme
+    pattern: "(?is)(tazmin\\s+edecektir|tazmin\\s+etmeyi\\s+kabul\\s+eder).*(her\\s+türlü\\s+(zarar|kayıp|masraf|talep))"
+    weight: 0.9
+    severity: 0.9
+    locale: tr
+    mitigation: "Tazminat yükümlülüğünün kusur oranına göre sınırlandırılması ve üçüncü taraf iddiaları için haber verme şartı getirilmesi önerilir."
+
+  - id: TERM-TR-001
+    category: TERMINATION
+    name: Tek taraflı, sebep göstermeden fesih hakkı
+    pattern: "(?is)(sebep\\s*göstermeksizin|herhangi\\s*bir\\s*gerekçe\\s*bildirmeksizin).*(tek\\s*taraflı\\s+fes(h|i))"
+    weight: 0.9
+    severity: 0.8
+    locale: tr
+    mitigation: "Fesih hakkının karşılıklı hale getirilmesi veya tek taraflı fesih durumunda en az 30 günlük ön ihbar süresi eklenmesi sağlanmalıdır."
+
+  - id: AUTO-TR-001
+    category: AUTO_RENEWAL
+    name: Otomatik yenileme + açıkça fesih bildirimi penceresi yok
+    pattern: "(?is)(otomatik\\s+olarak\\s+yenilen(ir|ecektir)).*(bildirim|fesih|iptal|sona\\s+erdirme)?(?!.*(30\\s*gün|60\\s*gün|yazılı\\s+bildirim))"
+    weight: 0.7
+    severity: 0.7
+    locale: tr
+    mitigation: "Sözleşme süresi bitiminden en az 30 gün önce yazılı bildirim ile otomatik yenilemenin durdurulabileceği hükmü eklenmelidir."
+
+  - id: PAY-TR-002
+    category: PAYMENT_TERMS
+    name: Ödeme süresi 60 günü aşıyor
+    pattern: "(?is)(ödeme\\s*süresi|fatura\\s*bedeli).*(6[1-9]|[7-9]\\d|1\\d\\d)\\s*gün"
+    weight: 0.6
+    severity: 0.6
+    locale: tr
+    mitigation: "Fatura ödeme vadesi 30 veya 45 güne düşürülmeli, gecikme durumunda temerrüt faizi işletileceği eklenmelidir."
+
+  - id: LAW-TR-001
+    category: GOVERNING_LAW
+    name: Yetkili hukuk / yetkili mahkeme Türkiye dışı
+    pattern: "(?is)(işbu\\s+ sözleşme|bu\\s+ sözleşme).*(yürürlükteki|tabi\\s+olacaktır|governed\\s+by).*(kanunlarına|hukukuna).*(?!t(u|ü)rkiye|t(u|ü)rk\\s+cumhuriyeti|istanbul|ankara|izmir)"
+    weight: 0.8
+    severity: 0.8
+    locale: tr
+    mitigation: "Uyuşmazlıkların çözümü için Türkiye Cumhuriyeti kanunlarının geçerli olması ve Türkiye'deki mahkemelerin yetkilendirilmesi önerilir."
+
+  - id: DATA-TR-001
+    category: DATA_PROTECTION
+    name: Kişisel verilerin aktarımı / paylaşımı muğlak (KVKK riski)
+    pattern: "(?is)(kişisel\\s+veri|kvkk|veri\\s+sahibi).*(paylaş(ılabilir|acaktır)|aktar(ılabilir|ılacaktır)).*(açık\\s+rıza|aydınlatma)?(?!.*(açık\\s+rıza|aydınlatma\\s+metni|sınırlı\\s+amaç))"
+    weight: 0.85
+    severity: 0.9
+    locale: tr
+    mitigation: "KVKK kapsamında veri aktarımının sadece belirli amaçlarla sınırlandırılması ve açık rıza metninin ayrıca alınacağı belirtilmelidir."
+
+  - id: PRIV-001
+    category: CONFIDENTIALITY
+    name: Personal data usage without explicit consent
+    pattern: '(?is)(kişisel\s+veri|personal\s+data).{0,200}(izinsiz|rızası\s+olmaksızın|without\s+(explicit\s+)?consent|unauthorized)'
+    weight: 1.0
+    severity: 0.95
+    locale: multi
+    mitigation: "Kişisel verinin paylaşımı veya işlenmesi açık yazılı rızaya bağlanmalı ve tarafın veriyi sınırsız kullanma hakkı sınırlandırılmalıdır."
+
+  # ==========================================
+  # SCORE-BASED & PATTERN LIST RULES
+  # ==========================================
+  - id: "TERM-001"
+    category: "TERMINATION"
+    score: 85
+    explanation: "Karşı taraf hiçbir gerekçe göstermeden sözleşmeyi feshedebilir. Gelirin bir anda kesilebilir."
+    mitigation: "Fesih hakkının karşılıklı (simetrik) hale getirilmesi veya tek taraflı fesih durumunda en az 30 günlük makul bir ön ihbar süresi eklenmesi önerilir."
+    patterns:
+      - "(terminate|termination).*(for (its )?convenience)"
+      - "may terminate (this )?(agreement|contract) at any time (and )?for any reason"
+      - "may terminate .* in its sole discretion"
+      - "may terminate .* without cause"
+      - "may terminate .* without (any )?penalty"
+      - "may terminate .* at any time (and )?for any reason"
+      - "may terminate .* upon written notice"
+      - "at (its|their) convenience .* terminate"
+
+  - id: "INS-001"
+    category: "INSURANCE_OBLIGATION"
+    score: 80
+    explanation: "Belirli bir sigorta poliçesini belirli bir minimum limit ile sürdürme zorunluluğu var. Bu maliyet sende kalabilir."
+    mitigation: "Talep edilen poliçe limitlerinin sözleşme bedeliyle orantılı olup olmadığını kontrol edin. Limitlerin düşürülmesini veya prim maliyetlerinin paylaşılmasını talep edebilirsiniz."
+    patterns:
+      - "(maintain|carry|procure).*(insurance|liability insurance)"
+      - "insurance coverage (of|in) (amounts )?not less than"
+      - "coverage of not less than \\$?[0-9][0-9,\\.]+(\\s*(per|each) (occurrence|claim))?"
+      - "commercial general liability insurance"
+      - "professional liability insurance"
+      - "errors and omissions insurance"
+      - "workers'? compensation insurance"
+
+  - id: "LAW-001"
+    category: "GOVERNING_LAW"
+    score: 60
+    explanation: "Sözleşmede yabancı bir hukuk seçilmiş olabilir. Anlaşmazlık olursa bu hukuka göre değerlendirilir."
+    mitigation: "Sözleşmenin Türk Hukukuna (veya tarafların ortak belirleyeceği tarafsız ve bilindik bir hukuka) tabi olacak şekilde değiştirilmesi önerilir."
+    patterns:
+      - "governed by the laws of (the )?[A-Z][a-zA-Z]+"
+      - "shall be governed by.*laws of"
+      - "under the laws of the State of"
+      - "in accordance with the laws of"
+      - "Turkish law shall not apply"
+
+  - id: "JUR-001"
+    category: "JURISDICTION"
+    score: 70
+    explanation: "Uyuşmazlık halinde belirli bir mahkemenin/yerin münhasır yetkisi tanımlanmış. Bu seni yabancı bir mahkemeye zorlayabilir."
+    mitigation: "Uyuşmazlıkların çözümü için şirketin merkezinin bulunduğu yerdeki (örneğin İstanbul veya Ankara) mahkemelerin yetkilendirilmesi önerilir."
+    patterns:
+      - "exclusive jurisdiction of the courts of"
+      - "exclusive jurisdiction .* (County|Court|Courts|District)"
+      - "venue shall (lie|be) in"
+      - "submit to the (exclusive )?jurisdiction of"
+      - "irrevocably submit to .* jurisdiction"
+
+  # ==========================================
+  # CUSTOM RULES
+  # ==========================================
+  - id: CUSTOM-TERM-001
+    category: TERMINATION
+    name: "Tek taraflı fesih (for convenience)"
+    pattern: "(?is)(terminate|termination).*(for its convenience|at its convenience|without cause)"
+    weight: 0.9
+    severity: 0.8
+    locale: en 
+    mitigation: "Sebepsiz fesih (convenience) hakkı iptal edilmeli veya feshin sadece haklı sebeple (cause) yapılabileceği şekilde sınırlandırılmalıdır."
+
+  - id: CUSTOM-IND-001
+    category: INDEMNITY
+    name: "Limitsiz tazminat / broad indemnity"
+    pattern: "(?is)(indemnify|hold harmless).*(any and all|all claims|without limitation)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tazminat yükümlülüğü doğrudan zararlarla sınırlandırılmalı, dolaylı zararlar (kâr kaybı, itibar kaybı vb.) kapsam dışı bırakılmalıdır."
+
+  - id: CUSTOM-INS-001
+    category: INSURANCE_OBLIGATION
+    name: "High insurance coverage or additional insured clause"
+    pattern: "(?is)(insurance).*(additional insured|combined single limit|one million)"
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "Talep edilen poliçe limitlerinin makul seviyede olduğundan ve mevcut poliçelerinizle örtüştüğünden emin olun."
+
+  - id: CUSTOM-IP-001
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "IP ownership fully assigned to client"
+    pattern: "(?is)(all material|work products|deliverables).*?(shall be|vested in).*?(commission|client)"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Fikri mülkiyet haklarının tamamen devri yerine, müşteriye sadece projeyle sınırlı bir kullanım hakkı (lisans) verilmesi müzakere edilebilir."
+
+  - id: CUSTOM-LAW-001
+    category: GOVERNING_LAW
+    name: "Foreign governing law or jurisdiction"
+    pattern: "(?is)(laws of the state of|jurisdiction of).*(California|New York|Texas|Florida)"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Uyuşmazlıkların ABD mahkemeleri yerine tarafsız bir tahkim merkezinde (örneğin ICC veya ISTAC) çözümlenmesi önerilir."
+
+  # ==========================================
+  # CONSTRUCTION / UNOPS SPECIFIC RULES
+  # ==========================================
+  - id: CONST-TERM-001
+    category: TERMINATION
+    name: "Keyfî Fesih ve Kâr Kaybı (Termination for Convenience)"
+    pattern: "(?is)terminate\\s+the\\s+contract.*?for\\s+(the\\s+employer['’]?s\\s+)?convenience"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin keyfî fesih hakkı sınırlandırılmalı, fesih durumunda müteahhidin tamamlanmamış işler için beklenen kârı (loss of profit) ve demobilizasyon masraflarının ödeneceği açıkça belirtilmelidir."
+
+  - id: CONST-OMISSION-001
+    category: SCOPE_OF_WORK
+    name: "İş Kapsamını Daraltıp Başkasına Verme (Omission to Engage Others)"
+    pattern: "(?is)omission\\s+of\\s+any\\s+part.*?employer\\s+may\\s+engage\\s+others"
+    weight: 0.95
+    severity: 0.90
+    locale: en
+    mitigation: "İşveren, sözleşmedeki iş kalemlerini projeden çıkarıp (omission) daha ucuza başka bir firmaya yaptırmamalıdır. Bu madde, sözleşme dengesine aykırıdır ve iptal edilmesi önerilir."
+
+  - id: CONST-SETOFF-001
+    category: PAYMENT_TERMS
+    name: "Sınırsız Kesinti ve Mahsup Hakkı (Unfettered Set-off)"
+    pattern: "(?is)employer\\s+may\\s+withhold,\\s+retain\\s+or\\s+set\\s*off\\s+from\\s+any\\s+payment"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin hakedişlerden tek taraflı kesinti (set-off) yapma hakkı; yalnızca taraflarca mutabık kalınan, kesinleşmiş yargı kararına dayanan veya itirazsız cezai şart alacaklarıyla sınırlandırılmalıdır."
+
+  - id: CONST-TIMEBAR-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Çok Kısa İhbar Süresi ve Hak Kaybı (Strict Time Bar / Waiver)"
+    pattern: "(?is)(not\\s+entitled\\s+to\\s+an\\s+extension|deemed\\s+to\\s+have\\s+waived).*?(not\\s+submit\\s+a\\s+notice|fails\\s+to\\s+give\\s+notice)"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Süre uzatımı veya ek maliyet talepleri için verilen bildirim süresi (örn. 7 gün) çok kısadır. Bu sürenin en az 28 güne (FIDIC standartları) çıkarılması ve bildirim yapılmamasının 'kesin hak kaybı' (waiver) sayılacağı ibaresinin kaldırılması önerilir."
+
+  - id: CONST-PRICE-001
+    category: PAYMENT_TERMS
+    name: "Fiyat Farkı Yasağı (No Price Escalation)"
+    pattern: "(?is)(Contract\\s+Price|rates\\s+and\\s+prices).*?not\\s+be\\s+adjusted\\s+for\\s+rises\\s+or\\s+falls"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Sözleşme bedelinin malzeme ve işçilik artışlarına karşı sabit tutulması (sabit fiyat) büyük finansal risk barındırır. Beklenmeyen enflasyon veya malzeme fiyat endeksi artışlarında sözleşme bedelinin resmi endekslere göre (örn. TÜİK) güncellenmesi gerektiği eklenmelidir."
+
+  - id: CONST-SITE-001
+    category: SITE_CONDITIONS
+    name: "Beklenmeyen Saha ve İklim Koşulları Riski (Unforeseen Conditions)"
+    pattern: "(?is)deemed\\s+to\\s+have\\s+(inspected|satisfied\\s+itself).*?(climatic|hydrological|natural\\s+conditions).*?not\\s+entitled\\s+to\\s+an\\s+increase"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Müteahhidin zemin veya iklim koşullarından kaynaklanan riskleri tamamen üstlenmesi adil değildir. 'Öngörülemeyen fiziki koşullar' (Unforeseeable physical conditions) ile karşılaşılması halinde müteahhide süre uzatımı ve maliyet tazmini hakkı verilmelidir."
+
+  - id: CONST-DESIGN-001
+    category: WARRANTIES
+    name: "Mutlak Amaca Uygunluk Garantisi (Fitness for Purpose)"
+    pattern: "(?is)(design).*?fit\\s+for\\s+(the\\s+)?intended\\s+purpose(s)?"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Tasarım için 'Amaca Uygunluk' (Fitness for purpose) yerine 'Makul Özen ve Beceri' (Reasonable skill and care) standardının kullanılması, profesyonel sorumluluk sigortası (PI) kapsamı dışında kalmamanız için kritik önem taşır."
+
+  - id: CONST-TAKINGOVER-001
+    category: COMPLETION_AND_HANDOVER
+    name: "Geçici Kabul Olmadan Teslim Alma (Use Without Taking-Over)"
+    pattern: "(?is)(partial\\s+or\\s+entire\\s+use\\s+or\\s+occupancy).*?(not|nor\\s+does\\s+it)\\s+(constitute(s)?\\s+an\\s+acknowledgement|release)"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "İşverenin tesisi veya işleri kendi amaçları için fiilen kullanmaya başlaması (Use or occupancy), işlerin teslim alındığı (Substantial Completion) anlamına gelmeli ve o bölümün bakım, güvenlik ve sigorta riski işverene geçmelidir."
+
+
+
+
+
+  - id: CONST-SITECOND-002
+    category: SITE_CONDITIONS
+    name: "Saha Koşullarındaki Farklılıkların Yükleniciye Yıkılması (Site Conditions Discrepancies)"
+    pattern: "(?is)Discrepancies\\s+between\\s+the\\s+Site\\s+Conditions.*?are\\s+at\\s+the\\s+Contractor['’]?s\\s+risk"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Saha koşullarının müteahhidin öngördüğünden farklı çıkması (zemin, hidroloji vb.) durumunda sürenin (EOT) ve maliyetin artırılması yasaklanmıştır. FIDIC standartlarına uygun olarak 'Öngörülemeyen fiziki koşullar' (Unforeseeable physical conditions) halinde maliyet ve süre telafisi hakkı sözleşmeye eklenmelidir."
+
+  - id: CONST-SUBCON-001
+    category: SCOPE_OF_WORK
+    name: "Belirlenmiş Alt Yüklenici Sorumluluğu (Nominated Subcontractors Liability)"
+    pattern: "(?is)responsible\\s+for\\s+the\\s+work\\s+of\\s+all\\s+Subcontractors\\s+and\\s+Nominated\\s+Subcontractors"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İşverenin atadığı (Nominated) alt yüklenicilerin hatalarından dolayı müteahhidin sorumlu tutulması ciddi bir risktir. Müteahhide, atanan alt yükleniciyi makul gerekçelerle reddetme veya bu firmaların hatalarından doğacak sorumluluğu sınırlandırma hakkı verilmelidir."
+
+  - id: CONST-IP-002
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Tasarım ve Belgelerin Tüm Haklarının Devri (Absolute Assignment of IPR)"
+    pattern: "(?is)Contractor\\s+assigns\\s+to\\s+the\\s+Employer\\s+absolutely\\s+all\\s+of\\s+the\\s+Contractor['’]?s\\s+rights.*?including\\s+all\\s+IPR"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Müteahhidin hazırladığı tasarımların ve belgelerin fikri mülkiyetinin tamamen (absolutely) işverene devredilmesi yerine, işverene sadece projeyle sınırlı ve devredilemez bir kullanım hakkı (lisans) verilmesi müzakere edilmelidir."
+
+  - id: CONST-FORCEMAJ-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Mücbir Sebepte Maliyet Tazmini Yasağı (No Cost for Force Majeure)"
+    pattern: "(?is)not\\s+be\\s+entitled\\s+to\\s+reimbursement\\s+of\\s+any\\s+additional\\s+Cost\\s+incurred.*?resulting\\s+from\\s+Force\\s+Majeure"
+    weight: 0.85
+    severity: 0.9
+    locale: en
+    mitigation: "Doğal afetler hariç tutulsa dahi, savaş, terör veya idari yaptırımlar gibi mücbir sebep hallerinde müteahhidin maruz kaldığı ek maliyetlerin (demobilizasyon vb.) işveren tarafından karşılanacağı hükmü eklenmelidir."
+
+  - id: CONST-PAYMOD-001
+    category: PAYMENT_TERMS
+    name: "Onaylanmış Hakedişlerin Geriye Dönük Değiştirilmesi (Retrospective Modification of Payments)"
+    pattern: "(?is)not\\s+bound\\s+by\\s+any\\s+sum\\s+previously\\s+considered.*?may\\s+make\\s+any\\s+correction\\s+or\\s+modification\\s+to\\s+any\\s+previous\\s+payments"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin geçmişte onaylanmış hakedişleri tek taraflı olarak değiştirme yetkisi (correction to previous payments) müteahhidin nakit akışı güvenliğini bozar. Geçmiş ödemelerin ancak bariz bir hesap hatası varsa ve tarafların mutabakatıyla düzeltilebileceği belirtilmelidir."
+
+  - id: CONST-SUSP-001
+    category: TERMINATION
+    name: "Uzun Süreli Askıya Alma ve Fesih Yasağı (Prolonged Suspension Without Termination Right)"
+    pattern: "(?is)suspension.*?continues\\s+for\\s+more\\s+than\\s+one\\s+hundred\\s+and\\s+eighty\\s+\\(180\\)\\s+consecutive\\s+days"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin projeyi 180 gün (6 ay) boyunca askıya alma hakkı çok uzundur. FIDIC standartlarına göre bu süre 84 gün (12 hafta) ile sınırlandırılmalı ve bu süre sonunda müteahhide sözleşmeyi feshetme veya şantiyeden çekilme hakkı verilmelidir."
+
+  - id: CONST-AUDIT-001
+    category: PAYMENT_TERMS
+    name: "Geriye Dönük Denetim ve Kesin Hesap Sonrası İade (Post-Payment Audit and Refund)"
+    pattern: "(?is)subject\\s+to\\s+a\\s+post-payment\\s+audit.*?entitled\\s+to\\s+a\\s+refund\\s+from\\s+the\\s+Contractor"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Sözleşme bitiminden sonra 2 yıl boyunca süren geriye dönük denetim (post-payment audit) ve para iadesi (refund) şartı ucu açık bir risktir. Kesin Hesap (Final Statement) onaylandıktan sonra işverenin geriye dönük alacak taleplerinden feragat ettiği (discharge) hükme bağlanmalıdır."
+
+  - id: CONST-TIMEBAR-002
+    category: CLAIMS_AND_DISPUTES
+    name: "14 Günlük Katı Hak Düşürücü Süre (14-Day Strict Time Bar)"
+    pattern: "(?is)fails\\s+to\\s+give\\s+a\\s+Notice\\s+of\\s+Claim\\s+within\\s+the\\s+period\\s+of\\s+fourteen\\s+\\(14\\)\\s+days.*?deemed\\s+to\\s+have\\s+waived\\s+its\\s+entitlement"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Hak taleplerinde (Claim) 14 günlük bildirim süresi çok kısadır ve sürenin aşılmasının 'kesin hak kaybı' (waived its entitlement) sayılması adil değildir. Süre, standart uygulamalara uygun olarak en az 28 gün olarak revize edilmelidir."
+
+  # ==========================================
+  # EPC / TURNKEY (FIDIC SILVER) SPECIFIC RULES
+  # ==========================================
+  
+  - id: EPC-ADV-001
+    category: PAYMENT_TERMS
+    name: "Avans Ödemesinin İptal Edilmesi (No Advance Payment)"
+    pattern: '(?is)Sub\s+Clause\s+14\.2\s+is\s+deleted'
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sözleşmedeki avans ödemesi (Sub Clause 14.2) maddesinin silinmesi, müteahhidin tüm mobilizasyon maliyetlerini kendi cebinden karşılamasına yol açar. Proje başlangıç finansmanı için sözleşme bedelinin en az %10'u kadar avans talep edilmelidir."
+
+  - id: EPC-PENALTY-001
+    category: PAYMENT_TERMS
+    name: "Sert Beyan Cezası (BEE Penalty Deduction)"
+    pattern: '(?is)penalty\s+for\s+claiming\s+BEE\s+and\s+Preferencing\s+Points.*?1%'
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "BEE puanı beyanındaki olası bir hata durumunda hiçbir itiraz hakkı tanınmadan doğrudan ceza kesilmesi çok ağır bir hükümdür. Maddi bir hata durumunda hakedişten kesinti yapılmadan önce savunma imkanı tanınmalıdır."
+
+  - id: EPC-TRAIN-001
+    category: SCOPE_OF_WORK
+    name: "Zorunlu İstihdam ve Stajyer Kotaları (Strict Training Quotas)"
+    pattern: '(?is)hires\s+at\s+least\s+twelve\s*\(\s*12\s*\)\s*Interns'
+    weight: 0.8
+    severity: 0.7
+    locale: en
+    mitigation: "Sözleşme süresi boyunca 12 stajyer (Interns) çalıştırılmasının zorunlu tutulması, idari maliyetlerinizi artıracaktır. Bu bütçe planlamasına dahil edilmelidir."
+
+  - id: EPC-DELAY-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Aşırı Yüksek Günlük Gecikme Cezası (High Delay Damages)"
+    pattern: '(?is)Delay\s+Damages\s+payable.*?R500\s*000'
+    weight: 0.9
+    severity: 0.95
+    locale: en
+    mitigation: "Günlük R500.000,00 gibi astronomik gecikme cezaları (Delay Damages) risklidir. Günlük ceza oranının sözleşme bedelinin %0.1'i ile sınırlandırılması müzakere edilmelidir."
+
+  - id: EPC-WEATH-001
+    category: SITE_CONDITIONS
+    name: "Doğa Olayları Riskinin Müteahhide Yıkılması (Forces of Nature Risk)"
+    pattern: '(?is)Forces\s+of\s+nature.*?Rain,\s*Wind,\s*Hail\s*and\s*Floods'
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Yağmur, rüzgar, dolu ve sel gibi doğa olaylarının riskinin tamamen müteahhide yüklenmesi, olağanüstü hallerde bile süre uzatımı alamamanıza yol açar. Süre uzatımı (EOT) hakkı tanınmalıdır."
+
+  - id: EPC-VAR-001
+    category: SCOPE_OF_WORK
+    name: "Değişiklik (Varyasyon) Sınırı (Variation Limit)"
+    pattern: '(?is)variation\s+orders\s+shall\s+exceed\s+20%'
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Sözleşmede yapılacak değişikliklerin sözleşme bedelinin %20'si ile sınırlandırılması, işverenin devasa kapsam değişiklikleri talep etmesi halinde müteahhidi korumasız bırakır."
+
+  - id: EPC-REP-001
+    category: SCOPE_OF_WORK
+    name: "Daraltılmış İlerleme Raporu Süresi (Short Progress Report Deadline)"
+    pattern: "(?is)'7days'\\s+is\\s+deleted\\s+and\\s+replaced\\s+with\\s+'3'\\s+days'"
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "İlerleme raporlarının teslim süresinin 7 günden 3 güne düşürülmesi sahada ağır bir idari yük oluşturur. Bürokratik cezalarla karşılaşmamak için bu sürenin 7 gün olarak kalması talep edilmelidir."
+
+  - id: EPC-STAMP-001
+    category: OTHER
+    name: "Damga Vergisi Masraf Paylaşımı (Shared Stamp Duties)"
+    pattern: '(?is)stamp\s+duties.*?borne\s+by\s+both\s+Parties'
+    weight: 0.6
+    severity: 0.6
+    locale: en
+    mitigation: "Damga vergisi (Stamp duties) masraflarının taraflarca ortaklaşa ödenecek olması proje kârlılığınızı etkileyebilir. İlgili yasal mevzuata göre bu verginin kimin sorumluluğunda olduğu netleştirilmelidir."
+
+  - id: EPC-JUR-001
+    category: JURISDICTION
+    name: "Yerel Tahkim Zorunluluğu (Local Arbitration Rules)"
+    pattern: '(?is)Arbitration\s+Foundation\s+of\s+South\s+Africa\s+Rules'
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Uyuşmazlıkların çözümünün yalnızca AFSA kurallarına tabi tutulması, yabancı müteahhitler için dezavantajlı olabilir. ICC veya UNCITRAL kuralları önerilebilir."
+
+
+  # ==========================================
+  # GLOBAL TURNKEY TEMPLATE - ULTRA FLEXIBLE
+  # ==========================================
+
+  - id: EPC-GLOBAL-LIAB
+    category: LIABILITY
+    name: "Sorumluluk Sınırı Boş Bırakılmış (Liability Cap Empty)"
+    # [ ] içindeki boşluğu veya parantez içindeki boş metni yakalar
+    pattern: '(?is)total\s+liability.*?exceed.{1,20}(\[|__).{0,10}(\]|__)'
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sözleşmede sorumluluk sınırı [ ] şeklinde boş bırakılmış. Bu, sınırsız tazminat riski demektir. Buraya 'Sözleşme Bedeli' yazılmalıdır."
+
+  - id: EPC-GLOBAL-PAY
+    category: PAYMENT_TERMS
+    name: "Ödeme Süresi Belirsiz (Payment Period Undefined)"
+    # "within [ ] days" yapısını yakalar
+    pattern: '(?is)within.{1,20}(\[|__).{0,10}(\]|__).{1,10}days'
+    weight: 0.8
+    severity: 0.9
+    locale: en
+    mitigation: "Ödeme süresi boş bırakılmış. İşverenin ödemeyi ne zaman yapacağı belli değil. Buraya '28 days' veya '56 days' eklenmelidir."
+
+  - id: EPC-GLOBAL-GOV
+    category: JURISDICTION
+    name: "Uygulanacak Hukuk Seçilmemiş (Governing Law Empty)"
+    pattern: '(?is)law\s+of.{1,20}(\[|__).{0,10}(\]|__)'
+    weight: 0.7
+    severity: 0.7
+    locale: en
+    mitigation: "Sözleşmenin hangi ülke hukukuna tabi olacağı seçilmemiş. Belirsizlik durumunda yerel mahkemeler yetkili olur, bu da risklidir."
+
+  - id: EPC-GLOBAL-VAR
+    category: SCOPE_OF_WORK
+    name: "Değişiklik Yetkisi (Variation Authority)"
+    # Kelimeler arasına ne girerse girsin (.{1,50}) yakalayan yapı
+    pattern: '(?is)Variation.{1,50}initiated.{1,50}any\s+time'
+    weight: 0.6
+    severity: 0.6
+    locale: en
+    mitigation: "İşverenin 'herhangi bir zamanda' değişiklik istemesi projeyi bitirmenizi engelleyebilir."
+
+
+
+  #1.-Unsigned-EPC-Agreement
+  - id: EPC-RISK-001
+    category: SITE_CONDITIONS
+    name: "Öngörülemeyen Zorluklar ve Saha Koşulları Riski Yüklenicide"
+    pattern: "(?is)(accepts\\s+total\\s+responsibility\\s+for\\s+having\\s+foreseen\\s+all\\s+difficulties|not\\s+be\\s+adjusted\\s+to\\s+take\\s+account\\s+of\\s+any\\s+unforeseen\\s+difficulties\\s+or\\s+costs|assumes?\\s+the\\s+risk\\s+of.*?site\\s+conditions|not\\s+entitled\\s+to\\s+make\\s+any\\s+claim.*?site\\s+conditions)"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Öngörülemeyen fiziki koşullar, zemin, hidroloji ve saha farklılıkları için yükleniciye süre uzatımı ve ek maliyet talep hakkı tanınmalıdır."
+
+  - id: EPC-RISK-002
+    category: PAYMENT_TERMS
+    name: "Sözleşme Bedelinin Yeterliliği Tamamen Yüklenici Riskinde"
+    pattern: "(?is)(deemed\\s+to\\s+have\\s+satisfied\\s+itself\\s+as\\s+to\\s+the\\s+correctness\\s+and\\s+sufficiency\\s+of\\s+the\\s+contract\\s+price|contract\\s+price\\s+covers\\s+all\\s+the\\s+contractor'?s\\s+obligations)"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Sözleşme bedelinin tüm riskleri kapsadığı yönündeki kayıt sınırlandırılmalı; işveren kaynaklı gecikme, mevzuat değişikliği ve öngörülemeyen saha koşulları için bedel uyarlaması açıkça korunmalıdır."
+
+  - id: EPC-RISK-003
+    category: WARRANTIES
+    name: "Employer Verisi Hatalı Olsa Bile Tasarım Riski Yüklenicide"
+    pattern: "(?is)(contractor\\s+shall\\s+be\\s+responsible\\s+for\\s+the\\s+design\\s+of\\s+the\\s+works|employer\\s+shall\\s+not\\s+be\\s+responsible\\s+for\\s+any\\s+error,\\s*inaccuracy\\s+or\\s+omission|any\\s+data\\s+or\\s+information.*?shall\\s+not\\s+relieve\\s+the\\s+contractor)"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşveren tarafından sağlanan veri, kriter ve tasarım girdilerinin doğruluğu işveren garantisine bağlanmalı; yüklenicinin sorumluluğu yalnızca makul inceleme ile tespit edilebilir hususlarla sınırlandırılmalıdır."
+
+  - id: EPC-RISK-004
+    category: PAYMENT_TERMS
+    name: "Ağır Teminat Yapısı (Advance / Performance / Warranty / Punch List Bond)"
+    pattern: "(?is)(advance\\s+payment\\s+bond|performance\\s+bond.*?12\\.5%\\s+of\\s+the\\s+contract\\s+price|warranty\\s+bond.*?10\\s*per\\s*cent|punch\\s+list\\s+bond.*?200%\\s+of\\s+the\\s+total\\s+projected\\s+cost)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Teminat mektuplarının toplam ekonomik yükü düşürülmeli; oranlar piyasa standartlarına çekilmeli ve aynı risk için birden fazla bond istenmesinin önü kesilmelidir."
+
+  - id: EPC-RISK-005
+    category: PAYMENT_TERMS
+    name: "Bond Yenilenmezse İşverenin Tam Tutarı Çekme Hakkı"
+    pattern: "(?is)(entitled\\s+to\\s+draw\\s+the\\s+full\\s+amount\\s+of\\s+the\\s+.*?bond|retain\\s+the\\s+same\\s+by\\s+way\\s+of\\s+security|replacement\\s+bond)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Teminat süresi uzatılmadığında işverenin tamamını tahsil etme hakkı yerine, eksikliğin giderilmesi için makul bir cure period tanınmalı ve tahsil hakkı sadece kesinleşmiş zararlarla sınırlandırılmalıdır."
+
+  - id: EPC-RISK-006
+    category: CLAIMS_AND_DISPUTES
+    name: "Yüksek Gecikme Cezası ve Yedek Gerçek Zarar Riski"
+    pattern: "(?is)(delay\\s+liquidated\\s+damages|weekly\\s+rate\\s+of\\s+0\\.4%\\s+of\\s+the\\s+contract\\s+price|sole\\s+remedy|void\\s+or\\s+unenforceable.*?liable\\s+to\\s+the\\s+employer\\s*\\(against\\s+proof\\))"
+    weight: 0.95
+    severity: 0.95
+    locale: en
+    mitigation: "Gecikme cezaları toplam sözleşme bedelinin makul bir yüzdesiyle sınırlandırılmalı ve cezai şart geçersiz sayılırsa ayrıca gerçek zarar talep edilemeyeceği açıkça yazılmalıdır."
+
+  - id: EPC-RISK-007
+    category: PAYMENT_TERMS
+    name: "Performance LD Formülü Boş ve Teslim Şarta Bağlı"
+    pattern: "(?is)(performance\\s+liquidated\\s+damages|usd\\s*\\[\\s*\\]|\\[usd\\s*\\[.*?\\]\\]|taki(ng|ng-)?over.*?liquidated\\s+damages.*?warranty\\s+bond)"
+    weight: 0.95
+    severity: 0.95
+    locale: en
+    mitigation: "Performance LD formülü ve tavanı netleştirilmeli; boş bırakılmış tutarlar doldurulmalı ve geçici kabulün yalnızca LD ödemesine bağlanması kaldırılmalıdır."
+
+  - id: EPC-RISK-008
+    category: TERMINATION
+    name: "Long Stop Sonrası Red, İade, Faiz ve Finansman Maliyeti Riski"
+    pattern: "(?is)(reject\\s+the\\s+works|refund\\s+to\\s+the\\s+employer|contract\\s+price\\s+already\\s+paid.*?plus\\s+interest|equity\\s+and\\s+financing\\s+costs|clear\\s+and\\s+restore\\s+the\\s+site)"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Red ve iade sonuçları daraltılmalı; işveren yalnızca doğrudan ve ispatlanmış zararlarını talep edebilmeli, financing cost ve equity cost gibi geniş kalemler kapsam dışı bırakılmalıdır."
+
+  - id: EPC-RISK-009
+    category: TERMINATION
+    name: "İşverenin Geniş Fesih Sebepleri"
+    pattern: "(?is)(termination\\s+by\\s+employer\\s+for\\s+contractor\\s+default|material\\s+breach|fails\\s+to\\s+comply\\s+with\\s+sub-?clause\\s+4\\.27|reaches\\s+the\\s+cap\\s+on\\s+delay\\s+liquidated\\s+damages|reaches\\s+the\\s+cap\\s+on\\s+performance\\s+liquidated\\s+damages|fails\\s+to\\s+complete\\s+the\\s+works\\s+before\\s+the\\s+long\\s+stop)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Fesih sebepleri daraltılmalı; yalnızca esaslı ve giderilmemiş ihlaller fesih nedeni olmalı, LD tavanına ulaşılması otomatik fesih sebebi sayılmamalıdır."
+
+  - id: EPC-RISK-010
+    category: TERMINATION
+    name: "İşverenin Her Zaman Askıya Alma Hakkı"
+    pattern: "(?is)(employer\\s+may\\s+at\\s+any\\s+time\\s+instruct\\s+the\\s+contractor\\s+to\\s+suspend|suspension\\s+of\\s+work)"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Askıya alma süresi sınırlandırılmalı; belirli bir sürenin aşılması halinde yükleniciye fesih ve tüm demobilizasyon / remobilizasyon maliyetlerini talep etme hakkı tanınmalıdır."
+
+  - id: EPC-RISK-011
+    category: PAYMENT_TERMS
+    name: "İşverenin Mahsup ve Kesinti Hakkı"
+    pattern: "(?is)(may\\s+deduct\\s+this\\s+amount\\s+from\\s+any\\s+moneys\\s+due|set\\s+off\\s+against\\s+or\\s+make\\s+any\\s+deduction)"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Mahsup hakkı yalnızca taraflarca mutabık kalınmış veya kesinleşmiş alacaklarla sınırlandırılmalı; ihtilaflı alacaklar için tek taraflı kesinti yapılamamalıdır."
+
+  - id: EPC-RISK-012
+    category: INDEMNITY
+    name: "Geniş Tazminat ve Zararsız Tutma Yükümlülüğü"
+    pattern: "(?is)(indemnif(y|ies|ied)\\s+and\\s+hold\\s+harmless|against\\s+and\\s+from\\s+all\\s+claims,\\s*damages,\\s*losses\\s+and\\s+expenses|including\\s+legal\\s+fees\\s+and\\s+expenses)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tazminat yalnızca üçüncü taraf talepleri ve doğrudan zararlarla sınırlandırılmalı; dolaylı zararlar ile tüm yasal masrafların otomatik kapsama girmesi engellenmelidir."
+
+  - id: EPC-RISK-013
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "İşveren Lehine Güçlü ve Süresiz Lisans"
+    pattern: "(?is)(non-?terminable\\s+transferable\\s+non-?exclusive\\s+royalty-?free\\s+licen[cs]e|copy,\\s*use\\s+and\\s+communicate\\s+the\\s+contractor'?s\\s+documents)"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Fikri mülkiyet devri yerine, sadece proje kapsamında kullanılabilecek sınırlı, devredilemez ve alt lisans verilemez bir lisans modeli tercih edilmelidir."
+
+  - id: EPC-RISK-014
+    category: CLAIMS_AND_DISPUTES
+    name: "Standart FIDIC Yorumuna Başvuru Yasağı"
+    pattern: "(?is)may\\s+not\\s+refer\\s+to\\s+the\\s+standard\\s+fidic\\s+silver\\s+book\\s+as\\s+an\\s+aid\\s+to\\s+interpretation"
+    weight: 0.75
+    severity: 0.75
+    locale: en
+    mitigation: "Uyuşmazlık halinde sözleşmenin yorumunda ilgili FIDIC standardının ticari ve teknik bağlam olarak dikkate alınabileceği açıkça korunmalıdır."
+
+  - id: EPC-RISK-015
+    category: OTHER
+    name: "Boş Bırakılmış Ticari ve Teknik Alanlar"
+    pattern: "(?is)(\\[\\s*\\]|\\[\\s*X\\s*\\]|\\[\\s*\\*\\*\\s*\\]|USD\\s*\\[\\s*\\])"
+    weight: 0.9
+    severity: 0.95
+    locale: en
+    mitigation: "Boş bırakılmış tüm tutar, tarih, test kriteri ve limit alanları imza öncesi netleştirilmeli; aksi halde yorum ve uygulama riski doğar."
+
+    # ==========================================
+  # FIDIC RED BOOK 1999 - GENERAL CONDITIONS
+  # ==========================================
+
+  - id: FIDIC-RED-TERM-001
+    category: TERMINATION
+    name: "Employer convenience termination (Red Book)"
+    pattern: "(?is)employer\\s+shall\\s+be\\s+entitled\\s+to\\s+terminate\\s+the\\s+contract.*?for\\s+the\\s+employer['’]?s\\s+convenience"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin convenience termination hakkı sınırlandırılmalı; fesih halinde yüklenicinin demobilizasyon, overhead, loss of profit ve taahhüt altına girdiği sipariş maliyetleri açıkça korunmalıdır."
+
+  - id: FIDIC-RED-SEC-001
+    category: PAYMENT_TERMS
+    name: "Performance Security required"
+    pattern: "(?is)contractor\\s+shall\\s+obtain.*?performance\\s+security"
+    weight: 0.8
+    severity: 0.75
+    locale: en
+    mitigation: "Performance Security tutarı, süresi ve çağrı şartları müzakere edilmelidir. Tutarın makul seviyede kalması ve otomatik/ilk talepte paraya çevrilememesi sağlanmalıdır."
+
+  - id: FIDIC-RED-SEC-002
+    category: PAYMENT_TERMS
+    name: "Full drawdown if security not extended"
+    pattern: "(?is)failure\\s+by\\s+the\\s+contractor\\s+to\\s+extend\\s+the\\s+validity\\s+of\\s+the\\s+performance\\s+security.*?employer\\s+may\\s+claim\\s+the\\s+full\\s+amount"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Teminat süresi uzatım eksikliğinde tam tutarın tahsili yerine makul cure period tanınmalı ve claim hakkı sadece gerçekten doğmuş zararlarla sınırlandırılmalıdır."
+
+  - id: FIDIC-RED-TIMEBAR-001
+    category: CLAIMS_AND_DISPUTES
+    name: "28-day contractor claim time bar"
+    pattern: "(?is)not\\s+later\\s+than\\s+28\\s+days.*?contractor\\s+became\\s+aware.*?if\\s+the\\s+contractor\\s+fails\\s+to\\s+give\\s+notice.*?shall\\s+not\\s+be\\s+entitled\\s+to\\s+additional\\s+payment"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "28 günlük hak düşürücü süre en az 42 güne çıkarılmalı ve bildirimin gecikmesi halinde otomatik hak kaybı yerine sadece ispat yükü etkisi doğurmalıdır."
+
+  - id: FIDIC-RED-TIMEBAR-002
+    category: CLAIMS_AND_DISPUTES
+    name: "Notice failure discharges employer liability"
+    pattern: "(?is)employer\\s+shall\\s+be\\s+discharged\\s+from\\s+all\\s+liability\\s+in\\s+connection\\s+with\\s+the\\s+claim"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Claim notice süresinin kaçırılması halinde işverenin tüm sorumluluktan kurtulması hükmü yumuşatılmalı; sadece gecikmeden doğan ispat zorluğu kadar sonuç doğurmalıdır."
+
+  - id: FIDIC-RED-PAY-001
+    category: PAYMENT_TERMS
+    name: "Engineer may revise previous payment certificates"
+    pattern: "(?is)engineer\\s+may\\s+in\\s+any\\s+payment\\s+certificate\\s+make\\s+any\\s+correction\\s+or\\s+modification\\s+that\\s+should\\s+properly\\s+be\\s+made\\s+to\\s+any\\s+previous\\s+payment\\s+certificate"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Geçmiş hakedişlerin tek taraflı düzeltilmesi yalnızca açık hesap hataları ile sınırlandırılmalı ve ihtilaflı düzeltmeler için yüklenici görüşü alınmalıdır."
+
+  - id: FIDIC-RED-PAY-002
+    category: PAYMENT_TERMS
+    name: "Employer deductions through payment certificates"
+    pattern: "(?is)this\\s+amount\\s+may\\s+be\\s+included\\s+as\\s+a\\s+deduction\\s+in\\s+the\\s+contract\\s+price\\s+and\\s+payment\\s+certificates"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Hakedişlerden kesinti hakkı yalnızca kesinleşmiş veya taraflarca kabul edilmiş alacaklarla sınırlandırılmalıdır."
+
+  - id: FIDIC-RED-PAY-003
+    category: PAYMENT_TERMS
+    name: "Employer set-off / deduction right"
+    pattern: "(?is)only\\s+be\\s+entitled\\s+to\\s+set\\s+off\\s+against\\s+or\\s+make\\s+any\\s+deduction"
+    weight: 0.8
+    severity: 0.75
+    locale: en
+    mitigation: "Mahsup hakkının kapsamı ve koşulları netleştirilmeli; disputed claims için tek taraflı set-off engellenmelidir."
+
+  - id: FIDIC-RED-FINAL-001
+    category: PAYMENT_TERMS
+    name: "Final statement as full and final settlement"
+    pattern: "(?is)final\\s+statement\\s+represents\\s+full\\s+and\\s+final\\s+settlement\\s+of\\s+all\\s+moneys\\s+due"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Final discharge verilmeden önce tüm pending claim, prolongation cost ve variation taleplerinin açıkça reserve edildiği yazılmalıdır."
+
+  - id: FIDIC-RED-FINAL-002
+    category: PAYMENT_TERMS
+    name: "Cessation of employer liability outside final statements"
+    pattern: "(?is)employer\\s+shall\\s+not\\s+be\\s+liable\\s+to\\s+the\\s+contractor.*?except\\s+to\\s+the\\s+extent\\s+that\\s+the\\s+contractor\\s+shall\\s+have\\s+included\\s+an\\s+amount\\s+expressly"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kesin hesap dışında kalan taleplerin düşeceği hükmü yumuşatılmalı; latent defects, unresolved claims ve sonradan ortaya çıkan alacaklar için saklı tutma kaydı eklenmelidir."
+
+  - id: FIDIC-RED-IP-001
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Broad employer license over contractor documents"
+    pattern: "(?is)non-terminable\\s+transferable\\s+non-exclusive\\s+royalty-free\\s+licence\\s+to\\s+copy,\\s*use\\s+and\\s+communicate\\s+the\\s+contractor['’]?s\\s+documents"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Lisansın kapsamı sadece proje, işletme ve bakım amaçlarıyla sınırlandırılmalı; üçüncü taraflara yaygın devri ve değişiklik hakkı kısıtlanmalıdır."
+
+  - id: FIDIC-RED-SUBPAY-001
+    category: PAYMENT_TERMS
+    name: "Direct payment to nominated subcontractor"
+    pattern: "(?is)employer\\s+may.*?pay,\\s*direct\\s+to\\s+the\\s+nominated\\s+subcontractor"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Nominated subcontractor’a doğrudan ödeme ancak açık, belgeli ve itirazsız borçlar için mümkün olmalı; yüklenicinin savunma hakkı korunmalıdır."
+
+  - id: FIDIC-RED-APPX-001
+    category: OTHER
+    name: "Risk depends on Appendix to Tender values"
+    pattern: "(?is)(amount\\s+stated\\s+in\\s+the\\s+appendix\\s+to\\s+tender|maximum\\s+amount.*?stated\\s+in\\s+the\\s+appendix\\s+to\\s+tender|minimum\\s+amount\\s+of\\s+interim\\s+payment\\s+certificates.*?stated\\s+in\\s+the\\s+appendix\\s+to\\s+tender)"
+    weight: 0.75
+    severity: 0.8
+    locale: en
+    mitigation: "Appendix to Tender içinde doldurulan tutarlar ayrıca analiz edilmelidir; performance security, delay damages, retention ve minimum IPC eşikleri agresif yazılmamalıdır."
+
+  - id: FIDIC-RED-LAW-001
+    category: GOVERNING_LAW
+    name: "Governing law tied to Appendix to Tender"
+    pattern: "(?is)contract\\s+shall\\s+be\\s+governed\\s+by\\s+the\\s+law\\s+of\\s+the\\s+country\\s+\\(or\\s+other\\s+jurisdiction\\)\\s+stated\\s+in\\s+the\\s+appendix\\s+to\\s+tender"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Appendix to Tender’da seçilecek hukuk ve yargı yeri ayrıca incelenmelidir; yabancı hukuk seçimi varsa ayrıca risk puanı verilmelidir."
+
+  - id: FIDIC-RED-LD-001
+    category: PAYMENT_TERMS
+    name: "Delay damages defined by Appendix to Tender"
+    pattern: "(?is)delay\\s+damages.*?sum\\s+stated\\s+in\\s+the\\s+appendix\\s+to\\s+tender.*?maximum\\s+amount"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Appendix’teki günlük gecikme cezası ve toplam cap oranı kontrol edilmelidir; günlük oran ve cap müzakere edilerek makul seviyeye çekilmelidir."
+
+    
+    
+   # ==========================================
+  # DBIA 540 - DESIGN CONSULTANT SPECIFIC RULES
+  # ==========================================
+
+  - id: DBIA-540-001
+    category: SCOPE_OF_WORK
+    name: "Broad pass-through of upstream obligations"
+    pattern: "(?is)design\\s+consultant\\s+shall\\s+have\\s+the\\s+same\\s+rights,\\s*responsibilities,\\s*and\\s+obligations.*?as\\s+design-builder.*?has\\s+against\\s+and\\s+to\\s+owner"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Pass-through hükümleri sınırlandırılmalı; danışmana yalnızca kendi hizmet kapsamı ile doğrudan ilgili ve yazılı olarak açıkça kabul edilmiş yükümlülükler geçirilmelidir."
+
+  - id: DBIA-540-002
+    category: SCOPE_OF_WORK
+    name: "Optional upstream provisions may be passed through"
+    pattern: "(?is)optional\\s+provisions.*?only\\s+passed\\s+through.*?to\\s+the\\s+extent.*?expressly\\s+set\\s+forth\\s+in\\s+article\\s+15"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Article 15 ile geçirilecek upstream optional provisions tek tek tanımlanmalı; genel atıf veya blanket incorporation yapılmamalıdır."
+
+  - id: DBIA-540-003
+    category: PAYMENT_TERMS
+    name: "Recovery tied to Design-Builder's recovery from Owner"
+    pattern: "(?is)may\\s+be\\s+entitled\\s+to\\s+an\\s+adjustment\\s+of\\s+costs\\s+and/or\\s+time\\s+to\\s+the\\s+extent\\s+the\\s+design-builder\\s+recovers\\s+from\\s+the\\s+owner"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Danışmanın hakları yalnızca işveren tahsilatına bağlanmamalı; danışmanın hak ettiği süre ve ücret düzenlemeleri doğrudan sözleşmede korunmalıdır."
+
+  - id: DBIA-540-004
+    category: WARRANTIES
+    name: "Consultant liable for deviation from Basis of Design"
+    pattern: "(?is)fails\\s+to\\s+identify\\s+such\\s+changes.*?or\\s+fails\\s+to\\s+produce\\s+construction\\s+documents\\s+consistent.*?design-builder\\s+incurs\\s+additional\\s+uncompensated\\s+costs.*?design\\s+consultant\\s+shall\\s+be\\s+responsible"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Deviation sorumluluğu yalnızca danışmanın kusurundan doğan doğrudan maliyetlerle sınırlandırılmalı; consequential ve upstream exposure kapsam dışı bırakılmalıdır."
+
+  - id: DBIA-540-005
+    category: WARRANTIES
+    name: "Review or approval does not transfer design liability"
+    pattern: "(?is)review\\s+and/or\\s+approval.*?shall\\s+not\\s+be\\s+deemed\\s+to\\s+transfer\\s+any\\s+design\\s+liability"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Danışmanın tasarım sorumluluğu korunurken, Design-Builder ve Owner review sürecindeki yönlendirmelerinin etkisi ayrıca dikkate alınmalıdır."
+
+  - id: DBIA-540-006
+    category: CLAIMS_AND_DISPUTES
+    name: "Delay liability with compensation and indemnity"
+    pattern: "(?is)if\\s+the\\s+delay\\s+is\\s+due\\s+to.*?design\\s+consultant.*?shall.*?compensate\\s+and\\s+indemnify\\s+design-builder\\s+for\\s+all\\s+costs,\\s*damages,\\s*and\\s+expenses"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Gecikme sorumluluğu yalnızca danışmanın kusuruyla ve öngörülebilir doğrudan zararlarla sınırlandırılmalı; broad indemnity kaldırılmalıdır."
+
+  - id: DBIA-540-007
+    category: PAYMENT_TERMS
+    name: "Pay-when-paid clause"
+    pattern: "(?is)all\\s+payments.*?shall\\s+not\\s+be\\s+due\\s+until\\s+after\\s+design-builder\\s+actually\\s+receives\\s+payment.*?from\\s+owner"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Pay-when-paid yerine en fazla pay-if-paid olmayan, belirli bir azami süreye bağlı ödeme rejimi tercih edilmelidir."
+
+  - id: DBIA-540-008
+    category: PAYMENT_TERMS
+    name: "Final payment requires broad release"
+    pattern: "(?is)general\\s+release.*?waiving.*?all\\s+claims,\\s*except\\s+those\\s+claims\\s+previously\\s+made\\s+in\\s+writing"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Final release içine reserve edilen claim listesi eklenmeli; latent claim ve unresolved dispute hakları saklı tutulmalıdır."
+
+  - id: DBIA-540-009
+    category: PAYMENT_TERMS
+    name: "Broad audit right over consultant records"
+    pattern: "(?is)right\\s+to\\s+audit.*?design\\s+consultant'?s\\s+records.*?for\\s+a\\s+period\\s+of\\s+three\\s*\\(\\s*3\\s*\\)\\s*years\\s+after\\s+final\\s+payment"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Denetim hakkı kapsam, süre ve belge türü bakımından sınırlandırılmalı; lump sum ve fee composition incelemesi hariç tutulmalıdır."
+
+  - id: DBIA-540-010
+    category: TERMINATION
+    name: "Conditional termination for convenience"
+    pattern: "(?is)if\\s+owner\\s+terminates\\s+design-builder\\s+for\\s+any\\s+reason,\\s*then\\s+design-builder\\s+may\\s+terminate\\s+this\\s+agreement"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Convenience termination halinde danışmana demobilizasyon, bekleyen işler ve kapatma maliyetleri açıkça ödenmelidir."
+
+  - id: DBIA-540-011
+    category: TERMINATION
+    name: "Short cure period for consultant default"
+    pattern: "(?is)cured,\\s*or\\s+commenced\\s+to\\s+be\\s+cured,\\s*within\\s+seven\\s*\\(\\s*7\\s*\\)\\s*days.*?second\\s+written\\s+notice.*?within\\s+an\\s+additional\\s+seven\\s*\\(\\s*7\\s*\\)\\s*day"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Cure süreleri hizmetin niteliğine uygun makul sürelere çıkarılmalı; karmaşık tasarım kusurlarında daha uzun düzeltme süresi tanınmalıdır."
+
+  - id: DBIA-540-012
+    category: TERMINATION
+    name: "Reprocurement and defense costs after default"
+    pattern: "(?is)recover.*?costs\\s+of\\s+completing\\s+the\\s+services.*?including\\s+attorneys'?\\s+fees\\s+and\\s+expenses.*?reprocurement\\s+and\\s+defense\\s+of\\s+claims"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Default sonrası zarar hesabı doğrudan, makul ve ispatlanmış completion cost ile sınırlandırılmalı; defense ve broad reprocurement exposure daraltılmalıdır."
+
+  - id: DBIA-540-013
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Use rights over work product upon termination/default"
+    pattern: "(?is)grants\\s+design-builder\\s+and\\s+owner.*?the\\s+right\\s+to\\s+use\\s+the\\s+work\\s+product.*?(termination|default)"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Termination/default halinde Work Product kullanım hakkı, tüm ücretlerin tam ödenmesine ve kullanımın proje ile sınırlı olmasına bağlanmalıdır."
+
+  - id: DBIA-540-014
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Additional fee for use of work product left blank"
+    pattern: "(?is)additional\\s+sum\\s+of\\s+dollars\\s*\\(\\$\\s*\\)"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Work Product kullanımına ilişkin ek bedel boş bırakılmamalı; termination/default senaryoları için net ücret belirlenmelidir."
+
+  - id: DBIA-540-015
+    category: INDEMNITY
+    name: "Broad indemnity for use of work product on another project"
+    pattern: "(?is)defend,\\s*indemnify\\s+and\\s+hold\\s+harmless.*?any\\s+and\\s+all\\s+claims,\\s*damages,\\s*liabilities,\\s*losses\\s+and\\s+expenses"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Başka projede kullanım tazminatı sadece kullanımdan doğan doğrudan üçüncü taraf talepleriyle sınırlandırılmalıdır."
+
+  - id: DBIA-540-016
+    category: INDEMNITY
+    name: "Patent and copyright infringement defense and indemnity"
+    pattern: "(?is)shall\\s+defend\\s+any\\s+action.*?based\\s+on\\s+any\\s+claim.*?constitutes\\s+infringement.*?shall\\s+indemnify\\s+and\\s+hold\\s+harmless"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "IP infringement sorumluluğu danışmanın kendi tasarım ve seçimine özgü unsurlarla sınırlandırılmalı; owner/design-builder directed selections kapsam dışı bırakılmalıdır."
+
+  - id: DBIA-540-017
+    category: INDEMNITY
+    name: "General indemnity to fullest extent permitted by law"
+    pattern: "(?is)to\\s+the\\s+fullest\\s+extent\\s+permitted\\s+by\\s+law,\\s*shall\\s+indemnify\\s+and\\s+hold\\s+harmless"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Indemnity yalnızca danışmanın negligent acts or omissions ölçüsünde ve doğrudan zararlarla sınırlandırılmalıdır."
+
+  - id: DBIA-540-018
+    category: CLAIMS_AND_DISPUTES
+    name: "Short notice period for contract adjustments"
+    pattern: "(?is)written\\s+notice\\s+shall\\s+be\\s+given\\s+within\\s+a\\s+reasonable\\s+time,\\s*not\\s+to\\s+exceed\\s+ten\\s*\\(\\s*10\\s*\\)\\s*days"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "10 günlük ihbar süresi en az 21-28 güne çıkarılmalı ve geç bildirim otomatik hak kaybı sonucunu doğurmamalıdır."
+
+  - id: DBIA-540-019
+    category: CLAIMS_AND_DISPUTES
+    name: "Design-Builder may refuse to submit owner claim"
+    pattern: "(?is)design-builder\\s+reserves\\s+the\\s+right\\s+not\\s+to\\s+submit\\s+a\\s+claim\\s+to\\s+owner"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Design-Builder’ın owner claim’ini sunmama hakkı kaldırılmalı veya danışmanın bu durumda doğrudan iç uyuşmazlık yoluyla tam talep hakkı açıkça korunmalıdır."
+
+  - id: DBIA-540-020
+    category: CLAIMS_AND_DISPUTES
+    name: "Owner dispute outcome binding as full and final resolution"
+    pattern: "(?is)accept\\s+the\\s+relief.*?obtained\\s+from\\s+owner.*?as\\s+full\\s+and\\s+final\\s+resolution"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Owner dispute sonucunun danışman açısından bağlayıcılığı, danışmanın katılım ve savunma hakları güvence altına alınarak sınırlandırılmalıdır."
+
+  - id: DBIA-540-021
+    category: CLAIMS_AND_DISPUTES
+    name: "Mandatory mediation followed by binding arbitration"
+    pattern: "(?is)mandatory,\\s*non-binding\\s+mediation.*?binding\\s+arbitration"
+    weight: 0.75
+    severity: 0.75
+    locale: en
+    mitigation: "Uyuşmazlık çözüm süreci süre ve maliyet bakımından gözden geçirilmeli; küçük uyuşmazlıklar için sadeleştirilmiş prosedür eklenmelidir."
+
+  - id: DBIA-540-022
+    category: CLAIMS_AND_DISPUTES
+    name: "Prevailing party recovers attorneys' fees"
+    pattern: "(?is)prevailing\\s+party.*?shall\\s+be\\s+entitled\\s+to\\s+recover.*?reasonable\\s+attorneys'?\\s+fees\\s+and\\s+expenses"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Loser pays hükmü kaldırılmalı veya kötü niyetli/iddiası açıkça haksız taleplerle sınırlandırılmalıdır."
+
+  - id: DBIA-540-023
+    category: CLAIMS_AND_DISPUTES
+    name: "Joinder or consolidation of arbitration"
+    pattern: "(?is)may\\s+be\\s+joined\\s+or\\s+consolidated\\s+with\\s+any\\s+arbitration"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Joinder/consolidation sadece aynı olay örgüsü ve aynı temel sözleşme ilişkisi içeren uyuşmazlıklarla sınırlandırılmalıdır."
+
+  - id: DBIA-540-024
+    category: LIMITATION_OF_LIABILITY
+    name: "Consequential damages waiver with major carve-out"
+    pattern: "(?is)neither\\s+design-builder\\s+nor\\s+design\\s+consultant\\s+shall\\s+be\\s+liable.*?consequential.*?notwithstanding.*?design-builder\\s+shall\\s+be\\s+entitled\\s+to\\s+recover.*?liquidated\\s+damages.*?consequential\\s+damages"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Consequential damages waiver içindeki carve-out daraltılmalı; owner liquidated damages ve upstream consequential exposure danışmana sınırsız yansıtılmamalıdır."
+
+  - id: DBIA-540-025
+    category: OTHER
+    name: "Obligations survive final payment and termination"
+    pattern: "(?is)obligations\\s+under\\s+this\\s+agreement\\s+shall\\s+not\\s+be\\s+released.*?shall\\s+specifically\\s+survive.*?final\\s+payment.*?termination"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Survival maddesi belirli yükümlülüklerle ve makul sürelerle sınırlandırılmalı; açık uçlu post-completion exposure kaldırılmalıdır."
+
+  - id: DBIA-540-026
+    category: INSURANCE_OBLIGATION
+    name: "Broad insurance requirements by exhibit"
+    pattern: "(?is)insurance\\s+coverages\\s+set\\s+forth\\s+in\\s+the\\s+insurance\\s+exhibit"
+    weight: 0.7
+    severity: 0.75
+    locale: en
+    mitigation: "Insurance Exhibit ayrıca incelenmeli; policy limits, additional insured, continuation period ve professional liability kapsamı makul seviyede tutulmalıdır."
+
+  - id: DBIA-540-027
+    category: INSURANCE_OBLIGATION
+    name: "Delete design-build exclusions from insurance"
+    pattern: "(?is)shall\\s+specifically\\s+delete\\s+any\\s+design-build\\s+or\\s+similar\\s+exclusions"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Poliçe üzerindeki design-build exclusion kaldırma yükümlülüğünün piyasada temin edilebilirlik ve prim etkisi ayrıca değerlendirilmelidir."
+
+  - id: DBIA-540-028
+    category: WARRANTIES
+    name: "Optional heightened performance standard"
+    pattern: "(?is)specifically\\s+identified\\s+performance\\s+standards.*?design\\s+consultant\\s+agrees.*?performed\\s+to\\s+achieve\\s+such\\s+standards"
+    weight: 0.95
+    severity: 0.95
+    locale: en
+    mitigation: "Negligence standard yerine measurable performance obligation getiriliyorsa bunun objektif kriterleri, toleransları ve sigorta etkisi açıkça düzenlenmelidir."
+
+    # ==========================================
+  # UF DESIGN/BUILD GMP 2025 SPECIFIC RULES
+  # ==========================================
+
+  - id: UF-DB-001
+    category: SITE_CONDITIONS
+    name: "Site inceleme eksikliğinden doğan claim waiver"
+    pattern: "(?is)claims\\s+by\\s+design/builder\\s+resulting\\s+from.*?failure\\s+to\\s+familiarize.*?shall\\s+be\\s+deemed\\s+waived"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Saha incelemesi eksikliğine dayalı tüm taleplerin peşinen feragat edilmiş sayılması kaldırılmalı; öngörülemeyen saha koşulları için süre uzatımı ve ek maliyet talep hakkı açıkça korunmalıdır."
+
+  - id: UF-DB-002
+    category: WARRANTIES
+    name: "Owner approval/payment does not relieve design-builder"
+    pattern: "(?is)no\\s+review,\\s*inspection,\\s*or\\s+approval.*?shall\\s+relieve\\s+design/builder.*?payment\\s+by\\s+owner.*?shall\\s+not\\s+constitute\\s+a\\s+waiver"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin inceleme, onay veya ödeme yapmasının hiçbir etkisinin olmaması yerine, işverenin yönlendirmeleri ve açık onaylarının risk dağılımında dikkate alınacağı bir düzenleme eklenmelidir."
+
+  - id: UF-DB-003
+    category: WARRANTIES
+    name: "Broad responsibility for quality completeness accuracy coordination"
+    pattern: "(?is)responsible\\s+for\\s+the\\s+quality,\\s*completeness,\\s*accuracy,\\s*and\\s+coordination"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Sorumluluk standardı, mutlak sonuç yükümlülüğü yaratmayacak şekilde makul mesleki özen ve beceri standardı ile sınırlandırılmalıdır."
+
+  - id: UF-DB-004
+    category: WARRANTIES
+    name: "Errors and omissions corrected at no cost with damage exposure"
+    pattern: "(?is)at\\s+no\\s+additional\\s+cost\\s+to\\s+the\\s+owner.*?not\\s+be\\s+entitled\\s+to\\s+any\\s+compensation.*?resulting\\s+from\\s+any\\s+error\\s+or\\s+omissions"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Hata ve eksikliklerden doğan düzeltme yükümlülüğü, yüklenicinin kusurundan kaynaklanan doğrudan zararlarla sınırlandırılmalı; dolaylı zararlar ve fesih sonrası geniş zarar kalemleri kapsam dışı bırakılmalıdır."
+
+  - id: UF-DB-005
+    category: WARRANTIES
+    name: "Owner standards exceed law and still mandatory"
+    pattern: "(?is)to\\s+the\\s+extent\\s+owner'?s\\s+standards\\s+exceed\\s+applicable\\s+legal\\s+requirements,\\s*such\\s+standards\\s+shall\\s+be\\s+met"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Yasal asgari standartların üzerinde kalan işveren standartları için bedel ve süre etkisi ayrıca tanımlanmalı; yazılı istisna ve sapma mekanizması ölçülebilir hale getirilmelidir."
+
+  - id: UF-DB-006
+    category: PAYMENT_TERMS
+    name: "All permits and approvals on design-builder"
+    pattern: "(?is)responsible\\s+for\\s+obtaining\\s+all\\s+necessary\\s+permits\\s+and\\s+other\\s+governmental\\s+approvals"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "İzin ve onay riskleri ayrıştırılmalı; işveren kontrolündeki başvurular, kurum gecikmeleri ve üçüncü taraf kaynaklı gecikmeler için yükleniciye süre ve maliyet koruması sağlanmalıdır."
+
+  - id: UF-DB-007
+    category: SCOPE_OF_WORK
+    name: "Mandatory QC testing safety program within 30 days"
+    pattern: "(?is)within\\s+thirty\\s*\\(\\s*30\\s*\\)\\s*calendar\\s+days.*?(quality\\s+control\\s+and\\s+testing\\s+program|safety\\s+program)"
+    weight: 0.75
+    severity: 0.75
+    locale: en
+    mitigation: "Otuz günlük program teslim süreleri proje mobilizasyon takvimiyle uyumlu hale getirilmeli ve eksikliklerin giderilmesi için makul bir düzeltme süresi tanınmalıdır."
+
+  - id: UF-DB-008
+    category: PAYMENT_TERMS
+    name: "GMP covers incomplete construction documents"
+    pattern: "(?is)construction\\s+documents\\s+may\\s+be\\s+incomplete.*?gmp\\s+proposal\\s+shall\\s+include\\s+all\\s+costs.*?completed\\s+construction\\s+documents"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Eksik tasarım belgelerine rağmen verilen GMP’nin kapsamı açıkça sınırlandırılmalı; tamamlanmamış tasarım ve geliştirilmemiş detay riskleri işveren üzerinde kalmalıdır."
+
+  - id: UF-DB-009
+    category: PAYMENT_TERMS
+    name: "Reasonably inferable and standards-based GMP expansion"
+    pattern: "(?is)reasonably\\s+inferable\\s+from\\s+the\\s+incomplete\\s+documents|consistent\\s+with\\s+the\\s+owner'?s\\s+programmatic\\s+goals|general\\s+industry\\s+standards|not\\s+a\\s+substantial\\s+enlargement"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kapsamı belirsiz şekilde genişleten 'makul olarak çıkarılabilir', 'işveren hedefleriyle uyumlu' ve benzeri ifadeler daraltılmalı; değişiklik emri hakkı korunmalıdır."
+
+  - id: UF-DB-010
+    category: TERMINATION
+    name: "Owner sole discretion to reject GMP or proceed with others"
+    pattern: "(?is)at\\s+its\\s+sole\\s+discretion.*?(reject\\s+a\\s+gmp\\s+proposal|terminate\\s+the\\s+project|proceed\\s+to\\s+construct.*?other\\s+than\\s+the\\s+design/builder)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "GMP’nin reddi, projenin sonlandırılması veya başka bir yükleniciyle devam edilmesi halinde, yüklenicinin yaptığı tasarım ve ön yapım çalışmalarının bedeli ile kapanış masrafları açıkça güvence altına alınmalıdır."
+
+  - id: UF-DB-011
+    category: PAYMENT_TERMS
+    name: "Strict GMP and category caps"
+    pattern: "(?is)shall\\s+not\\s+exceed\\s+the\\s+amount\\s+set\\s+forth\\s+in\\s+the\\s+agreed\\s+upon\\s+gmp.*?individual\\s+categories\\s+to\\s+exceed"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Sadece toplam GMP değil, alt kalem tavanları da esnetilmeli; işveren kaynaklı değişiklikler, piyasa dalgalanmaları ve öngörülemeyen durumlar için uyarlama mekanizması eklenmelidir."
+
+  - id: UF-DB-012
+    category: PAYMENT_TERMS
+    name: "Unit cost certification and downward adjustment risk"
+    pattern: "(?is)factual\\s+unit\\s+costs.*?accurate,\\s*complete\\s+and\\s+current.*?payments\\s+to\\s+the\\s+design/builder\\s+shall\\s+be\\s+reduced"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Birim maliyet sertifikaları yalnızca o tarihte makul olarak bilinebilen verilerle sınırlandırılmalı; iyi niyetle yapılan tahminlerin sonradan tek taraflı fiyat düşürme aracı olarak kullanılmaması sağlanmalıdır."
+
+  - id: UF-DB-013
+    category: PAYMENT_TERMS
+    name: "Contingency use requires owner approval by change order"
+    pattern: "(?is)use\\s+of\\s+contingency\\s+shall\\s+be\\s+approved\\s+by\\s+owner\\s+by\\s+change\\s+order\\s+prior\\s+to\\s+expenditure"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Kontenjan kullanımının her seferinde önceden değişiklik emrine bağlanması yumuşatılmalı; küçük ve acil kalemler için yönetimsel kullanım serbestisi tanınmalıdır."
+
+  - id: UF-DB-014
+    category: PAYMENT_TERMS
+    name: "All buyout savings returned to owner"
+    pattern: "(?is)all\\s+buyout\\s+savings\\s+shall\\s+be\\s+returned\\s+to\\s+the\\s+owner"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Satın alma tasarruflarının tamamının işverene dönmesi yerine, taraflar arasında paylaşım esasına dayalı bir tasarruf mekanizması düzenlenmelidir."
+
+  - id: UF-DB-015
+    category: PAYMENT_TERMS
+    name: "Overhead and profit capped at zero percent"
+    pattern: "(?is)overhead\\s*&\\s*profit.*?shall\\s+not\\s+exceed\\s+0%"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Yüzde sıfır genel gider ve kâr sınırı ticari olarak sürdürülebilir değildir; açık ve makul bir genel gider ve kâr oranı sözleşmede belirlenmelidir."
+
+  - id: UF-DB-016
+    category: CLAIMS_AND_DISPUTES
+    name: "Liquidated damages plus other damages and termination rights"
+    pattern: "(?is)shall\\s+be\\s+payable\\s+in\\s+addition\\s+to.*?shall\\s+not\\s+preclude\\s+the\\s+recovery\\s+of\\s+damages.*?right\\s+to\\s+terminate"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Gecikme için öngörülen cezai şart, ilgili gecikme bakımından tek parasal başvuru yolu olacak şekilde düzenlenmeli; ek zarar talepleri ve fesih baskısı sınırlandırılmalıdır."
+
+  - id: UF-DB-017
+    category: PAYMENT_TERMS
+    name: "Owner may withhold anticipated liquidated damages"
+    pattern: "(?is)reasonably\\s+believes.*?shall\\s+be\\s+entitled.*?to\\s+withhold.*?liquidated\\s+damages"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Henüz kesinleşmemiş gecikme cezaları için peşin kesinti yapılabilmesi objektif ölçütlere bağlanmalı ve yükleniciye itiraz ve açıklama hakkı tanınmalıdır."
+
+  - id: UF-DB-018
+    category: INSURANCE_OBLIGATION
+    name: "Broad insurance package with additional insured and waiver"
+    pattern: "(?is)additional\\s+insureds|waiver\\s+of\\s+subrogation|severability\\s+of\\s+interests\\s+endorsement"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Sigorta yükümlülükleri, piyasada temin edilebilirlik, prim maliyeti ve proje ölçeğiyle orantılı olacak şekilde yeniden düzenlenmelidir."
+
+  - id: UF-DB-019
+    category: INSURANCE_OBLIGATION
+    name: "Professional liability tail and ERP requirement"
+    pattern: "(?is)for\\s+at\\s+least\\s+three\\s+years\\s+following\\s+completion.*?extended\\s+reporting\\s+provision\\s+of\\s+at\\s+least\\s+three\\s+years"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Mesleki sorumluluk sigortası için kuyruk süreleri ve uzatılmış bildirim yükümlülükleri, piyasa uygulamaları ve proje riskiyle uyumlu hale getirilmelidir."
+
+  - id: UF-DB-020
+    category: PAYMENT_TERMS
+    name: "Extremely broad owner audit rights"
+    pattern: "(?is)may\\s+count\\s+employees\\s+at\\s+the\\s+site|interview\\s+all\\s+current\\s+or\\s+former\\s+employees|right\\s+to\\s+audit"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Denetim hakkı kapsam, süre ve gizlilik bakımından sınırlandırılmalı; çalışanlarla doğrudan görüşme ve bordro dağıtımına katılma gibi aşırı müdahaleci yetkiler kaldırılmalıdır."
+
+  - id: UF-DB-021
+    category: PAYMENT_TERMS
+    name: "Audit cost shifted if overcharge threshold met"
+    pattern: "(?is)overpricing\\s+or\\s+overcharges\\s+of\\s+one\\s+percent.*?audit\\s+shall\\s+be\\s+reimbursed"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Denetim masrafının yükleniciye yüklenmesi, yalnızca kasıtlı veya açıkça ağır fazla faturalama halleriyle sınırlandırılmalıdır."
+
+  - id: UF-DB-022
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Owner broad campus-use rights over design documents"
+    pattern: "(?is)may\\s+use\\s+the\\s+same,\\s*without\\s+compensation.*?(operation,\\s*maintenance,\\s*construction\\s+and\\s+renovation|remainder\\s+of\\s+owner'?s\\s+campus|additions\\s+or\\s+renovations)"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İşverenin tasarım belgelerini ücretsiz ve geniş kapsamlı kullanma hakkı, proje işletme ve bakım amaçlarıyla sınırlandırılmalı; kampüs genelinde yeniden kullanım daraltılmalıdır."
+
+  - id: UF-DB-023
+    category: JURISDICTION
+    name: "Mandatory Florida law and Alachua County venue"
+    pattern: "(?is)governed\\s+by.*?laws\\s+of\\s+the\\s+state\\s+of\\s+florida.*?venue\\s+shall\\s+lie\\s+in\\s+the\\s+courts\\s+in\\s+alachua\\s+county,\\s*florida"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Florida ve Alachua County mahkemelerinin zorunlu yetkisi yerine, tarafsız tahkim veya daha dengeli bir uyuşmazlık çözüm mekanizması değerlendirilmelidir."
+
+  - id: UF-DB-024
+    category: TERMINATION
+    name: "Owner may unilaterally cancel for public records noncompliance"
+    pattern: "(?is)may\\s+be\\s+unilaterally\\s+canceled\\s+by\\s+the\\s+owner.*?refuse\\s+to\\s+allow\\s+public\\s+access"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Kamuya açık kayıt yükümlülüklerine aykırılık halinde, derhal tek taraflı fesih yerine önce yazılı bildirim ve makul bir düzeltme süresi öngörülmelidir."
+
+  - id: UF-DB-025
+    category: PAYMENT_TERMS
+    name: "Annual appropriation funding risk"
+    pattern: "(?is)contingent\\s+upon\\s+an\\s+annual\\s+appropriation\\s+by\\s+the\\s+legislature"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Yıllık bütçe tahsisi gerçekleşmezse, yüklenicinin yaptığı işlerin bedeli, kapanış giderleri ve makul demobilizasyon maliyetleri açıkça ödenmelidir."
+
+  - id: UF-DB-026
+    category: INDEMNITY
+    name: "Broad indemnity including recklessness breach and attorneys' fees"
+    pattern: "(?is)indemnify\\s+and\\s+hold\\s+owner.*?including.*?attorneys’?\\s+fees.*?(recklessness|intentionally\\s+wrongful\\s+conduct|breach\\s+of\\s+any\\s+covenant)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tazmin yükümlülüğü, yüklenicinin kusur oranına göre doğrudan zararlarla sınırlandırılmalı; sözleşme ihlali temelli açık uçlu tazmin sorumluluğu daraltılmalıdır."
+
+  - id: UF-DB-027
+    category: OTHER
+    name: "Continuing obligations survive termination"
+    pattern: "(?is)all\\s+provisions.*?continuing\\s+obligations\\s+shall\\s+survive.*?expiration\\s+or\\s+termination"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Sona erme sonrası devam edecek yükümlülükler, belirli madde başlıkları ve makul sürelerle açıkça sınırlandırılmalıdır."
+
+  - id: UF-DB-028
+    category: LIMITATION_OF_LIABILITY
+    name: "Contractor waives lost profits unabsorbed overhead consequential damages"
+    pattern: "(?is)waives\\s+any\\s+monetary\\s+claims.*?(lost\\s+profits|lost\\s+business\\s+opportunities|unabsorbed\\s+overhead|indirect\\s+or\\s+consequential\\s+damages)"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kâr kaybı, absorbe edilemeyen genel gider ve dolaylı zarar feragati; işveren kaynaklı durdurma, fesih ve ödeme temerrüdü halleri için istisnalar içermelidir."
+
+  - id: UF-DB-029
+    category: PAYMENT_TERMS
+    name: "Truth in negotiation certificate adjustment risk"
+    pattern: "(?is)truth-?in-?negotiation\\s+certificate.*?within\\s+one\\s+year.*?construction\\s+cost\\s+will\\s+be\\s+adjusted"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Gerçeğe uygun müzakere sertifikası yalnızca o tarihte bilinen maliyet verileriyle sınırlanmalı; sonradan tek taraflı bedel azaltımının şartları açık ve dar şekilde tanımlanmalıdır."
+
+  - id: UF-DB-030
+    category: PAYMENT_TERMS
+    name: "Exhibit H delete savings include overhead and profit"
+    pattern: "(?is)decrease\\s+in\\s+cost\\s+of\\s+the\\s+work.*?overhead\\s+and\\s+profit.*?shall\\s+inure\\s+to\\s+the\\s+benefit\\s+of\\s+owner"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Eksiltici değişiklik emirlerinde genel gider ve kârın da otomatik olarak işverene dönmesi yeniden müzakere edilmeli ve daha dengeli hale getirilmelidir."
+
+  - id: UF-DB-031
+    category: PAYMENT_TERMS
+    name: "Fixed lump sum staffing and general conditions with no increase"
+    pattern: "(?is)fixed,\\s*lump\\s+sum\\s+compensation.*?will\\s+not\\s+be\\s+increased\\s+for\\s+any\\s+reason\\s+except\\s+by\\s+a\\s+change\\s+order"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Personel ve genel şartlar kalemleri için mutlak sabit bedel yaklaşımı, işveren kaynaklı gecikmeler ve süre uzatımı hallerinde uyarlanabilir olmalıdır."
+
+  - id: UF-DB-032
+    category: PAYMENT_TERMS
+    name: "Contingency cannot increase staffing or general conditions"
+    pattern: "(?is)contingency\\s+may\\s+not\\s+be\\s+utilized\\s+to\\s+increase.*?staffing\\s+costs.*?general\\s+conditions\\s+cost"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Kontenjanın personel ve genel şartlar kalemlerini artırmak için kullanılamaması, işveren kaynaklı uzamalar ve kaçınılmaz saha koşulları bakımından esnetilmelidir."
+  
+    
+    
+    # ==========================================
+  # TSUS DESIGN/BUILD GMP 2020 SPECIFIC RULES
+  # ==========================================
+
+  - id: TSUS-DB-001
+    category: SCOPE_OF_WORK
+    name: "Reasonably inferable kapsam genişlemesi"
+    pattern: "(?is)necessary\\s+or\\s+reasonably\\s+inferable\\s+to\\s+complete\\s+the\\s+project"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kapsamı belirsiz şekilde genişleten 'reasonably inferable' ifadesi daraltılmalı ve yalnızca makul ölçüde açıkça gösterilen veya teknik olarak zorunlu işler ile sınırlandırılmalıdır."
+
+  - id: TSUS-DB-002
+    category: PAYMENT_TERMS
+    name: "GMP sonrası detay eksikliği nedeniyle artış yasağı"
+    pattern: "(?is)shall\\s+not\\s+be\\s+entitled\\s+to\\s+any\\s+increase\\s+in\\s+the\\s+gmp.*?continued\\s+refinement\\s+of\\s+the\\s+construction\\s+documents"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "GMP kabulünden sonra tasarım gelişimi nedeniyle doğan ek kapsamlar için tamamen bedel artış yasağı kaldırılmalı; eksik veya gelişmekte olan tasarım unsurları için değişiklik emri mekanizması korunmalıdır."
+
+  - id: TSUS-DB-003
+    category: SITE_CONDITIONS
+    name: "Önceden var olan koşullar için claim yasağı"
+    pattern: "(?is)shall\\s+not\\s+make\\s+or\\s+be\\s+entitled\\s+to\\s+any\\s+claim.*?arising\\s+from\\s+project\\s+conditions.*?should\\s+have\\s+discovered"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Mevcut saha koşullarına ilişkin tüm riskin yükleniciye yazılması yerine, makul incelemeyle tespit edilemeyen gizli veya öngörülemeyen koşullar için süre ve maliyet hakkı tanınmalıdır."
+
+  - id: TSUS-DB-004
+    category: WARRANTIES
+    name: "Tasarım hata ve eksikliklerinin tüm maliyeti yüklenicide"
+    pattern: "(?is)responsible\\s+for\\s+all\\s+costs.*?resulting\\s+from\\s+any\\s+error\\s+or\\s+omission\\s+in\\s+the\\s+contract\\s+documents"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tasarım hata ve eksikliklerinden doğan sorumluluk, yüklenicinin kusuru ile sınırlı doğrudan zararlarla sınırlandırılmalı; açık uçlu zaman ve yeniden yapım riskleri daraltılmalıdır."
+
+  - id: TSUS-DB-005
+    category: WARRANTIES
+    name: "Owner approval yükleniciyi sorumluluktan kurtarmıyor"
+    pattern: "(?is)approval\\s+or\\s+acceptance.*?shall\\s+not\\s+in\\s+any\\s+way\\s+release\\s+design/build\\s+contractor"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşveren onaylarının hiçbir etkisinin olmaması yerine, işverenin açık talimatları ve onaylarının risk dağılımında dikkate alınacağı dengeli bir hüküm eklenmelidir."
+
+  - id: TSUS-DB-006
+    category: WARRANTIES
+    name: "Owner requested corrections uygulanmazsa maliyet yüklenicide"
+    pattern: "(?is)shall\\s+incorporate.*?corrections\\s+and\\s+amendments\\s+as\\s+the\\s+owner\\s+requests.*?additional\\s+cost.*?shall\\s+be\\s+borne\\s+by\\s+the\\s+design/build\\s+contractor"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin talep ettiği düzeltmelerin kapsamı netleştirilmeli; teknik olarak hatalı, kapsam genişletici veya bütçeyi etkileyen talepler için bedel ve süre uyarlaması korunmalıdır."
+
+  - id: TSUS-DB-007
+    category: PAYMENT_TERMS
+    name: "CCL aşımında ücretsiz redesign baskısı"
+    pattern: "(?is)shall\\s+revise\\s+the\\s+construction\\s+documents.*?without\\s+increase\\s+in\\s+the\\s+pre-construction\\s+phase\\s+fee\\s+or\\s+design\\s+services\\s+fee"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "CCL aşımı halinde ücretsiz yeniden tasarım yükümlülüğü, yalnızca yüklenicinin kusurundan kaynaklanan hallerle sınırlandırılmalı; işverenin yön verdiği kapsam ve kalite kararları için ek ücret hakkı korunmalıdır."
+
+  - id: TSUS-DB-008
+    category: TERMINATION
+    name: "GMP anlaşmazlığında fesih hakkı"
+    pattern: "(?is)if\\s+the\\s+owner\\s+rejects\\s+the\\s+gmp\\s+proposal.*?or\\s+the\\s+parties\\s+are\\s+unable.*?the\\s+owner\\s+may\\s+terminate\\s+this\\s+agreement"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "GMP üzerinde anlaşma sağlanamaması halinde, yüklenicinin yaptığı tasarım, fiyatlama ve ön yapım hizmetlerinin bedeli ile makul kapanış giderleri açıkça ödenmelidir."
+
+  - id: TSUS-DB-009
+    category: TERMINATION
+    name: "Owner convenience termination with 3-day notice"
+    pattern: "(?is)terminated\\s+by\\s+the\\s+owner\\s+for\\s+its\\s+convenience.*?three\\s*\\(\\s*3\\s*\\)\\s*calendar\\s+days\\s+written\\s+notice"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İşverenin kolaylık nedeniyle fesih hakkı korunacaksa, bildirim süresi uzatılmalı ve yüklenicinin bekleyen sipariş, personel, demobilizasyon ve makul kâr kaybı talepleri güvence altına alınmalıdır."
+
+  - id: TSUS-DB-010
+    category: PAYMENT_TERMS
+    name: "Final payment tam ibra etkisi"
+    pattern: "(?is)final\\s+payment.*?shall\\s+constitute\\s+a\\s+full\\s+and\\s+complete\\s+release.*?except\\s+for\\s+those\\s+previously\\s+made\\s+in\\s+writing"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Kesin hesap ve son ödeme, yalnızca açıkça saklı tutulan talepler hariç ibra doğurmalıdır; gizli ayıplar, bekleyen uyuşmazlıklar ve sonradan belirlenen alacaklar için hak saklı tutulmalıdır."
+
+  - id: TSUS-DB-011
+    category: PAYMENT_TERMS
+    name: "Geniş withholding ve setoff hakları"
+    pattern: "(?is)may\\s+be\\s+deducted\\s+from\\s+any\\s+moneys\\s+due|owner\\s+shall\\s+have\\s+the\\s+right\\s+to\\s+withhold\\s+from\\s+payments\\s+due"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Mahsup ve ödeme kesintisi hakları, yalnızca kesinleşmiş veya taraflarca mutabık kalınmış alacaklarla sınırlandırılmalı; ihtilaflı kalemler için tek taraflı kesinti engellenmelidir."
+
+  - id: TSUS-DB-012
+    category: PAYMENT_TERMS
+    name: "Owner no payment in broad default scenarios"
+    pattern: "(?is)owner\\s+shall\\s+not\\s+be\\s+obligated\\s+to\\s+make\\s+any\\s+payment.*?(material\\s+breach|insolvent|fails\\s+to\\s+obtain,\\s*maintain\\s+or\\s+renew\\s+insurance)"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Ödeme durdurma sebepleri daraltılmalı ve her bir sebep için yazılı bildirim ile makul bir düzeltme süresi öngörülmelidir."
+
+  - id: TSUS-DB-013
+    category: PAYMENT_TERMS
+    name: "Extremely broad audit rights"
+    pattern: "(?is)verify\\s+and\\s+audit.*?interviewing\\s+design/build\\s+contractor'?s\\s+employees|visiting\\s+the\\s+project\\s+site"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Denetim yetkisi makul belge kategorileri ve makul zamanlarla sınırlandırılmalı; çalışanlarla sınırsız görüşme ve operasyonu aksatacak erişim hakları daraltılmalıdır."
+
+  - id: TSUS-DB-014
+    category: PAYMENT_TERMS
+    name: "All savings credited to owner"
+    pattern: "(?is)the\\s+entire\\s+difference\\s+shall\\s+be\\s+credited\\s+to\\s+the\\s+owner\\s+as\\s+savings"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Tasarrufların tamamının işverene yazılması yerine, verimlilik ve satın alma başarısını teşvik edecek paylaşım esaslı bir tasarruf mekanizması değerlendirilmelidir."
+
+  - id: TSUS-DB-015
+    category: PAYMENT_TERMS
+    name: "Unused allowance retained 100 percent by owner"
+    pattern: "(?is)owner\\s+shall\\s+be\\s+entitled\\s+to\\s+retain\\s+one\\s+hundred\\s+percent\\s*\\(\\s*100%\\s*\\)\\s+of\\s+the\\s+balance\\s+of\\s+any\\s+unused\\s+allowance"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Kullanılmayan allowance tutarlarının tamamının işverene kalması hükmü, allowance yönetiminde yüklenicinin maliyet yönetimi katkısını da dikkate alacak şekilde gözden geçirilmelidir."
+
+  - id: TSUS-DB-016
+    category: PAYMENT_TERMS
+    name: "5 percent security bond"
+    pattern: "(?is)security\\s+bond.*?five\\s+percent\\s*\\(\\s*5%\\s*\\)"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Başlangıçta talep edilen güvence bonosu oranı proje büyüklüğü ve aşamasına göre yeniden değerlendirilerek daha dengeli hale getirilmelidir."
+
+  - id: TSUS-DB-017
+    category: PAYMENT_TERMS
+    name: "Payment and performance bonds equal to GMP"
+    pattern: "(?is)payment\\s+and\\s+performance\\s+bonds.*?equal\\s+to\\s+the\\s+gmp"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "GMP tutarının tamamı kadar bond talebi, proje riski ve piyasa kapasitesi dikkate alınarak düşürülmeli veya aşamalı güvence modeli uygulanmalıdır."
+
+  - id: TSUS-DB-018
+    category: INSURANCE_OBLIGATION
+    name: "Owner may adjust insurance requirements"
+    pattern: "(?is)reserves\\s+the\\s+right\\s+to\\s+review.*?make\\s+reasonable\\s+adjustments\\s+to\\s+the\\s+insurance\\s+coverages\\s+and\\s+their\\s+limits"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Sigorta limitlerinin ve kapsamlarının tek taraflı sonradan değiştirilmesi sınırlandırılmalı; değişiklikler ancak objektif risk artışı halinde ve ek maliyet telafisiyle yapılmalıdır."
+
+  - id: TSUS-DB-019
+    category: INSURANCE_OBLIGATION
+    name: "Owner may request policy term revisions"
+    pattern: "(?is)may\\s+make\\s+any\\s+reasonable\\s+requests\\s+for\\s+deletion,\\s*or\\s+revision\\s+or\\s+modification"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Poliçe şartlarında sonradan değişiklik talep etme yetkisi, yalnızca açık risk boşlukları için ve piyasada temin edilebilir koşullarla sınırlı tutulmalıdır."
+
+  - id: TSUS-DB-020
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Irrevocable perpetual license over drawings and BIM"
+    pattern: "(?is)irrevocable,\\s*fully\\s+paid-up,\\s*perpetual\\s+license\\s+and\\s+right\\s+to\\s+use"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Çizim, CADD ve BIM belgeleri üzerindeki kullanım lisansı yalnızca proje ile bağlantılı kullanım amaçlarıyla sınırlandırılmalı; her amaçla süresiz kullanım hakkı daraltılmalıdır."
+
+  - id: TSUS-DB-021
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Owner may use documents after termination with substitute contractor"
+    pattern: "(?is)substitute\\s+design/build\\s+contractor.*?having\\s+all\\s+rights\\s+and\\s+privileges"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Fesih sonrası başka yükleniciye doküman kullanım hakkı verilmesi, yalnızca projeyi tamamlama amacıyla ve ücretleri ödenmiş dokümanlarla sınırlı tutulmalıdır."
+
+  - id: TSUS-DB-022
+    category: CLAIMS_AND_DISPUTES
+    name: "Time is of the essence"
+    pattern: "(?is)time\\s+limits\\s+stated\\s+in\\s+the\\s+contract\\s+documents\\s+are\\s+of\\s+the\\s+essence"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Süre hükümleri korunacaksa, işveren kaynaklı gecikmeler, kurum onay süreçleri ve öngörülemeyen koşullar için açık süre uzatımı mekanizmaları güçlendirilmelidir."
+
+  - id: TSUS-DB-023
+    category: CLAIMS_AND_DISPUTES
+    name: "Liquidated damages blank per-day exposure"
+    pattern: "(?is)liquidated\\s+damages.*?\\<\\<amount\\>\\>\\s*dollars\\s*\\(\\$0\\)\\s*per\\s*day"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Günlük gecikme cezası tutarı, gerçek kayıpla orantılı ve makul bir üst sınıra bağlı olacak şekilde netleştirilmelidir."
+
+  - id: TSUS-DB-024
+    category: INDEMNITY
+    name: "Broad general indemnity"
+    pattern: "(?is)design/build\\s+contractor\\s+shall\\s+indemnify\\s+and\\s+hold\\s+harmless"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tazmin yükümlülüğü, yüklenicinin kusuruna dayalı üçüncü taraf talepleri ve doğrudan zararlarla sınırlandırılmalı; açık uçlu ve sınırsız tazmin yapısı daraltılmalıdır."
+
+  - id: TSUS-DB-025
+    category: INDEMNITY
+    name: "Patent and copyright indemnity"
+    pattern: "(?is)patent\\s+or\\s+copyright\\s+infringement.*?indemnify\\s+and\\s+hold\\s+harmless"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Patent ve telif tazminatı, yalnızca yüklenicinin seçtiği veya önerdiği tasarım ve ürünlerle sınırlanmalı; işveren tarafından zorunlu tutulan seçimler kapsam dışı bırakılmalıdır."
+
+  - id: TSUS-DB-026
+    category: CLAIMS_AND_DISPUTES
+    name: "Chapter 2260 public dispute regime"
+    pattern: "(?is)resolved\\s+in\\s+accordance\\s+with.*?chapter\\s+2260"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Uyuşmazlık çözüm yolunun yalnızca kamuya özgü usullere bağlanması halinde, yüklenicinin taleplerini etkin şekilde ileri sürebileceği açık prosedürler ayrıca netleştirilmelidir."
+
+  - id: TSUS-DB-027
+    category: JURISDICTION
+    name: "Mandatory Texas law and Travis County venue"
+    pattern: "(?is)governed\\s+by.*?laws\\s+of\\s+the\\s+state\\s+of\\s+texas.*?travis\\s+county\\s+shall\\s+be\\s+the\\s+sole\\s+place\\s+of\\s+venue"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Texas hukuku ve Travis County zorunlu yetkisi, yabancı veya eyalet dışı yüklenici açısından ayrıca değerlendirilmeli; mümkünse daha dengeli bir uyuşmazlık çözüm yapısı müzakere edilmelidir."
+
+  - id: TSUS-DB-028
+    category: PAYMENT_TERMS
+    name: "Debt to state may be set off from payments"
+    pattern: "(?is)payments\\s+owing.*?may\\s+be\\s+applied\\s+directly\\s+toward\\s+any\\s+debt\\s+or\\s+delinquency"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Kamuya olan borçların ödemelerden mahsup edilmesi halinde, mahsup edilen kalemlerin kesinleşmiş ve yazılı olarak bildirilmiş olması şartı açıkça düzenlenmelidir."
+
+  - id: TSUS-DB-029
+    category: OTHER
+    name: "Public information delivery obligation"
+    pattern: "(?is)promptly\\s+available\\s+in\\s+a\\s+format\\s+that\\s+is\\s+accessible\\s+by\\s+the\\s+public\\s+at\\s+no\\s+additional\\s+charge"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Kamuya açık bilgi yükümlülüğü bakımından hangi belgelerin hangi formatta ve hangi sürelerde teslim edileceği operasyonel olarak netleştirilmelidir."
+
+  - id: TSUS-DB-030
+    category: OTHER
+    name: "Cybersecurity training compliance obligation"
+    pattern: "(?is)cybersecurity\\s+training\\s+program.*?within\\s+the\\s+first\\s+thirty\\s*\\(\\s*30\\s*\\)\\s*calendar\\s+days"
+    weight: 0.7
+    severity: 0.75
+    locale: en
+    mitigation: "Siber güvenlik eğitim yükümlülükleri bakımından erişim verilecek personel kapsamı ve doğrulama usulü açık şekilde sınırlandırılmalıdır."
+
+  - id: TSUS-DB-031
+    category: INSURANCE_OBLIGATION
+    name: "Extended reporting period for professional liability"
+    pattern: "(?is)extended\\s+reporting\\s+period\\s+endorsement.*?two\\s*\\(\\s*2\\s*\\)\\s*full\\s+years"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Mesleki sorumluluk sigortası için uzatılmış bildirim süresi, piyasa koşulları ve proje niteliği dikkate alınarak maliyet etkisiyle birlikte değerlendirilmelidir."
+
+  - id: TSUS-DB-032
+    category: PAYMENT_TERMS
+    name: "Owner may halt production during design review"
+    pattern: "(?is)owner\\s+may\\s+require\\s+the\\s+design/build\\s+contractor\\s+to\\s+halt\\s+production\\s+during\\s+design\\s+review"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Tasarım incelemesi sırasında üretimi durdurma yetkisi, süre ve maliyet etkileri belirlenerek ve yalnızca makul hallerde kullanılacak şekilde sınırlandırılmalıdır."
+
+    # ==========================================
+  # DASNY DESIGN-BUILD CONTRACT SPECIFIC RULES
+  # ==========================================
+
+  - id: DASNY-DB-001
+    category: SCOPE_OF_WORK
+    name: "Reasonably inferable kapsam genişlemesi"
+    pattern: "(?is)reasonably\\s+inferable\\s+from\\s+the\\s+contract\\s+documents"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kapsamı belirsiz şekilde genişleten 'reasonably inferable' ifadesi daraltılmalı ve yalnızca teknik olarak zorunlu, açıkça öngörülebilir işler ile sınırlandırılmalıdır."
+
+  - id: DASNY-DB-002
+    category: PAYMENT_TERMS
+    name: "Contract documents yetersizliğine dayalı claim yasağı"
+    pattern: "(?is)will\\s+not\\s+make\\s+any\\s+claims\\s+for\\s+additional\\s+costs\\s+or\\s+extensions.*?contract\\s+documents\\s+being\\s+insufficient"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Sözleşme dokümanlarının yetersizliğine dayalı tüm taleplerin peşinen kapatılması kaldırılmalı; eksik veya gelişmemiş dokümanlardan doğan süre ve maliyet hakları korunmalıdır."
+
+  - id: DASNY-DB-003
+    category: SCOPE_OF_WORK
+    name: "Single point of responsibility"
+    pattern: "(?is)single\\s+point\\s+of\\s+responsibility"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Tek nokta sorumluluğu korunacaksa, işveren ve üçüncü taraf kaynaklı tasarım verileri ile owner-directed kararlar bakımından açık istisnalar düzenlenmelidir."
+
+  - id: DASNY-DB-004
+    category: CLAIMS_AND_DISPUTES
+    name: "Prompt written notice for owner inaction"
+    pattern: "(?is)shall\\s+promptly\\s+notify\\s+owner\\s+in\\s+writing.*?lack\\s+of\\s+action"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Bildirim yükümlülükleri makul sürelerle tanımlanmalı ve geç bildirimin otomatik hak kaybı yaratmayacağı açıkça düzenlenmelidir."
+
+  - id: DASNY-DB-005
+    category: WARRANTIES
+    name: "Owner action or inaction does not relieve contractor"
+    pattern: "(?is)shall\\s+not\\s+be\\s+relieved\\s+of\\s+its\\s+obligation.*?as\\s+a\\s+result\\s+of\\s+any\\s+activities\\s+or\\s+duties\\s+of\\s+owner"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin eylem veya ihmallerinin hiçbir etkisinin olmaması yerine, işverenin açık yönlendirme ve onaylarının risk paylaşımında dikkate alınacağı düzenlenmelidir."
+
+  - id: DASNY-DB-006
+    category: WARRANTIES
+    name: "Best efforts and expeditious economical performance"
+    pattern: "(?is)best\\s+efforts.*?expeditious\\s+and\\s+economical\\s+manner"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Performans standardı, ölçüsüz sonuç yükümlülüğü yaratmayacak şekilde makul profesyonel özen ve iyi endüstri uygulamaları ile sınırlandırılmalıdır."
+
+  - id: DASNY-DB-007
+    category: PAYMENT_TERMS
+    name: "Financial assurance on worsened creditworthiness"
+    pattern: "(?is)creditworthiness\\s+has\\s+materially\\s+worsened.*?performance\\s+assurance"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Ek performans güvencesi talebi objektif finansal kriterlere bağlanmalı ve güvence tutarı ile şekli makul sınırlar içinde belirlenmelidir."
+
+  - id: DASNY-DB-008
+    category: SCOPE_OF_WORK
+    name: "Partial notice to proceed"
+    pattern: "(?is)may\\s+release\\s+contractor\\s+to\\s+commence\\s+only\\s+a\\s+portion\\s+of\\s+the\\s+work"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Kısmi işe başlama talimatı verilmesi halinde, bunun program, mobilizasyon ve kaynak planlaması üzerindeki etkileri için süre ve maliyet uyarlaması mekanizması eklenmelidir."
+
+  - id: DASNY-DB-009
+    category: CLAIMS_AND_DISPUTES
+    name: "Extra work requires written authorization"
+    pattern: "(?is)additional\\s+work\\s+performed.*?without\\s+a\\s+written\\s+authorization.*?sole\\s+risk"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Ek işlerin yazılı onaya bağlanması korunmakla birlikte, acil durumlar ve sahada derhal karar gerektiren haller için sonradan teyit mekanizması tanınmalıdır."
+
+  - id: DASNY-DB-010
+    category: CLAIMS_AND_DISPUTES
+    name: "No mechanic's or materialman's lien"
+    pattern: "(?is)shall\\s+file\\s+no\\s+mechanic'?s\\s+or\\s+materialman'?s\\s+lien"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Lien yasağı halinde, ödenmeyen ve ihtilafsız alacaklar için alternatif güvence mekanizmaları açıkça düzenlenmelidir."
+
+  - id: DASNY-DB-011
+    category: INDEMNITY
+    name: "Lien-related indemnity including attorneys' fees"
+    pattern: "(?is)indemnify\\s+owner.*?attorneys’?\\s+fees.*?placement\\s+of\\s+such\\s+lien"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Lien kaynaklı tazmin sorumluluğu, yalnızca yüklenicinin kusuru ve kontrolü altındaki hallerle sınırlanmalı; ihtilaflı alacaklardan doğan kayıtlar kapsam dışında tutulmalıdır."
+
+  - id: DASNY-DB-012
+    category: SCOPE_OF_WORK
+    name: "Owner intended third-party beneficiary in all subcontracts"
+    pattern: "(?is)intended\\s+third-?party\\s+beneficiary"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşverenin üçüncü kişi yararlanıcı statüsü, yalnızca belirli kritik yükümlülüklerle sınırlandırılmalı ve alt yüklenicilerle doğrudan geniş hak ilişkisi yaratmayacak şekilde daraltılmalıdır."
+
+  - id: DASNY-DB-013
+    category: TERMINATION
+    name: "Subcontractor must continue for owner after contractor default"
+    pattern: "(?is)upon\\s+default\\s+of\\s+the\\s+contractor.*?subcontractor\\s+shall\\s+be\\s+required\\s+to\\s+continue"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Alt yüklenicilerin işveren lehine devam yükümlülüğü, yalnızca ödemelerin güvence altına alınması ve sözleşme koşullarının korunması şartıyla düzenlenmelidir."
+
+  - id: DASNY-DB-014
+    category: TERMINATION
+    name: "Owner may take assignment of subcontracts"
+    pattern: "(?is)owner\\s+may\\s+elect.*?to\\s+have\\s+this\\s+subcontract\\s+assigned"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Alt sözleşmelerin işverene veya işverenin belirleyeceği kişiye devri, yalnızca fesih sonrası tamamlama amacıyla ve ödenmiş işler bakımından sınırlandırılmalıdır."
+
+  - id: DASNY-DB-015
+    category: INDEMNITY
+    name: "Joint and several liability"
+    pattern: "(?is)joint\\s+and\\s+severally\\s+liable"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Müşterek ve müteselsil sorumluluk, tarafların fiili rol ve kusur oranları dikkate alınarak daraltılmalı veya iç ilişki paylaşım mekanizması netleştirilmelidir."
+
+  - id: DASNY-DB-016
+    category: PAYMENT_TERMS
+    name: "GMP absolute maximum"
+    pattern: "(?is)gmp\\s+is\\s+the\\s+absolute\\s+maximum"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Mutlak üst sınır niteliğindeki GMP için, işveren kaynaklı değişiklikler, mevzuat değişiklikleri ve öngörülemeyen koşullar bakımından açık uyarlama hükümleri eklenmelidir."
+
+  - id: DASNY-DB-017
+    category: PAYMENT_TERMS
+    name: "Certified payroll required with each payment"
+    pattern: "(?is)certified\\s+payrolls\\s+for\\s+the\\s+contractor\\s+and\\s+its\\s+subcontractors"
+    weight: 0.75
+    severity: 0.75
+    locale: en
+    mitigation: "Sertifikalı bordro yükümlülükleri için teslim formatı, sıklığı ve eksiklik halinde uygulanacak süreç açık ve operasyonel olarak yönetilebilir biçimde düzenlenmelidir."
+
+  - id: DASNY-DB-018
+    category: PAYMENT_TERMS
+    name: "Final payment release"
+    pattern: "(?is)acceptance\\s+by\\s+the\\s+contractor\\s+of\\s+final\\s+payment.*?release\\s+to\\s+the\\s+owner\\s+from\\s+all\\s+claims"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Son ödeme ile doğacak ibra etkisi, yazılı olarak saklı tutulan tüm talepler ile gizli kusur ve bekleyen uyuşmazlık hakları hariç olacak şekilde sınırlandırılmalıdır."
+
+  - id: DASNY-DB-019
+    category: OTHER
+    name: "Final payment does not release contractor obligations"
+    pattern: "(?is)no\\s+payment,\\s*final\\s+or\\s+otherwise,\\s*shall\\s+release\\s+the\\s+contractor"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Son ödeme sonrası devam edecek yükümlülükler açık madde başlıkları ve makul sürelerle sınırlandırılmalıdır."
+
+  - id: DASNY-DB-020
+    category: CLAIMS_AND_DISPUTES
+    name: "Liquidated damages 5000 per day"
+    pattern: "(?is)liquidated\\s+damages.*?\\$5,000\\s*per\\s*day"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Günlük gecikme cezası tutarı, projenin gerçek kayıp potansiyeliyle orantılı ve makul bir üst sınıra bağlı olacak şekilde yeniden değerlendirilmelidir."
+
+  - id: DASNY-DB-021
+    category: CLAIMS_AND_DISPUTES
+    name: "Escalated liquidated damages 10000 per day"
+    pattern: "(?is)\\$10,000\\s*per\\s*day"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Artan oranlı gecikme cezası yapısı daraltılmalı ve cezaların kademeli olarak yükselmesi yerine tek, öngörülebilir ve makul bir sınır belirlenmelidir."
+
+  - id: DASNY-DB-022
+    category: CLAIMS_AND_DISPUTES
+    name: "Time is of the essence"
+    pattern: "(?is)time\\s+is\\s+of\\s+the\\s+essence"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Süre hükümleri esaslı kabul edilecekse, işveren kaynaklı gecikmeler, onay süreçleri ve öngörülemeyen durumlar için açık süre uzatımı hakları ayrıca korunmalıdır."
+
+  - id: DASNY-DB-023
+    category: OTHER
+    name: "Scope of Work to be developed by contractor"
+    pattern: "(?is)scope\\s+of\\s+work.*?to\\s+be\\s+developed\\s+and\\s+provided\\s+by\\s+contractor"
+    weight: 0.85
+    severity: 0.85
+    locale: en
+    mitigation: "Kapsam belgesinin yüklenici tarafından geliştirilecek olması halinde, işverenin onay verdiği kapsamın bağlayıcı ve nihai olduğu açıkça yazılmalıdır."
+
+  # ==========================================
+  # EAST VALLEY WATER DISTRICT GENERAL CONDITIONS
+  # ==========================================
+
+  - id: EVWD-GC-001
+    category: CLAIMS_AND_DISPUTES
+    name: "Engineer kararı final ve bağlayıcı"
+    pattern: "(?is)engineer'?s\\s+decision.*?shall\\s+be\\s+final|decision\\s+of\\s+the\\s+district\\s+on\\s+all\\s+such\\s+matters\\s+shall\\s+be\\s+considered\\s+final\\s+and\\s+binding"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Mühendisin veya işverenin kararlarının nihai ve bağlayıcı sayılması daraltılmalı; yüklenicinin bağımsız itiraz ve uyuşmazlık çözüm hakkı açıkça korunmalıdır."
+
+  - id: EVWD-GC-002
+    category: WARRANTIES
+    name: "Shop drawing review contractorı kurtarmıyor"
+    pattern: "(?is)shall\\s+in\\s+no\\s+way\\s+relieve\\s+the\\s+contractor\\s+of\\s+responsibility\\s+for\\s+errors\\s+or\\s+omissions"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Shop drawing incelemesinin hiçbir etkisinin olmaması yerine, işveren ve mühendis incelemesinin en azından açık yönlendirme ve onaylar bakımından dikkate alınacağı düzenlenmelidir."
+
+  - id: EVWD-GC-003
+    category: PAYMENT_TERMS
+    name: "Shop drawing revisions no extra work basis"
+    pattern: "(?is)shall\\s+not\\s+be\\s+taken\\s+as\\s+the\\s+basis\\s+of\\s+claims\\s+for\\s+extra\\s+work"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Shop drawing revizyonlarının hiçbir şekilde ek iş talebine konu olamayacağı hükmü daraltılmalı; kapsam değişikliği veya işveren kaynaklı revizyonlar için bedel ve süre hakkı korunmalıdır."
+
+  - id: EVWD-GC-004
+    category: CLAIMS_AND_DISPUTES
+    name: "No damages or time extension for contractor revision delay"
+    pattern: "(?is)no\\s+claim\\s+for\\s+damages\\s+or\\s+extension\\s+of\\s+time.*?required\\s+revisions\\s+to\\s+shop\\s+drawings"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Yüklenicinin revizyon sürecinden kaynaklanan tüm süre ve zarar taleplerinin kapatılması kaldırılmalı; mühendis inceleme gecikmesi veya işveren kaynaklı revizyonlar için haklar korunmalıdır."
+
+  - id: EVWD-GC-005
+    category: PAYMENT_TERMS
+    name: "Substitution revision costs borne by contractor"
+    pattern: "(?is)entire\\s+cost\\s+of\\s+these\\s+revisions\\s+shall\\s+be\\s+borne\\s+by\\s+the\\s+contractor"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İkame ürün nedeniyle doğan tüm revizyon maliyetlerinin otomatik olarak yükleniciye yazılması yerine, işveren onaylı değişikliklerin kapsam ve maliyet etkisi ayrıca değerlendirilmelidir."
+
+  - id: EVWD-GC-006
+    category: SCOPE_OF_WORK
+    name: "Means and methods risk entirely on contractor"
+    pattern: "(?is)contractor\\s+shall\\s+assume\\s+the\\s+entire\\s+responsibility\\s+for\\s+methods\\s+of\\s+performing\\s+the\\s+work"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Yöntem ve uygulama sorumluluğu korunacaksa, işveren talimatı veya sahaya özgü veri eksikliğinden kaynaklanan riskler için açık istisnalar düzenlenmelidir."
+
+  - id: EVWD-GC-007
+    category: CLAIMS_AND_DISPUTES
+    name: "Attorney fees and engineer daily defense charge"
+    pattern: "(?is)recover\\s+damages.*?reasonable\\s+attorney'?s\\s+fees.*?\\$1,000\\.00\\s+per\\s+day"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Mühendise karşı açılan ve sonuç alınamayan davalarda avukatlık ücreti ve günlük savunma bedeli yükleniciye yüklenmemeli; bu hüküm tamamen kaldırılmalı veya kötü niyetli davalarla sınırlandırılmalıdır."
+
+  - id: EVWD-GC-008
+    category: WARRANTIES
+    name: "Work without inspection may be removed regardless of defect"
+    pattern: "(?is)work\\s+done\\s+in\\s+the\\s+absence\\s+of\\s+prescribed\\s+inspection.*?removed\\s+and\\s+replaced.*?regardless\\s+of\\s+whether.*?defective\\s+or\\s+not"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Denetimsiz yapılan işin kusurlu olmasa bile sökülüp yeniden yaptırılması yerine, bu yaptırım yalnızca teknik olarak doğrulanamayan veya uygunsuz bulunan işlerle sınırlandırılmalıdır."
+
+  - id: EVWD-GC-009
+    category: WARRANTIES
+    name: "Covered work may be uncovered at contractor cost"
+    pattern: "(?is)work\\s+shall\\s+not\\s+be\\s+covered\\s+up\\s+without\\s+the\\s+authority.*?shall\\s+be\\s+uncovered"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İzinsiz kapatılan işin açtırılması yaptırımı korunacaksa, makul ihbar ve yalnızca ilgili kısmın açılması ilkesi açıkça düzenlenmelidir."
+
+  - id: EVWD-GC-010
+    category: PAYMENT_TERMS
+    name: "Additional review cost beyond second submittal withheld"
+    pattern: "(?is)right\\s+to\\s+withhold\\s+moneys\\s+due.*?beyond\\s+the\\s+second\\s+submittal"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İkinci sunum sonrası oluşan mühendis inceleme maliyetlerinin yükleniciye otomatik yansıtılması sınırlandırılmalı; yalnız açık kusur veya eksik sunum hallerine bağlanmalıdır."
+
+  - id: EVWD-GC-011
+    category: PAYMENT_TERMS
+    name: "Overtime inspection reimbursement"
+    pattern: "(?is)reimburse\\s+the\\s+district.*?inspection\\s+in\\s+excess\\s+of\\s+the\\s+foregoing"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Normal çalışma saatleri dışındaki denetim bedellerinin yükleniciye yüklenmesi, yalnızca yüklenicinin tercih ettiği hızlandırma senaryoları ile sınırlandırılmalıdır."
+
+  - id: EVWD-GC-012
+    category: CLAIMS_AND_DISPUTES
+    name: "No damages or anticipated profits on change orders"
+    pattern: "(?is)no\\s+such\\s+change\\s+shall\\s+constitute\\s+the\\s+basis\\s+of\\s+claims\\s+for\\s+damage\\s+or\\s+anticipated\\s+profits"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Değişiklik emirlerinde zarar ve beklenen kâr taleplerinin tamamen dışlanması yerine, silinen iş, yeniden sıralama ve ciddi program etkisi doğuran haller için sınırlı telafi mekanizması korunmalıdır."
+
+  - id: EVWD-GC-013
+    category: TERMINATION
+    name: "Strict anti-assignment with termination risk"
+    pattern: "(?is)shall\\s+not\\s+assign,\\s*sublet,\\s*sell,\\s*transfer.*?without\\s+the\\s+prior\\s+written\\s+consent.*?may\\s+be\\s+terminated"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Temlik ve devre ilişkin yasaklar, işverenin makul olmayan şekilde onay vermekten kaçınamayacağı ve yalnız esaslı risk artışı halinde reddedebileceği şekilde daraltılmalıdır."
+
+  - id: EVWD-GC-014
+    category: SCOPE_OF_WORK
+    name: "Minimum 50 percent self-performance requirement"
+    pattern: "(?is)shall\\s+perform\\s+not\\s+less\\s+than\\s+50\\s+percent\\s+of\\s+the\\s+work\\s+with\\s+his\\s+own\\s+forces"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Yüklenicinin en az yüzde elli işi kendi personeliyle yapma zorunluluğu, uzmanlık ve piyasa koşulları dikkate alınarak esnetilmelidir."
+
+  - id: EVWD-GC-015
+    category: TERMINATION
+    name: "Engineer may force subcontract annulment"
+    pattern: "(?is)subcontract\\s+shall\\s+provide\\s+for\\s+annulment.*?upon\\s+written\\s+order\\s+of\\s+the\\s+Engineer"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Alt sözleşmenin mühendis talebiyle feshedilebilmesi, yalnızca ciddi ve belgelendirilmiş ihlal halleri ile sınırlandırılmalı; yükleniciye savunma ve düzeltme süresi tanınmalıdır."
+
+  - id: EVWD-GC-016
+    category: TERMINATION
+    name: "Unauthorized subcontracting may lead to termination"
+    pattern: "(?is)unauthorized\\s+subcontracting.*?subject\\s+to\\s+contract\\s+termination"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Yetkisiz alt yüklenicilik yaptırımı korunacaksa, hangi düzenlemelerin bu kapsama girdiği açıkça tanımlanmalı ve önce yazılı uyarı verilmelidir."
+
+  - id: EVWD-GC-017
+    category: PAYMENT_TERMS
+    name: "Suspension without extra compensation"
+    pattern: "(?is)shall\\s+not\\s+be\\s+entitled\\s+to\\s+receive\\s+extra\\s+or\\s+additional\\s+compensation.*?suspension\\s+of\\s+work"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "İş durdurma halinde ek bedel hakkının tamamen kapatılması kaldırılmalı; işveren kaynaklı durdurmalarda süre uzatımı ve maliyet telafisi açıkça tanınmalıdır."
+
+  - id: EVWD-GC-018
+    category: TERMINATION
+    name: "District may terminate for its interests"
+    pattern: "(?is)against\\s+the\\s+District'?s\\s+interests\\s+to\\s+complete\\s+the\\s+Work"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İşveren menfaatine aykırılık gibi geniş ve belirsiz fesih sebepleri daraltılmalı; fesih halinde yüklenicinin makul kapanış giderleri ve bekleyen taahhüt maliyetleri korunmalıdır."
+
+  - id: EVWD-GC-019
+    category: TERMINATION
+    name: "Default termination and excess completion cost"
+    pattern: "(?is)cost\\s+of\\s+completing\\s+the\\s+Work\\s+shall\\s+be\\s+deducted.*?Contractor\\s+shall\\s+pay\\s+the\\s+excess"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Temerrüt halinde tamamlama maliyetinin yükleniciye yansıtılması, makul, ispatlanmış ve doğrudan tamamlatma giderleri ile sınırlandırılmalıdır."
+
+  - id: EVWD-GC-020
+    category: CLAIMS_AND_DISPUTES
+    name: "Five-day protest time bar and waiver"
+    pattern: "(?is)within\\s+five\\s*\\(\\s*5\\s*\\)\\s*days.*?waives\\s+all\\s+grounds\\s+for\\s+protests\\s+or\\s+objections"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Beş günlük itiraz süresi uzatılmalı ve sürenin kaçırılması otomatik hak kaybı sonucunu doğurmamalıdır."
+
+  - id: EVWD-GC-021
+    category: PAYMENT_TERMS
+    name: "No extra compensation for rights-of-way and agency requirements"
+    pattern: "(?is)shall\\s+not\\s+be\\s+made\\s+the\\s+basis\\s+for\\s+claims\\s+for\\s+additional\\s+compensation"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Ajans gereklilikleri ve hak geçişi kaynaklı maliyetlerin hiçbir şekilde ek bedel konusu olamayacağı hükmü daraltılmalı; işverenin kontrol alanındaki gecikmeler için telafi sağlanmalıdır."
+
+  - id: EVWD-GC-022
+    category: SITE_CONDITIONS
+    name: "Utilities not guaranteed to be shown"
+    pattern: "(?is)does\\s+not\\s+guarantee\\s+that\\s+all\\s+existing\\s+utilities\\s+are\\s+shown"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Mevcut altyapının eksik veya yanlış gösterilmesi riskinin tamamının yükleniciye bırakılması yerine, gösterilmeyen ana hat ve önemli müdahaleler için süre ve maliyet koruması genişletilmelidir."
+
+  - id: EVWD-GC-023
+    category: SITE_CONDITIONS
+    name: "Contractor bears most utility and service connection costs"
+    pattern: "(?is)shall\\s+be\\s+borne\\s+by\\s+the\\s+Contractor"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Mevcut tesislere ilişkin sökme, koruma, destekleme ve yeniden yapım maliyetleri bakımından, çizimlerde gösterilmeyen veya makulce tespit edilemeyen haller için işveren sorumluluğu korunmalıdır."
+
+  - id: EVWD-GC-024
+    category: SITE_CONDITIONS
+    name: "Site condition disclaimer and no warranty of drawings"
+    pattern: "(?is)not\\s+intended\\s+or\\s+to\\s+be\\s+inferred.*?constitute\\s+a\\s+representation\\s+or\\s+warranty.*?Execution\\s+of\\s+the\\s+Contract\\s+shall\\s+be\\s+conclusive\\s+evidence"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "Çizim ve saha koşullarına ilişkin tüm garanti retleri daraltılmalı; yüklenicinin makul inceleme ile tespit edemeyeceği gizli veya farklı koşullar için açık koruma sağlanmalıdır."
+
+  - id: EVWD-GC-025
+    category: WARRANTIES
+    name: "Best grade and best standard language"
+    pattern: "(?is)best\\s+grade\\s+in\\s+quality|best\\s+standard\\s+of\\s+construction"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "Belirsiz şekilde yükseltilmiş kalite beklentileri, makul sektör standardı ve sözleşmede açıkça tanımlanan performans kriterleri ile sınırlandırılmalıdır."
+
+  - id: EVWD-GC-026
+    category: PAYMENT_TERMS
+    name: "District may deduct repair and removal costs"
+    pattern: "(?is)District\\s+will\\s+deduct\\s+the\\s+cost\\s+thereof\\s+from\\s+any\\s+moneys\\s+due"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Düzeltme ve söküm maliyetlerinin tek taraflı mahsup edilebilmesi, yalnızca açıkça belgelenmiş ve yükleniciye yazılı bildirilmiş giderlerle sınırlandırılmalıdır."
+
+  - id: EVWD-GC-027
+    category: INSURANCE_OBLIGATION
+    name: "One-year guarantee plus 10 percent surety bond"
+    pattern: "(?is)guarantee\\s+all\\s+work\\s+for\\s+a\\s+period\\s+of\\s+one\\s*\\(\\s*1\\s*\\)\\s*year.*?amount\\s+of\\s+ten\\s+percent\\s+of\\s+the\\s+contract\\s+price"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Bir yıllık garantiye ek olarak yüzde on güvence istenmesi yeniden müzakere edilmeli; aynı risk için çifte teminat yükü azaltılmalıdır."
+
+  - id: EVWD-GC-028
+    category: CLAIMS_AND_DISPUTES
+    name: "Time is of the essence"
+    pattern: "(?is)Time\\s+is\\s+of\\s+the\\s+essence"
+    weight: 0.9
+    severity: 0.9
+    locale: en
+    mitigation: "Süre hükümleri esaslı sayılacaksa, işveren kaynaklı gecikmeler ve öngörülemeyen koşullar için açık süre uzatımı hakları ayrıca korunmalıdır."
+
+  - id: EVWD-GC-029
+    category: CLAIMS_AND_DISPUTES
+    name: "Liquidated damages deductible from monies due"
+    pattern: "(?is)liquidated\\s+damages.*?may\\s+deduct\\s+the\\s+amount.*?from\\s+any\\s+moneys\\s+due"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Gecikme cezalarının otomatik mahsup edilebilmesi, yalnızca kesinleşmiş ve tartışmasız tutarlar için uygulanacak şekilde sınırlandırılmalıdır."
+
+  - id: EVWD-GC-030
+    category: PAYMENT_TERMS
+    name: "Retention and broad payment withholding"
+    pattern: "(?is)deduction\\s+of\\s+10\\s+percent|payments\\s+may\\s+be\\s+withheld\\s+or\\s+reduced"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Hakediş kesintileri ve retention oranları, yalnızca sözleşmede açıkça tanımlanan ve makul sebeplerle sınırlı olacak şekilde daraltılmalıdır."
+
+  - id: EVWD-GC-031
+    category: PAYMENT_TERMS
+    name: "Retained funds may become District property after termination"
+    pattern: "(?is)retained\\s+by\\s+the\\s+District\\s+shall\\s+become\\s+the\\s+property\\s+of\\s+the\\s+District"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Fesih halinde tutulmuş tutarların otomatik olarak işverene geçmesi yerine, yalnızca ispatlanmış tamamlama farkı kadar mahsup yapılmasına izin verilmelidir."
+
+  - id: EVWD-GC-032
+    category: CLAIMS_AND_DISPUTES
+    name: "Five-day final estimate waiver"
+    pattern: "(?is)within\\s+five\\s*\\(\\s*5\\s*\\)\\s*calendar\\s+days.*?waiver\\s+of\\s+the\\s+Contractor'?s\\s+right"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kesin hesap itiraz süresi uzatılmalı ve gecikmenin otomatik hak kaybı sayılmayacağı açıkça düzenlenmelidir."
+
+  - id: EVWD-GC-033
+    category: PAYMENT_TERMS
+    name: "Final payment releases District from all claims"
+    pattern: "(?is)final\\s+payment.*?shall\\s+be\\s+a\\s+release\\s+of\\s+the\\s+District.*?from\\s+all\\s+claims"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Son ödeme ile doğan ibra etkisi, yazılı olarak saklı tutulan talepler ile gizli ayıp ve bekleyen uyuşmazlık hakları hariç olacak şekilde sınırlandırılmalıdır."
+
+  - id: EVWD-GC-034
+    category: PAYMENT_TERMS
+    name: "No overhead supervision or delay damages in force account"
+    pattern: "(?is)No\\s+payment\\s+shall\\s+be\\s+made.*?overhead,\\s*general\\s+administrative\\s+expense,\\s*supervision,\\s*or\\s+damages\\s+claimed\\s+for\\s+delay"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Force account hesabında genel gider, yönetim ve gecikme etkilerinin tamamen dışlanması kaldırılmalı; en azından sahada fiilen doğan yönetimsel ve süre etkileri telafi edilmelidir."
+
+  - id: EVWD-GC-035
+    category: INDEMNITY
+    name: "Broad liability and defense obligation"
+    pattern: "(?is)assume\\s+the\\s+defense.*?including\\s+reasonable\\s+attorneys'?\\s+fees|defend,\\s*indemnify\\s+and\\s+hold\\s+harmless"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Savunma ve tazmin yükümlülükleri, yüklenicinin kusur oranına dayalı üçüncü taraf talepleri ve doğrudan zararlarla sınırlandırılmalıdır."
+
+  - id: EVWD-GC-036
+    category: INTELLECTUAL_PROPERTY_TRANSFER
+    name: "Patent and copyright indemnity"
+    pattern: "(?is)patented\\s+or\\s+copyrighted\\s+design.*?hold\\s+harmless,\\s*indemnify\\s+and\\s+defend"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Patent ve telif tazminatı, yalnızca yüklenicinin seçtiği tasarım, ürün ve süreçlerle sınırlanmalı; işverenin zorunlu tuttuğu seçimler kapsam dışında bırakılmalıdır."
+
+  - id: EVWD-GC-037
+    category: INSURANCE_OBLIGATION
+    name: "Heavy insurance package with primary waiver and builder's risk"
+    pattern: "(?is)waive\\s+all\\s+right\\s+to\\s+subrogation|primary\\s+insurance|builder'?s\\s+risk\\s+insurance.*?100\\s+percent\\s+completed\\s+value|A:XIII"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Sigorta paketi, proje büyüklüğü ve piyasada temin edilebilirlik dikkate alınarak yeniden dengelenmeli; ilave sigortalı, feragat ve yüzde yüz builder's risk yükleri ölçülü hale getirilmelidir."
+
+    # ==========================================
+  # AOC CM@R GENERAL CONDITIONS - SAN DIEGO CENTRAL COURTHOUSE
+  # ==========================================
+
+  - id: AOC-CMR-001
+    category: SCOPE_OF_WORK
+    name: "Reasonably inferable kapsam genişlemesi"
+    pattern: "(?is)reasonably\\s+inferable\\s+from\\s+them\\s+as\\s+being\\s+necessary\\s+to\\s+produce\\s+the\\s+intended\\s+results"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kapsamı belirsiz şekilde genişleten 'reasonably inferable' ifadesi daraltılmalı ve yalnızca açıkça gösterilen veya teknik olarak zorunlu işler ile sınırlandırılmalıdır."
+
+  - id: AOC-CMR-002
+    category: SCOPE_OF_WORK
+    name: "Minor detail deemed implied"
+    pattern: "(?is)shall\\s+be\\s+deemed\\s+to\\s+have\\s+been\\s+implied.*?Minor\\s+Detail"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Eksik detayların otomatik olarak sözleşmeye dahil sayılması hükmü sınırlandırılmalı; maliyeti veya etkisi önemli kalemler için değişiklik emri mekanizması korunmalıdır."
+
+  - id: AOC-CMR-003
+    category: CLAIMS_AND_DISPUTES
+    name: "RFI response notice waiver after 14 days"
+    pattern: "(?is)Failure\\s+to\\s+give\\s+such\\s+written\\s+notice\\s+within\\s+14\\s+days.*?shall\\s+waive\\s+the\\s+Contractor'?s\\s+right\\s+to\\s+seek\\s+additional\\s+time\\s+or\\s+cost"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "RFI cevabına karşı 14 günlük yazılı bildirim süresi uzatılmalı ve sürenin kaçırılması otomatik hak kaybı sonucunu doğurmamalıdır."
+
+  - id: AOC-CMR-004
+    category: CLAIMS_AND_DISPUTES
+    name: "Additional instructions require notice before proceeding"
+    pattern: "(?is)shall\\s+submit\\s+written\\s+notice\\s+to\\s+the\\s+AOC\\s+within\\s+14\\s+days.*?prior\\s+to\\s+commencement\\s+of\\s+the\\s+work"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Ek talimatların kapsam artışı doğurması halinde yazılı bildirim şartı korunacaksa, makul bir süre ve iş akışını durdurmadan hak saklama imkanı tanınmalıdır."
+
+  - id: AOC-CMR-005
+    category: WARRANTIES
+    name: "AOC may reject work and order additional testing"
+    pattern: "(?is)will\\s+have\\s+the\\s+authority\\s+to\\s+reject\\s+the\\s+Work|require\\s+additional\\s+inspection\\s+or\\s+testing"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İşin reddi ve ek test yetkisi, objektif uygunsuzluk kriterlerine bağlanmalı; tekrarlanan test maliyetleri yalnızca yüklenici kusuru halinde yüklenmelidir."
+
+  - id: AOC-CMR-006
+    category: SCOPE_OF_WORK
+    name: "Subcontractor risk entirely on contractor"
+    pattern: "(?is)No\\s+Claim.*?for\\s+any\\s+action\\s+of\\s+any\\s+Subcontractor.*?unless\\s+the\\s+AOC\\s+is\\s+the\\s+proximate\\s+cause"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Alt yüklenici ve tedarikçi kaynaklı tüm risklerin yükleniciye yazılması daraltılmalı; işverenin yönlendirdiği, dayattığı veya seçimini zorunlu tuttuğu taraflar için istisna eklenmelidir."
+
+  - id: AOC-CMR-007
+    category: WARRANTIES
+    name: "Contractor repairs prior defective work at sole expense"
+    pattern: "(?is)the\\s+Contractor\\s+shall\\s+repair\\s+or\\s+replace\\s+such\\s+defective\\s+work\\s+at\\s+the\\s+Contractor'?s\\s+sole\\s+expense"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Daha önce yapılmış uygunsuz işlerin tamamının yükleniciye yüklenmesi yerine, yalnızca yüklenicinin kusur alanına giren bölümler için sorumluluk tanımlanmalıdır."
+
+  - id: AOC-CMR-008
+    category: SITE_CONDITIONS
+    name: "Lack of knowledge of existing conditions no claim basis"
+    pattern: "(?is)lack\\s+of\\s+knowledge\\s+of\\s+existing\\s+conditions\\s+will\\s+not\\s+be\\s+accepted.*?basis\\s+for\\s+a\\s+Claim\\s+for\\s+additional\\s+compensation"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Mevcut koşullara ilişkin bilgi eksikliğinin hiçbir şekilde ek bedel talebine dayanak olamayacağı hükmü daraltılmalı; gizli ve makul inceleme ile tespit edilemeyen koşullar için koruma sağlanmalıdır."
+
+  - id: AOC-CMR-009
+    category: WARRANTIES
+    name: "Submittal review does not relieve contractor"
+    pattern: "(?is)shall\\s+not\\s+relieve\\s+the\\s+Contractor\\s+of\\s+responsibility\\s+for\\s+errors\\s+or\\s+omissions\\s+in\\s+submittals"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Submittal incelemesinin hiçbir etkisinin olmaması yerine, işverenin açık onay verdiği veya yönlendirdiği hususlar bakımından risk paylaşımı düzenlenmelidir."
+
+  - id: AOC-CMR-010
+    category: PAYMENT_TERMS
+    name: "Review cost charged after second resubmittal"
+    pattern: "(?is)After\\s+the\\s+second\\s+re-submittal.*?charged\\s+all\\s+costs\\s+of\\s+submittal\\s+review"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "İkinci sunum sonrası inceleme maliyetlerinin yükleniciye otomatik yüklenmesi sınırlandırılmalı; yalnızca açık eksiklik ve uygunsuzluk halleri için uygulanmalıdır."
+
+  - id: AOC-CMR-011
+    category: PAYMENT_TERMS
+    name: "Substitution proposal must be within 10 days"
+    pattern: "(?is)within\\s+10\\s+days\\s+after\\s+Contract\\s+start\\s+date"
+    weight: 0.85
+    severity: 0.8
+    locale: en
+    mitigation: "İkame ürün teklifleri için öngörülen on günlük süre, tedarik gerçekleri ve tasarım karmaşıklığı dikkate alınarak uzatılmalıdır."
+
+  - id: AOC-CMR-012
+    category: PAYMENT_TERMS
+    name: "Substitution changes at no additional cost to AOC"
+    pattern: "(?is)shall\\s+be\\s+made\\s+without\\s+additional\\s+cost\\s+to\\s+the\\s+AOC"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "İkame ürün nedeniyle ortaya çıkan tüm uyarlama maliyetlerinin yükleniciye yazılması yerine, işverenin onayladığı tasarım değişiklikleri ayrıca fiyatlandırılabilmelidir."
+
+  - id: AOC-CMR-013
+    category: WARRANTIES
+    name: "Covered work must be uncovered at contractor expense"
+    pattern: "(?is)be\\s+uncovered\\s+for\\s+the\\s+AOC'?s\\s+observation\\s+and\\s+replaced\\s+at\\s+the\\s+Contractor'?s\\s+expense"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Örtülmüş işin açtırılması yaptırımı korunacaksa, yalnızca gerekli kısım açtırılmalı ve işverenin zamanında denetim yapmamasından doğan maliyetler yükleniciye yüklenmemelidir."
+
+  - id: AOC-CMR-014
+    category: TERMINATION
+    name: "Termination for AOC sole convenience"
+    pattern: "(?is)terminate\\s+this\\s+Contract.*?for\\s+its\\s+sole\\s+convenience"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kolaylık nedeniyle fesih hakkı korunacaksa, yüklenicinin bekleyen sipariş, demobilizasyon, kapanış giderleri ve makul kâr kaybı için açık telafi mekanizması düzenlenmelidir."
+
+  - id: AOC-CMR-015
+    category: TERMINATION
+    name: "Five-day cure default termination"
+    pattern: "(?is)written\\s+notice\\s+of\\s+at\\s+least\\s+5\\s+days.*?defaults\\s+are\\s+not\\s+remedied"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Beş günlük cure süresi, işin niteliğine uygun makul bir düzeye çıkarılmalı ve esaslı ihlaller ile küçük eksiklikler arasında ayrım yapılmalıdır."
+
+  - id: AOC-CMR-016
+    category: TERMINATION
+    name: "No further payment until completion after cause termination"
+    pattern: "(?is)shall\\s+not\\s+be\\s+entitled\\s+to\\s+receive\\s+any\\s+further\\s+payment\\s+until\\s+Completion\\s+of\\s+the\\s+Work"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Temerrüt sonrası tüm ödemelerin durdurulması yerine, tamamlanmış ve tartışmasız iş bedellerinin ödenmesine izin veren dengeli bir mekanizma kurulmalıdır."
+
+  - id: AOC-CMR-017
+    category: PAYMENT_TERMS
+    name: "GMAX complete acceptance no change order for conflicts ambiguities omissions"
+    pattern: "(?is)no\\s+right\\s+for\\s+change\\s+orders\\s+or\\s+extra\\s+work\\s+due\\s+to\\s+conflicts,\\s*ambiguities\\s+or\\s+omissions"
+    weight: 1.0
+    severity: 1.0
+    locale: en
+    mitigation: "GMAX sonrasında çelişki, belirsizlik ve eksiklikler için değişiklik emri hakkının tamamen kaldırılması kabul edilmemeli; tasarım eksikleri için açık fiyat ve süre koruması saklı tutulmalıdır."
+
+  - id: AOC-CMR-018
+    category: PAYMENT_TERMS
+    name: "Contractor contingency funds design/document errors"
+    pattern: "(?is)shall\\s+be\\s+paid\\s+by\\s+the\\s+Contractor\\s+from\\s+the\\s+Contractor\\s+contingency"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Yüklenici kontenjanı, işveren veya tasarımcı kaynaklı belge eksiklerini finanse etme aracı olmamalı; kontenjanın kullanım alanları dar ve objektif şekilde tanımlanmalıdır."
+
+  - id: AOC-CMR-019
+    category: PAYMENT_TERMS
+    name: "GMAX overrun on contractor and savings returned to AOC"
+    pattern: "(?is)Contractor\\s+shall\\s+pay\\s+the\\s+overrun.*?shall\\s+return\\s+the\\s+Direct\\s+Cost\\s+and\\s+Contingency\\s+savings\\s+to\\s+the\\s+AOC"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "GMAX aşımının tamamen yükleniciye yazılması ve tüm tasarrufların işverene dönmesi yerine, makul bir paylaşım ve risk dengeleme mekanizması oluşturulmalıdır."
+
+  - id: AOC-CMR-020
+    category: PAYMENT_TERMS
+    name: "Broad disallowed costs including lost profits and rescheduling"
+    pattern: "(?is)lost\\s+revenues;\\s*lost\\s+profits;\\s*lost\\s+income|rescheduling\\s+costs|Claim\\s+preparation|legal\\s+expenses"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Maliyet dışı bırakma listesi daraltılmalı; en azından işveren kaynaklı değişiklik ve gecikmelerden doğan doğrudan program ve yönetim etkileri telafi edilebilmelidir."
+
+  - id: AOC-CMR-021
+    category: CLAIMS_AND_DISPUTES
+    name: "Change order acceptance waives all related claims"
+    pattern: "(?is)written\\s+acceptance\\s+of\\s+a\\s+Change\\s+Order.*?waiver\\s+of\\s+all\\s+Claims"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Değişiklik emri kabulünün tüm bağlantılı talepleri otomatik düşürmesi yerine, yazılı olarak saklı tutulan zaman ve maliyet haklarının korunacağı açıkça düzenlenmelidir."
+
+  - id: AOC-CMR-022
+    category: CLAIMS_AND_DISPUTES
+    name: "Shared float and no delay damages until completion date exceeded"
+    pattern: "(?is)float.*?jointly\\s+owned|no\\s+time\\s+extensions\\s+will\\s+be\\s+granted\\s+nor\\s+delay\\s+damages\\s+paid\\s+until.*?contract\\s+completion\\s+date"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Paylaşımlı float yaklaşımı sınırlandırılmalı ve işveren kaynaklı gecikmelerin, sözleşme bitiş tarihi aşılmasa bile etkisinin tanınacağı bir mekanizma eklenmelidir."
+
+  - id: AOC-CMR-023
+    category: CLAIMS_AND_DISPUTES
+    name: "No acceleration or early completion claim"
+    pattern: "(?is)will\\s+not\\s+change\\s+the\\s+contract\\s+time\\s+or\\s+entitle\\s+the\\s+Contractor\\s+to\\s+acceleration\\s+claims\\s+or\\s+to\\s+delay\\s+damage\\s+claims"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Erken bitirme planı kabul edilse bile tüm hızlandırma ve gecikme taleplerinin dışlanması yerine, işveren müdahaleleri nedeniyle bozulan erken bitirme planları için sınırlı telafi sağlanmalıdır."
+
+  - id: AOC-CMR-024
+    category: CLAIMS_AND_DISPUTES
+    name: "Liquidated damages with estimated withholding"
+    pattern: "(?is)deduct\\s+liquidated\\s+damages\\s+based\\s+on\\s+estimated\\s+period\\s+of\\s+late\\s+completion|\\$2,000\\s+for\\s+each\\s+calendar\\s+day"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tahmini gecikme süresine göre peşin cezai şart kesintisi yapılması kaldırılmalı; yalnızca kesinleşmiş ve ölçülebilir gecikmeler için mahsup yapılmalıdır."
+
+  - id: AOC-CMR-025
+    category: CLAIMS_AND_DISPUTES
+    name: "Seven-day time extension notice"
+    pattern: "(?is)submit\\s+justification\\s+no\\s+later\\s+than\\s+7\\s+days\\s+after\\s+the\\s+initial\\s+occurrence"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Süre uzatımı için yedi günlük bildirim süresi uzatılmalı ve geç bildirimin otomatik hak kaybı yaratmayacağı açıkça düzenlenmelidir."
+
+  - id: AOC-CMR-026
+    category: CLAIMS_AND_DISPUTES
+    name: "No delay claim unless noticed at occurrence"
+    pattern: "(?is)shall\\s+make\\s+no\\s+Claim\\s+for\\s+delay\\s+not\\s+called\\s+to\\s+the\\s+attention\\s+of\\s+the\\s+AOC\\s+in\\s+writing"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Gecikme taleplerinin olay anındaki yazılı bildirime bağlanması yumuşatılmalı; makul süre içinde yapılan ve zararı belgelendiren bildirimler geçerli sayılmalıdır."
+
+  - id: AOC-CMR-027
+    category: CLAIMS_AND_DISPUTES
+    name: "Normal weather not justified delay"
+    pattern: "(?is)normal\\s+weather\\s+conditions.*?will\\s+not\\s+be\\s+regarded\\s+as\\s+a\\s+justified\\s+delay"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Normal hava koşulları kavramı objektif meteorolojik eşiklerle tanımlanmalı; kritik yolu etkileyen aşırı yerel koşullar için süre uzatımı imkanı korunmalıdır."
+
+  - id: AOC-CMR-028
+    category: PAYMENT_TERMS
+    name: "Unilateral acceleration cannot use contractor contingency"
+    pattern: "(?is)shall\\s+not\\s+be\\s+entitled\\s+to\\s+use\\s+of\\s+the\\s+Contractor\\s+Contingency"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Yüklenicinin hızlandırma için kontenjan kullanamaması hükmü, işverenin program baskısı veya işveren kaynaklı sıkışmalar nedeniyle yapılan hızlandırmalar bakımından esnetilmelidir."
+
+  - id: AOC-CMR-029
+    category: PAYMENT_TERMS
+    name: "Strict conditional and unconditional lien release regime"
+    pattern: "(?is)conditional\\s+lien\\s+releases|unconditional\\s+lien\\s+releases|stop\\s+notices\\s+release"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Hakediş ve kesin ödeme için istenen feragat belgeleri, fiilen ödenmiş tutarlar ve ilgili dönemlerle sınırlı olacak şekilde daraltılmalıdır."
+
+  - id: AOC-CMR-030
+    category: PAYMENT_TERMS
+    name: "Retention not less than ten percent"
+    pattern: "(?is)retain\\s+not\\s+less\\s+than\\s+ten\\s*\\(\\s*10\\s*\\)\\s*percent"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Yüzde on retention oranı proje riski ve ilerleme düzeyi dikkate alınarak düşürülmeli veya kademeli azaltım mekanizması eklenmelidir."
+
+  - id: AOC-CMR-031
+    category: PAYMENT_TERMS
+    name: "Stop notice/lien costs and attorneys fees deductible"
+    pattern: "(?is)attorney\\s+fees\\s+and\\s+expense\\s+incurred.*?deduct.*?from\\s+any\\s+sum\\s+payable"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Stop notice veya lien kaynaklı giderlerin avukatlık ücretleriyle birlikte tek taraflı mahsup edilebilmesi yalnızca kesinleşmiş ve belgeli tutarlarla sınırlandırılmalıdır."
+
+  - id: AOC-CMR-032
+    category: CLAIMS_AND_DISPUTES
+    name: "Final statement claim deadline and waiver"
+    pattern: "(?is)has\\s+30\\s+days\\s+after\\s+receipt\\s+of\\s+the\\s+final\\s+statement\\s+to\\s+file\\s+a\\s+Claim.*?constitute\\s+waiver"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Kesin hesap sonrası otuz günlük claim süresi uzatılmalı ve sürenin kaçırılması halinde otomatik tüm hak kaybı doğmamalıdır."
+
+  - id: AOC-CMR-033
+    category: CLAIMS_AND_DISPUTES
+    name: "Disputed work must proceed first"
+    pattern: "(?is)shall\\s+immediately\\s+perform\\s+such\\s+work.*?Failure\\s+to\\s+submit\\s+a\\s+protest.*?shall\\s+constitute\\s+a\\s+waiver"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Uyuşmazlık konusu işin önce yapılması sistemi korunacaksa, yüklenicinin hak saklama ve bedel/süre talep etme mekanizması daha esnek hale getirilmelidir."
+
+  - id: AOC-CMR-034
+    category: CLAIMS_AND_DISPUTES
+    name: "Heavy claim documentation burden"
+    pattern: "(?is)3\\s+certified\\s+copies|productivity\\s+exhibits|computer\\s+disks\\s+of\\s+all\\s+schedules"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Talep dosyası için istenen belge yükü makul seviyeye çekilmeli; yalnızca uyuşmazlığın çözümü için gerekli temel kayıtlar zorunlu tutulmalıdır."
+
+  - id: AOC-CMR-035
+    category: CLAIMS_AND_DISPUTES
+    name: "False Claims Act exposure for unsupported claim"
+    pattern: "(?is)False\\s+Claims\\s+Act|misrepresentation\\s+of\\s+fact\\s+or\\s+fraud"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Desteklenemeyen her talebin sahte talep riskine bağlanması daraltılmalı; kötü niyet, kasıt veya açık sahtecilik halleri ile sınırlandırılmalıdır."
+
+  - id: AOC-CMR-036
+    category: CLAIMS_AND_DISPUTES
+    name: "Prevailing party attorneys fees"
+    pattern: "(?is)prevailing\\s+party\\s+shall\\s+be\\s+entitled\\s+to\\s+recover\\s+reasonable\\s+attorney\\s+fees\\s+and\\s+costs"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "Kazanan taraf avukatlık ücretlerini alır hükmü, kötü niyetli veya açıkça dayanaksız taleplerle sınırlı hale getirilmelidir."
+
+  - id: AOC-CMR-037
+    category: CLAIMS_AND_DISPUTES
+    name: "Mandatory continuation of work during dispute"
+    pattern: "(?is)Pending\\s+the\\s+final\\s+resolution.*?diligently\\s+proceed\\s+with\\s+the\\s+performance"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Uyuşmazlık sırasında işe devam yükümlülüğü korunacaksa, ödeme güvencesi ve yüklenicinin nakit akışını koruyacak geçici mekanizmalar eklenmelidir."
+
+  - id: AOC-CMR-038
+    category: PAYMENT_TERMS
+    name: "Broad audit and access to records"
+    pattern: "(?is)access\\s+upon\\s+24\\s+hours\\s+advance\\s+written\\s+notice|maintained\\s+and\\s+made\\s+available\\s+until\\s+3\\s+years\\s+past\\s+final\\s+payment"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Denetim ve kayıt erişimi kapsam, gizlilik ve süre bakımından daraltılmalı; yalnızca sözleşmeye doğrudan ilişkin kayıtlarla sınırlandırılmalıdır."
+
+  - id: AOC-CMR-039
+    category: INDEMNITY
+    name: "Broad indemnity with retention/setoff"
+    pattern: "(?is)shall\\s+indemnify\\s+and\\s+hold\\s+harmless.*?may\\s+be\\s+retained\\s+until\\s+disposition"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Tazmin yükümlülüğü, yüklenicinin kusur oranına göre üçüncü taraf talepleriyle sınırlandırılmalı; ihtilaflı iddialar için otomatik para tutma yetkisi daraltılmalıdır."
+
+  - id: AOC-CMR-040
+    category: INSURANCE_OBLIGATION
+    name: "Heavy contractor insurance package"
+    pattern: "(?is)\\$15,000,000\\s+per\\s+occurrence|10\\s*\\(\\s*10\\s*\\)\\s*years\\s+past|primary\\s+and\\s+non-contributing|additional\\s+insureds|waive\\s+any\\s+right\\s+of\\s+recovery\\s+or\\s+subrogation"
+    weight: 1.0
+    severity: 0.95
+    locale: en
+    mitigation: "Sigorta limitleri ve ek sigortalı, feragat, tamamlanmış işler ve öncelikli sigorta yükleri, proje büyüklüğü ve piyasada temin edilebilirlik dikkate alınarak yeniden dengelenmelidir."
+
+  - id: AOC-CMR-041
+    category: INSURANCE_OBLIGATION
+    name: "OCIP loss sharing and insurance credits"
+    pattern: "(?is)shall\\s+share\\s+equally\\s+in\\s+the\\s+first\\s+\\$10,000|Insurance\\s+Credits"
+    weight: 0.9
+    severity: 0.85
+    locale: en
+    mitigation: "OCIP kapsamında kayıp paylaşımı ve sigorta kredileri, alt yükleniciler ve yüklenici için öngörülebilir ve ölçülü sınırlar içinde tanımlanmalıdır."
+
+  - id: AOC-CMR-042
+    category: INSURANCE_OBLIGATION
+    name: "Performance bond and payment bond 100 percent"
+    pattern: "(?is)one\\s+hundred\\s+percent\\s*\\(\\s*100%\\s*\\)\\s+of\\s+the\\s+Project"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Yüzde yüz performans ve ödeme bonosu yükümlülüğü, proje riski ve piyasa kapasitesi dikkate alınarak yeniden değerlendirilmeli veya aşamalı güvence modeli uygulanmalıdır."
+
+  - id: AOC-CMR-043
+    category: PAYMENT_TERMS
+    name: "Funding availability and appropriation termination"
+    pattern: "(?is)subject\\s+to\\s+the\\s+availability\\s+of\\s+authorized\\s+funds|lack\\s+of\\s+appropriation\\s+of\\s+funds"
+    weight: 0.95
+    severity: 0.9
+    locale: en
+    mitigation: "Bütçe ve ödenek yetersizliği nedeniyle fesih halinde, yüklenicinin yapılmış iş bedeli, kapanış giderleri ve makul demobilizasyon maliyetleri açıkça güvence altına alınmalıdır."
+
+  - id: AOC-CMR-044
+    category: OTHER
+    name: "Gratuities and conflict certifications with termination exposure"
+    pattern: "(?is)Covenant\\s+Against\\s+Gratuities|Conflict\\s+of\\s+Interest|terminate\\s+the\\s+Contract"
+    weight: 0.8
+    severity: 0.8
+    locale: en
+    mitigation: "Uyum ve etik sertifikasyonları korunacaksa, ihlal halleri açıkça tanımlanmalı ve kasıtlı olmayan teknik ihlaller için doğrudan fesih yerine düzeltme süreci öngörülmelidir."

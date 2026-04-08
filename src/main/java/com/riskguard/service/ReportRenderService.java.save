@@ -1,0 +1,171 @@
+package com.riskguard.service;
+
+import com.riskguard.dto.RiskReportResponse;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ReportRenderService {
+
+    public String renderHtml(RiskReportResponse report) {
+
+        String riskLabel = riskLevelLabel(report.totalScore);
+        String riskColor = riskLevelColor(report.totalScore);
+
+        StringBuilder html = new StringBuilder();
+
+        html.append("<!DOCTYPE html>");
+        html.append("<html lang='en'><head>");
+        html.append("<meta charset='UTF-8'/>");
+        html.append("<meta name='viewport' content='width=device-width, initial-scale=1.0'/>");
+        html.append("<title>Contract Risk Report</title>");
+
+        // Basit inline CSS
+        html.append("<style>");
+        html.append("body { font-family: Arial, sans-serif; color:#1a1a1a; padding:24px; background:#f5f5f5; }");
+        html.append(".card { background:#fff; border-radius:12px; padding:20px; margin-bottom:24px; box-shadow:0 10px 30px rgba(0,0,0,0.06); }");
+        html.append("h1 { font-size:20px; margin:0 0 8px 0; color:#111; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; }");
+        html.append("h2 { font-size:16px; margin:16px 0 8px 0; color:#333; }");
+        html.append(".meta-row { font-size:14px; color:#555; margin-bottom:4px; }");
+        html.append(".score { font-weight:bold; font-size:32px; color:#1a1a1a; margin-top:4px; }");
+
+        // rozet stili
+        html.append(".badge { display:inline-block; font-size:12px; font-weight:600; color:#fff; border-radius:999px; padding:4px 10px; line-height:1; }");
+
+        html.append("table { width:100%; border-collapse:collapse; margin-top:12px; font-size:14px; }");
+        html.append("th { text-align:left; background:#222; color:#fff; padding:8px; font-weight:600; font-size:13px; }");
+        html.append("td { background:#fff; border-bottom:1px solid #ddd; vertical-align:top; padding:8px; }");
+        html.append(".cat { font-weight:bold; color:#222; }");
+        html.append(".rule { color:#555; font-size:12px; }");
+        html.append(".snippet { font-family: monospace; font-size:12px; background:#fafafa; border:1px solid #eee; border-radius:6px; padding:8px; display:block; white-space:pre-wrap; word-break:break-word; }");
+        html.append(".empty { color:#777; font-style:italic; padding:16px 0; }");
+        html.append("</style>");
+
+        html.append("</head><body>");
+
+        // ÜST KART
+        html.append("<div class='card'>");
+        html.append("<h1>");
+        html.append("<span>Sözleşme Risk Raporu</span>");
+        html.append("<span class='badge' style='background:" + riskColor + ";'>" + riskLabel + "</span>");
+        html.append("</h1>");
+
+        html.append("<div class='meta-row'><strong>Belge ID:</strong> " + safe(report.documentId) + "</div>");
+        html.append("<div class='meta-row'><strong>Dosya adı:</strong> " + safe(report.filename) + "</div>");
+        html.append("<div class='meta-row'><strong>Dil:</strong> " + safe(report.language) + "</div>");
+
+        html.append("<div class='meta-row' style='margin-top:12px;'><strong>Toplam Risk Skoru:</strong></div>");
+        html.append("<div class='score'>" + report.totalScore + " / 100</div>");
+
+        html.append("</div>");
+
+        // BULGULAR KARTI
+        html.append("<div class='card'>");
+        html.append("<h2>Tespit Edilen Riskli Maddeler</h2>");
+
+        if (report.findings == null || report.findings.isEmpty()) {
+            html.append("<div class='empty'>Hiç riskli madde bulunamadı veya kurallar bu metne uymadı.</div>");
+        } else {
+            html.append("<table>");
+            html.append("<thead>");
+            html.append("<tr>");
+            html.append("<th style='width:10%;'>Kategori</th>");
+            html.append("<th style='width:10%;'>Kural</th>");
+            html.append("<th style='width:10%;'>Skor</th>");
+            html.append("<th style='width:10%;'>Güven</th>");
+            html.append("<th style='width:30%;'>Açıklama</th>");
+            html.append("<th style='width:30%;'>Snippet</th>");
+            html.append("</tr>");
+            html.append("</thead>");
+            html.append("<tbody>");
+
+            for (RiskReportResponse.FindingSummary f : report.findings) {
+                html.append("<tr>");
+
+                html.append("<td>");
+                html.append("<div class='cat'>" + safe(f.category) + "</div>");
+                html.append("</td>");
+
+                html.append("<td>");
+                html.append("<div class='rule'>" + safe(f.ruleId) + "</div>");
+                html.append("</td>");
+
+                html.append("<td>");
+                html.append(String.valueOf(f.score));
+                html.append("</td>");
+
+                html.append("<td>");
+                html.append(String.valueOf(f.confidence));
+                html.append("</td>");
+
+                html.append("<td>");
+                html.append(safe(f.explanation));
+                html.append("</td>");
+
+                html.append("<td>");
+                html.append("<span class='snippet'>" + safe(f.snippet) + "</span>");
+                html.append("</td>");
+
+                html.append("</tr>");
+            }
+
+            html.append("</tbody>");
+            html.append("</table>");
+        }
+
+        html.append("</div>");
+
+        html.append("</body></html>");
+
+        return html.toString();
+    }
+
+    // Risk rozet metni
+    private String riskLevelLabel(double score) {
+        if (score >= 70.0) return "Yüksek Risk";
+        if (score >= 30.0) return "Orta Risk";
+        return "Düşük Risk";
+    }
+
+    // Risk rozet rengi
+    private String riskLevelColor(double score) {
+        if (score >= 70.0) return "#b00020"; // kırmızı
+        if (score >= 30.0) return "#f57c00"; // turuncu
+        return "#2e7d32"; // yeşil
+    }
+
+    // Basit HTML escape
+    private String safe(String s) {
+        if (s == null) return "";
+        return s
+            .replace("&","&amp;")
+            .replace("<","&lt;")
+            .replace(">","&gt;")
+            .replace("\"","&quot;")
+            .replace("'","&#39;");
+    }
+    private String prettyCategory(String raw) {
+        if (raw == null) return "";
+        return switch (raw) {
+            case "INDEMNITY" ->
+                "Geniş Tazminat Yükümlülüğü";
+            case "LIMITATION_OF_LIABILITY" ->
+                "Sorumluluk Sınırı / Limitsiz Sorumluluk";
+            case "TERMINATION" ->
+                "Tek Taraflı Fesih Hakkı";
+            case "INSURANCE_OBLIGATION" ->
+                "Yüksek Sigorta Yükümlülüğü";
+            case "INTELLECTUAL_PROPERTY_TRANSFER" ->
+                "Fikri Hakların Tam Devri";
+            case "GOVERNING_LAW" ->
+                "Yabancı Hukuk / Yetki Riski";
+            case "CONFIDENTIALITY" ->
+                "Gizlilik / Veri Koruma";
+            case "PAYMENT_TERMS" ->
+                "Ödeme Şartları";
+            default ->
+                raw;
+        };
+    }
+
+}
+
